@@ -1,0 +1,24 @@
+.financeForm {
+    padding:2em;
+    width:40%;
+
+    label {
+        display: block;
+        margin-bottom:2em;
+    }
+    input,
+    textarea {
+        width:100%;
+    }
+    textarea {
+        height:5em;
+    }
+    input[type="submit"] {
+        background:#413C58;
+        border:0;
+        padding:0.5em;
+        color:#eee;
+        font-size:1em;
+    }
+ 
+}

@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import styles from 'styles/financeForm.module.scss';
 
 const AddForm = (props) => {
     const defaultState = {
@@ -23,6 +24,7 @@ const AddForm = (props) => {
                 'Accept': 'application/json',
                 'Content-Type': 'application/json;charset=UTF-8'
             },
+            //todo: check if valid state and alert if empty form!
                 body: JSON.stringify(state),
             }).then(response => {
                 setState(defaultState);
@@ -38,7 +40,7 @@ const AddForm = (props) => {
     }
 
     return (
-        <div>
+        <div className={styles.financeForm}>
             { message ? <p>{message}</p> : '' }
             <form onSubmit={handleSubmit}>
                 <label htmlFor="date">

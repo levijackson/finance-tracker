@@ -1,0 +1,47 @@
+/*
+$dark-green: #00272B;
+$red: #FF6663;
+$lime: #E0FF4F;
+$violet: #413C58;
+*/
+
+body {
+    padding:0;
+    margin:0;
+}
+
+.wrapper {
+    width: 100vw;
+    height: 100vh;
+    font-family:sans-serif;
+}
+.row {
+    margin:0;
+}
+
+header {
+    background:#00272B;
+    width:100%;
+    padding:1em;
+}
+
+.navigation {
+    width:100%;
+}
+.navigation a {
+    color:#ccc;
+    text-decoration:none;
+    margin-right:3em;
+}
+.navigation a:hover {
+    color:#FF6663;
+}
+
+footer {
+    background:#00272B;
+    padding:1em;
+    color:#ccc;
+    font-size:0.8em;
+}
+
+

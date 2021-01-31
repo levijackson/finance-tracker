@@ -1,6 +1,5 @@
 import { GetServerSideProps } from 'next'
 
-import Layout from 'components/layout';
 import Recent from 'components/recent';
 import db from 'helpers/db';
 import Item from 'models/item';
@@ -27,9 +26,9 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
 
 export default function Home(props) {
     return (
-      <Layout>
+      <>
         <Recent title="Income" items={props.income} />
         <Recent title="Expenses" items={props.expense} />
-      </Layout>
+      </>
     )
 }

@@ -6,7 +6,7 @@ const Recent = (props) => {
     }
     
     return (
-        <div>
+        <div className="col-xs-12 col-sm-6">
             <h4>{props.title}</h4>
             <ul>
                 {props.items.map((item, index) => {
