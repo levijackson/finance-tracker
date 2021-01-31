@@ -26,6 +26,7 @@ const AddForm = (props) => {
                 body: JSON.stringify(state),
             }).then(response => {
                 setState(defaultState);
+                setMessage('Added!');
             });
         } catch (error) {
             setMessage('Failed to add ' + props.category);

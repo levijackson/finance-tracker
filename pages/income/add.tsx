@@ -1,9 +1,12 @@
 import FinanceForm from 'components/financeForm';
+import Layout from 'components/layout';
 
 const Income = () => {
 
     return (
-        <FinanceForm category="income" />
+        <Layout>
+            <FinanceForm category="income" />
+        </Layout>
     );
 }
 

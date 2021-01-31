@@ -15,7 +15,8 @@
     "prettier": "^2.2.1",
     "react": "17.0.1",
     "react-dom": "17.0.1",
-    "regenerator-runtime": "^0.13.7"
+    "regenerator-runtime": "^0.13.7",
+    "sass": "^1.32.5"
   },
   "devDependencies": {
     "@babel/core": "^7.12.10",
@@ -28,6 +29,9 @@
     "typescript": "^4.1.3"
   },
   "jest": {
-    "moduleDirectories": [".", "node_modules"]
+    "moduleDirectories": [
+      ".",
+      "node_modules"
+    ]
   }
 }
