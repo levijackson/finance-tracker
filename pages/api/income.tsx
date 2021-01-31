@@ -1,6 +1,6 @@
 import type { NextApiRequest, NextApiResponse } from 'next';
-import db from '../../helpers/db';
-import Item from '../../models/item';
+import db from 'helpers/db';
+import Item from 'models/item';
 
 export default async (req: NextApiRequest, res: NextApiResponse) => {
     if (req.method !== 'POST') {

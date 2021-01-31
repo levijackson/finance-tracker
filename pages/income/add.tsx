@@ -1,4 +1,4 @@
-import FinanceForm from '../../components/financeForm';
+import FinanceForm from 'components/financeForm';
 
 const Income = () => {
 

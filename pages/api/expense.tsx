@@ -1,6 +1,6 @@
 import type { NextApiRequest, NextApiResponse } from 'next';
-import db from '../../helpers/db';
-import Item from '../../models/item';
+import db from 'helpers/db';
+import Item from 'models/item';
 
 export default async (req: NextApiRequest, res: NextApiResponse) => {
     if (req.method !== 'POST') {
@@ -10,7 +10,11 @@ export default async (req: NextApiRequest, res: NextApiResponse) => {
     await db();
 
     try {
-        const item = await Item.create(req.body)
+        let data = req.body;
+        const date = new Date(data.date);
+        data.date = date.toLocaleDateString();
+        
+        const item = await Item.create(data)
         res.status(201).json({ success: true, data: item })
     } catch (error) {
         res.status(400).json({ success: false })

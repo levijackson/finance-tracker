@@ -1,4 +1,4 @@
-import { formatDate } from '../utils/date';
+import { formatDate } from 'utils/date';
 
 // todo: how to type hint Item
 const toJson = (item) => {

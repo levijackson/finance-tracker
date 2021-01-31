@@ -4,7 +4,7 @@ import Recent from '../components/recent';
 import { GetServerSideProps } from 'next'
 import db from '../helpers/db';
 import Item from '../models/item';
-import { toJson } from '../helpers/item'
+import { toJson } from 'helpers/item'
 
 export const getServerSideProps: GetServerSideProps = async (context) => {
     await db();
