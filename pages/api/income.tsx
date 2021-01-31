@@ -1,5 +1,5 @@
 import type { NextApiRequest, NextApiResponse } from 'next';
-import db from '../../utils/db';
+import db from '../../helpers/db';
 import Item from '../../models/item';
 
 export default async (req: NextApiRequest, res: NextApiResponse) => {
