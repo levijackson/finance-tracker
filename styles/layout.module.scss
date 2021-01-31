@@ -1,0 +1,43 @@
+$dark-green: #00272B;
+$red: #FF6663;
+$lime: #E0FF4F;
+$violet: #413C58;
+
+body {
+    padding:0;
+}
+
+.container {
+    width: 100vw;
+    height: 100vh;
+
+    font-family:sans-serif;
+}
+
+.header {
+    background:#00272B;
+    width:100%;
+}
+.navigation {
+    width:100%;
+    display:flex;
+    flex-direction: column;
+
+    a {
+        color:#ccc;
+        text-decoration:none;
+        padding:1em;
+        border-bottom:1px solid #666;
+
+        &:hover {
+            color:$red;
+        }
+    }
+}
+
+@media all and (min-width: 700px) {
+    .navigation {
+        flex-direction:row;
+    }
+}
+

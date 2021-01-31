@@ -28,10 +28,8 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
 export default function Home(props) {
     return (
       <Layout>
-          <div className={styles.container}>
-              <Recent title="Income" items={props.income} />
-              <Recent title="Expenses" items={props.expense} />
-          </div>
+        <Recent title="Income" items={props.income} />
+        <Recent title="Expenses" items={props.expense} />
       </Layout>
     )
 }
