@@ -9,6 +9,9 @@
     input,
     textarea {
         width:100%;
+        border:1px solid #ccc;
+        padding:0.5em;
+        border-radius:0.5em;
     }
     textarea {
         height:5em;
@@ -19,6 +22,10 @@
         padding:0.5em;
         color:#eee;
         font-size:1em;
+        cursor:pointer;
+
+        &:hover {
+            background:#00272B;
+        }
     }
- 
 }

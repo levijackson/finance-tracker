@@ -10,10 +10,18 @@ body {
     margin:0;
 }
 
+h1, h2 {
+    font-weight:normal;
+    color:#413C58;
+    text-shadow:1px 1px 2px #ccc;
+}
+
 .wrapper {
-    width: 100vw;
-    height: 100vh;
+    width:100vw;
+    height:100vh;
     font-family:sans-serif;
+    display:flex;
+    flex-direction:column;
 }
 .row {
     margin:0;
@@ -23,6 +31,11 @@ header {
     background:#00272B;
     width:100%;
     padding:1em;
+    flex: 1 0 auto;
+}
+
+.content {
+    flex: 1 0 auto;
 }
 
 .navigation {
@@ -42,6 +55,7 @@ footer {
     padding:1em;
     color:#ccc;
     font-size:0.8em;
+    flex-shrink:0;
 }
 
 

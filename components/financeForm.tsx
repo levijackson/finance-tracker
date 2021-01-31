@@ -12,8 +12,24 @@ const AddForm = (props) => {
     const [state, setState] = useState(defaultState);
     const [message, setMessage] = useState('');
     
+    const isValid = (state) => {
+        if (state.date === '') {
+            return false;
+        }
+        if (state.amount === '') {
+            return false;
+        }
+        
+        return true;
+    };
+
     const handleSubmit = async (e) => {
         e.preventDefault();
+
+        if (!isValid(state)) {
+            setMessage('Missing fields');
+            return false;
+        }
 
         let url = '/api/' + state.category;
 
@@ -24,7 +40,6 @@ const AddForm = (props) => {
                 'Accept': 'application/json',
                 'Content-Type': 'application/json;charset=UTF-8'
             },
-            //todo: check if valid state and alert if empty form!
                 body: JSON.stringify(state),
             }).then(response => {
                 setState(defaultState);

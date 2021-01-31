@@ -3,7 +3,10 @@ import FinanceForm from 'components/financeForm';
 const Expense = () => {
 
     return (
-        <FinanceForm category="expense" />
+        <>
+        <h1 className="col-xs-12">Add Expense</h1>
+        <FinanceForm category="expense" className="col-xs-12" />
+        </>
     );
 }
 
