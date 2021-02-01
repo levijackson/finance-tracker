@@ -1,5 +1,7 @@
 import { useState } from 'react';
+import DatePicker from 'react-datepicker';
 import styles from 'styles/financeForm.module.scss';
+import 'react-datepicker/dist/react-datepicker.css';
 
 const AddForm = (props) => {
     const defaultState = {
@@ -60,7 +62,11 @@ const AddForm = (props) => {
             <form onSubmit={handleSubmit}>
                 <label htmlFor="date">
                     Date
-                    <input type="text" name="date" value={state.date} onChange={handleInputChange} />
+                    <DatePicker 
+                        dateFormat="yyyy-MM-dd"
+                        selected={state.date}
+                        onChange={date => setState({ ...state, date: date })}
+                    />
                 </label>
                 <label htmlFor="amount">
                     Amount

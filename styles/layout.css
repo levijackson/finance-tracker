@@ -58,4 +58,6 @@ footer {
     flex-shrink:0;
 }
 
-
+body .react-datepicker-wrapper {
+    display:block;
+}
