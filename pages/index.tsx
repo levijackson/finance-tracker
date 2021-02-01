@@ -26,9 +26,9 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
 
 
 export default function Home(props) {
-  const { user, mutateUser } = useUser();
+  const { user } = useUser();
 
-    if (!user) {
+    if (!user?.isLoggedIn) {
         return null;
     }
 

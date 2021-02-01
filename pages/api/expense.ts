@@ -14,9 +14,9 @@ export default async (req: NextApiRequest, res: NextApiResponse) => {
         const date = new Date(data.date);
         data.date = date.toLocaleDateString();
         
-        const item = await Item.create(data)
-        res.status(201).json({ success: true, data: item })
+        const item = await Item.create(data);
+        res.status(201).json({ success: true, data: item });
     } catch (error) {
-        res.status(400).json({ success: false })
+        res.status(400).json({ success: false });
     }
 }

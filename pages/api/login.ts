@@ -1,7 +1,8 @@
+import type { NextApiRequest, NextApiResponse } from 'next';
 import fetchJson from 'lib/fetchJson';
 import withSession from 'lib/session';
 
-export default withSession(async (req, res) => {
+export default withSession(async (req: NextApiRequest, res: NextApiResponse) => {
   const { username } = await req.body;
   const url = `https://api.github.com/users/${username}`;
 
