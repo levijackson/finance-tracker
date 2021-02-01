@@ -1,6 +1,16 @@
-import FinanceForm from 'components/financeForm';
+import { useRouter } from 'next/router';
+
+import FinanceForm from 'components/FinanceForm';
+import useUser from 'lib/useUser';
 
 const Income = () => {
+
+    const { user } = useUser();
+    const router = useRouter();
+
+    if (!user?.isLoggedIn) {
+        router.push('/');
+    }
 
     return (
         <>

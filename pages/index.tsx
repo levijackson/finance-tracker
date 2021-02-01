@@ -1,6 +1,6 @@
 import { GetServerSideProps } from 'next'
 
-import Recent from 'components/recent';
+import Recent from 'components/Recent';
 import db from 'helpers/db';
 import Item from 'models/item';
 import { toJson } from 'helpers/item'

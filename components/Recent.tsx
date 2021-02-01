@@ -1,5 +1,3 @@
-import React from 'react';
-
 const Recent = (props) => {
     if (props.items.length === 0) {
         return null;
