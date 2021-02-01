@@ -1,6 +1,9 @@
-import type { AppProps } from 'next/app'
-import React from 'react'
-import Link from 'next/link'
+import type { AppProps } from 'next/app';
+import React from 'react';
+import Header from 'components/header';
+import Footer from 'components/Footer';
+import { SWRConfig } from 'swr';;
+import fetch from 'lib/fetchJson';
 
 // http://flexboxgrid.com/
 import 'styles/flexboxgrid.min.css';
@@ -8,25 +11,24 @@ import 'styles/layout.css';
 
 function MyApp({ Component, pageProps }: AppProps) {
   return (
-    <div className="wrapper">
-        <header className="row">
-          <div className="navigation col-xs-12 col-sm-6">
-            <Link href="/">Home</Link>
-            <Link href="/expense/add">Add expense</Link>
-            <Link href="/income/add">Add income</Link>
-          </div>
-        </header>
+    <SWRConfig
+      value={{
+        fetcher: fetch,
+        onError: (err) => {
+          console.error(err);
+        },
+      }}
+    >
+        <div className="wrapper">
+            <Header />
 
-        <div className="content row">
-          <Component {...pageProps} />
-        </div>
+            <div className="content row">
+              <Component {...pageProps} />
+            </div>
 
-        <footer className="row">
-          <div className="name col-xs-12">
-            Finance Tracker <small>{(new Date().getFullYear())}</small>
+            <Footer />
           </div>
-        </footer>
-      </div>
+      </SWRConfig>
   );
 }
 

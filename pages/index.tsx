@@ -4,6 +4,7 @@ import Recent from 'components/recent';
 import db from 'helpers/db';
 import Item from 'models/item';
 import { toJson } from 'helpers/item'
+import useUser from 'lib/useUser';
 
 export const getServerSideProps: GetServerSideProps = async (context) => {
     await db();
@@ -25,6 +26,12 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
 
 
 export default function Home(props) {
+  const { user, mutateUser } = useUser();
+
+    if (!user) {
+        return null;
+    }
+
     return (
       <>
         <Recent title="Income" items={props.income} />
