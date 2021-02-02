@@ -1,4 +1,11 @@
-const Recent = (props) => {
+import { ItemInterface } from 'components/interfaces/Item';
+
+interface RecentProps {
+    items: Array<ItemInterface>;
+    title: string;
+}
+
+const Recent = (props: RecentProps) => {
     if (props.items.length === 0) {
         return null;
     }

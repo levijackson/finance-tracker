@@ -45,9 +45,14 @@ header {
     color:#ccc;
     text-decoration:none;
     margin-right:3em;
+    cursor:pointer;
 }
 .navigation a:hover {
     color:#FF6663;
+}
+.logout span {
+    margin-left:10px;
+    font-size:0.7em;
 }
 
 footer {

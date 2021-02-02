@@ -1,8 +1,8 @@
 import { formatDate } from 'utils/date';
 import { formatCurrency } from 'utils/currency';
+import { ItemInterface } from 'components/interfaces/Item';
 
-// todo: how to type hint Item
-const toJson = (item) => {
+const toJson = (item: ItemInterface) => {
     return {
         amount: formatCurrency(item.amount),
         note: item.note || '',

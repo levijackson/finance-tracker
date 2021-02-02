@@ -1,33 +1,24 @@
 import Link from 'next/link';
-import { useRouter } from 'next/router';
-
-import useUser from 'lib/useUser';
-import fetchJson from 'lib/fetchJson';
+import { signIn, signOut, useSession } from 'next-auth/client';
 
 const Header = () => {
-    const { user, mutateUser } = useUser();
-    const router = useRouter();
-
-    const logout = async (e) => {
-        e.preventDefault();
-        await mutateUser(
-            fetchJson('/api/logout', { method: "POST" })
-        );
-        router.push('/');
-    };
+    const [ session, loading ] = useSession();
 
     return (
         <header className="row">
-            <div className="navigation col-xs-12 col-sm-6">
+            <div className="navigation col-xs-12 col-sm-8">
             <Link href="/">Home</Link>
-            {!user?.isLoggedIn && (
-                <Link href="/login">Login</Link>
+            {!session && (
+                <a onClick={signIn}>Sign in</a>
             )}
-            {user?.isLoggedIn && (
+            {session && (
                 <>
                 <Link href="/expense/add">Add expense</Link>
                 <Link href="/income/add">Add income</Link>
-                <a onClick={logout}>Logout</a>
+                <a className="logout" onClick={signOut}>
+                    Sign out
+                    { session && <span>({session.user.email})</span> }
+                </a>
                 </>
             )}
             </div>

@@ -1,24 +1,31 @@
 import { useState } from 'react';
 import DatePicker from 'react-datepicker';
+import { useSession } from 'next-auth/client';
+import { ItemInterface } from 'components/interfaces/Item';
 import styles from 'styles/financeForm.module.scss';
 import 'react-datepicker/dist/react-datepicker.css';
 
-const AddForm = (props) => {
-    const defaultState = {
+interface AddFormProps {
+    category: string;
+}
+
+const AddForm = (props: AddFormProps) => {
+    const defaultState: ItemInterface = {
         date: '',
-        amount: '',
+        amount: 0,
         category: props.category,
         note: ''
     };
 
-    const [state, setState] = useState(defaultState);
-    const [message, setMessage] = useState('');
+    const [ state, setState ] = useState(defaultState);
+    const [ message, setMessage ] = useState('');
+    const [ session, loading ] = useSession();
     
-    const isValid = (state) => {
+    const isValid = (state: ItemInterface) => {
         if (state.date === '') {
             return false;
         }
-        if (state.amount === '') {
+        if (state.amount === 0) {
             return false;
         }
         
@@ -33,17 +40,19 @@ const AddForm = (props) => {
             return false;
         }
 
-        let url = '/api/' + state.category;
+        let url: string = '/api/' + state.category;
 
         try {
-            const res = await fetch(url, {
+            const email: string = session.user.email;
+            const data: object = { ...state, email };
+            await fetch(url, {
                 method: 'POST',
                 headers: {
                 'Accept': 'application/json',
                 'Content-Type': 'application/json;charset=UTF-8'
             },
-                body: JSON.stringify(state),
-            }).then(response => {
+                body: JSON.stringify(data),
+            }).then(() => {
                 setState(defaultState);
                 setMessage('Added!');
             });
@@ -53,7 +62,13 @@ const AddForm = (props) => {
     };
 
     const handleInputChange = (e) => {
-        setState({ ...state, [e.target.name]: e.target.value });
+        let name: string = e.target.name;
+        let value: any = e.target.value;
+        if (name === 'amount') {
+            value = parseFloat(value);
+        }
+
+        setState({ ...state, [name]: value });
     }
 
     return (
@@ -65,7 +80,7 @@ const AddForm = (props) => {
                     <DatePicker 
                         dateFormat="yyyy-MM-dd"
                         selected={state.date}
-                        onChange={date => setState({ ...state, date: date })}
+                        onChange={(date: string) => setState({ ...state, date: date })}
                     />
                 </label>
                 <label htmlFor="amount">
