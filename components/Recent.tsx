@@ -1,25 +1,30 @@
 import { ItemInterface } from 'components/interfaces/Item';
 
 interface RecentProps {
-    items: Array<ItemInterface>;
+    data: {
+        month: string;
+        items: Array<ItemInterface>
+    };
     title: string;
 }
 
-const Recent = (props: RecentProps) => {
-    if (props.items.length === 0) {
-        return null;
-    }
-    
+const Recent = (props: RecentProps) => {    
     return (
         <div className="col-xs-12 col-sm-6">
-            <h4>{props.title}</h4>
-            <ul>
-                {props.items.map((item, index) => {
-                    return <li key={index}>
-                        ${item.amount} ({item.date})
-                    </li>;
-                })}
-            </ul>
+            {props.data.map((data, monthIndex) => {
+            return <>
+                <h4>{props.title} - {data.month}</h4>
+                <ul>
+                    {
+                        data.items.map((item, itemIndex) => {
+                            return <li key={itemIndex}>
+                                ${item.amount} ({item.date})
+                            </li>;
+                        })
+                    }
+                </ul>
+            </>
+            })}
         </div>
     );
 };
