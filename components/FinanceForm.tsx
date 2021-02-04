@@ -5,17 +5,23 @@ import { ItemInterface } from 'components/interfaces/Item';
 import styles from 'styles/financeForm.module.scss';
 import 'react-datepicker/dist/react-datepicker.css';
 
-interface AddFormProps {
+interface FinanceFormProps {
     type: string;
     item?: ItemInterface;
     id?: string;
 }
 
-const AddForm = (props: AddFormProps) => {
+const FinanceForm = (props: FinanceFormProps) => {
+    let editing = false;
+    if (props.hasOwnProperty('item')) {
+        props.item.date = new Date(props.item.date);
+        editing = true;
+    }
+
     const defaultState: ItemInterface = {
         date: '',
         amount: 0,
-        type: props.type,
+        type: 'expense',
         note: '',
         category: ''
     };
@@ -35,9 +41,10 @@ const AddForm = (props: AddFormProps) => {
         'payroll'
     ];
 
-    if (props.hasOwnProperty('item')) {
-        props.item.date = new Date(props.item.date);
-    }
+    const typeOptions = [
+        'income',
+        'expense'
+    ];
 
     const [ state, setState ] = useState((props.item ? props.item : defaultState));
     const [ message, setMessage ] = useState('');
@@ -64,7 +71,7 @@ const AddForm = (props: AddFormProps) => {
 
         let url: string = '/api/item';
 
-        if (props.hasOwnProperty('id')) {
+        if (editing) {
             url += '/' + props.id;
         }
 
@@ -79,8 +86,12 @@ const AddForm = (props: AddFormProps) => {
             },
                 body: JSON.stringify(data),
             }).then(() => {
-                setState(defaultState);
-                setMessage('Added!');
+                if (editing) {
+                    setMessage('Updated!');
+                } else {
+                    setState(defaultState);
+                    setMessage('Added!');
+                }
             });
         } catch (error) {
             setMessage('Failed to add ' + props.type);
@@ -101,6 +112,14 @@ const AddForm = (props: AddFormProps) => {
         <div className={styles.financeForm}>
             { message ? <p>{message}</p> : '' }
             <form onSubmit={handleSubmit}>
+            <label htmlFor="type">
+                    Type
+                    <select name="type" value={state.type} onChange={handleInputChange}>
+                        { typeOptions.map((item, index) => {
+                            return <option value={item} key={index}>{item}</option>
+                        })}
+                    </select>
+                </label>
                 <label htmlFor="date">
                     Date
                     <DatePicker 
@@ -131,4 +150,4 @@ const AddForm = (props: AddFormProps) => {
     );
 }
 
-export default AddForm;
+export default FinanceForm;

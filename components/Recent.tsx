@@ -1,4 +1,5 @@
 import { ItemInterface } from 'components/interfaces/Item';
+import Link from 'next/link';
 
 interface RecentProps {
     data: {
@@ -18,7 +19,7 @@ const Recent = (props: RecentProps) => {
                     {
                         data.items.map((item, itemIndex) => {
                             return <li key={itemIndex}>
-                                ${item.amount} ({item.date})
+                                <Link href={"/item/edit/" + item.id}><a>${item.amount} ({item.date})</a></Link>
                             </li>;
                         })
                     }

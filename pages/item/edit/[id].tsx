@@ -18,18 +18,18 @@ export const getServerSideProps: GetServerSideProps = async ({ query }) => {
       };
 };
 
-interface ExpenseProps {
+interface EditProps {
     item: ItemInterface;
     id: string
 }
 
-const Expense = (props: ExpenseProps) => {
+const EditForm = (props: EditProps) => {
     return (
         <>
-        <h1 className="col-xs-12">Edit Expense</h1>
+        <h1 className="col-xs-12">Edit</h1>
         <FinanceForm type="expense" item={props.item} id={props.id} className="col-xs-12" />
         </>
     );
 }
 
-export default Expense;
+export default EditForm;

@@ -13,8 +13,7 @@ const Header = () => {
             )}
             {session && (
                 <>
-                <Link href="/expense/add">Add expense</Link>
-                <Link href="/income/add">Add income</Link>
+                <Link href="/item/add">Add item</Link>
                 <a className="logout" onClick={signOut}>
                     Sign out
                     { session && <span>({session.user.email})</span> }
