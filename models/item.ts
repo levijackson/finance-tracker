@@ -7,8 +7,12 @@ const ItemSchema = new mongoose.Schema({
   },
   category: {
     type: String,
-    enum: ['income', 'expense'],
     required: [true, 'Please provide a category.'],
+  },
+  type: {
+    type: String,
+    enum: ['income', 'expense'],
+    required: [true, 'Please provide a type.'],
   },
   amount: {
     type: Number,

@@ -13,6 +13,7 @@ import {
 export const getServerSideProps: GetServerSideProps = async (context) => {
     await db();
     
+    // todo: refactor to reduce duplication
     const monthNames = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
     const numberMonths = 2;
     let currentDate = new Date();
@@ -29,7 +30,7 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
         let endDate = currentDate.getFullYear() + '-' + (currentDate.getMonth()+1) + '-' + currentDate.getDate();
 
         let incomeItems = (await Item.find({
-          'category': 'income',
+          'type': 'income',
           'date': {
               $gt: startDate,
               $lt: endDate
@@ -43,7 +44,7 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
         });
 
         let expenseItems = (await Item.find({
-          'category': 'expense',
+          'type': 'expense',
           'date': {
               $gt: startDate,
               $lt: endDate

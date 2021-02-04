@@ -6,18 +6,40 @@ import styles from 'styles/financeForm.module.scss';
 import 'react-datepicker/dist/react-datepicker.css';
 
 interface AddFormProps {
-    category: string;
+    type: string;
+    item?: ItemInterface;
+    id?: string;
 }
 
 const AddForm = (props: AddFormProps) => {
     const defaultState: ItemInterface = {
         date: '',
         amount: 0,
-        category: props.category,
-        note: ''
+        type: props.type,
+        note: '',
+        category: ''
     };
 
-    const [ state, setState ] = useState(defaultState);
+    const categoryOptions = [
+        'other',
+        'utilities',
+        'transportation',
+        'groceries',
+        'health',
+        'insurance',
+        'restaurants',
+        'entertainment',
+        'travel',
+        'giving',
+        'education',
+        'payroll'
+    ];
+
+    if (props.hasOwnProperty('item')) {
+        props.item.date = new Date(props.item.date);
+    }
+
+    const [ state, setState ] = useState((props.item ? props.item : defaultState));
     const [ message, setMessage ] = useState('');
     const [ session, loading ] = useSession();
     
@@ -40,7 +62,11 @@ const AddForm = (props: AddFormProps) => {
             return false;
         }
 
-        let url: string = '/api/' + state.category;
+        let url: string = '/api/item';
+
+        if (props.hasOwnProperty('id')) {
+            url += '/' + props.id;
+        }
 
         try {
             const email: string = session.user.email;
@@ -57,7 +83,7 @@ const AddForm = (props: AddFormProps) => {
                 setMessage('Added!');
             });
         } catch (error) {
-            setMessage('Failed to add ' + props.category);
+            setMessage('Failed to add ' + props.type);
         }
     };
 
@@ -82,6 +108,14 @@ const AddForm = (props: AddFormProps) => {
                         selected={state.date}
                         onChange={(date: string) => setState({ ...state, date: date })}
                     />
+                </label>
+                <label htmlFor="category">
+                    Category
+                    <select name="category" value={state.category} onChange={handleInputChange}>
+                        { categoryOptions.map((item, index) => {
+                            return <option value={item} key={index}>{item}</option>
+                        })}
+                    </select>
                 </label>
                 <label htmlFor="amount">
                     Amount

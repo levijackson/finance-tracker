@@ -6,7 +6,9 @@ const toJson = (item: ItemInterface) => {
     return {
         amount: formatCurrency(item.amount),
         note: item.note || '',
-        date: formatDate(item.date)
+        date: formatDate(item.date),
+        category: item.category,
+        type: item.type
     };
 };
 
