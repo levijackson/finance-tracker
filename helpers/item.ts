@@ -1,22 +1,20 @@
-import { formatDate } from 'utils/date';
 import { formatCurrency } from 'utils/currency';
 import { ItemInterface } from 'components/interfaces/Item';
-import db from 'helpers/db';
-import Item from 'models/item';
+import { connectToDatabase } from 'helpers/db';
 
 const toJson = (item: ItemInterface) => {
     return {
-        id: item.id || null,
+        id: item._id.toString() || null,
         amount: formatCurrency(item.amount),
         note: item.note || '',
-        date: formatDate(item.date),
+        date: item.date,
         category: item.category,
         type: item.type
     };
 };
 
 const getData = async (type: string, numberMonths: number) => {
-    await db();
+    const { db } = await connectToDatabase();
 
     const monthNames = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
     let currentDate = new Date();
@@ -30,15 +28,16 @@ const getData = async (type: string, numberMonths: number) => {
         let startDate = currentDate.getFullYear() + '-' + (currentDate.getMonth()+1) + '-01';
         let endDate = currentDate.getFullYear() + '-' + (currentDate.getMonth()+1) + '-' + currentDate.getDate();
 
-        let items = (await Item.find({
-            'type': type,
-            'date': {
-                $gt: startDate,
-                $lt: endDate
-            }
-        }).exec()).map((item) => {
-            return toJson(item);
-        });
+        let items = await db
+            .collection('items')
+            .find({
+                'type': type,
+                'date': {
+                    $gt: new Date(startDate),
+                    $lt: new Date(endDate)
+                }
+            })
+            .toArray();
 
         for (let item in items) {
             sum += items[item].amount;

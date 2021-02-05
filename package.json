@@ -9,7 +9,7 @@
     "test": "jest"
   },
   "dependencies": {
-    "mongoose": "^5.11.14",
+    "mongodb": "^3.6.4",
     "next": "10.0.6",
     "next-auth": "^3.1.0",
     "react": "17.0.1",
@@ -23,6 +23,7 @@
     "@babel/plugin-transform-runtime": "^7.12.10",
     "@babel/preset-env": "^7.12.11",
     "@babel/preset-typescript": "^7.12.7",
+    "@types/mongodb": "^3.6.5",
     "@types/node": "^14.14.22",
     "@types/react": "^17.0.0",
     "babel-jest": "^26.6.3",

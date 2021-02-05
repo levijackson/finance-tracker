@@ -1,5 +1,5 @@
 export interface ItemInterface {
-    id?: string;
+    _id?: string;
     date: string | Date;
     amount: number;
     type: string;

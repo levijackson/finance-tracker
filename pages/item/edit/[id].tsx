@@ -1,13 +1,18 @@
 import { GetServerSideProps } from 'next';
 import FinanceForm from 'components/FinanceForm';
-import db from 'helpers/db';
-import Item from 'models/item';
+import { connectToDatabase } from 'helpers/db';
 import { ItemInterface } from 'components/interfaces/item';
+import { ObjectId } from 'mongodb';
 import { toJson } from 'helpers/item';
 
 export const getServerSideProps: GetServerSideProps = async ({ query }) => {
-    await db();
-    let item = (await Item.findById(query.id).exec());
+    const { db } = await connectToDatabase();
+
+    let item = await db
+            .collection('items')
+            .findOne({
+                '_id': new ObjectId(query.id)
+            });
     item = toJson(item);
 
     return {

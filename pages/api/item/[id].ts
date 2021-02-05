@@ -1,25 +1,27 @@
 import type { NextApiRequest, NextApiResponse } from 'next';
-import db from 'helpers/db';
-import Item from 'models/item';
+import { connectToDatabase } from 'helpers/db';
+import { ObjectId } from 'mongodb';
+
 
 export default async (req: NextApiRequest, res: NextApiResponse) => {
     if (req.method !== 'POST') {
         res.status(405);
     }
 
-    await db();
+    const { db } = await connectToDatabase();
 
     try {
-        let result = (await Item.findById(req.query.id).exec());
-        let data = req.body;
-        const date = new Date(data.date);
-        result.date = date.toLocaleDateString();
-        result.category = data.category;
-        result.amount = data.amount;
-        result.note = data.note;
-        await result.save();
+        await db
+            .collection('items')
+            .findOneAndUpdate({
+                '_id': new ObjectId(req.query.id)
+            },
+            {
+                $set: req.body
+            });
+
         
-        res.status(201).json({ success: true, data: result });
+        res.status(201).json({ success: true });
     } catch (error) {
         res.status(400).json({ success: false });
     }

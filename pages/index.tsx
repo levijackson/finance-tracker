@@ -10,6 +10,9 @@ import {
 export const getServerSideProps: GetServerSideProps = async (context) => {
     let chartData = [];
 
+// refactor to merge the income/expense into a single item for the charts
+// check if we need toJson or formatDate now
+// maybe adjust formatData so it runs on inseert to stnadardize on yyyy-mm-dd
     let incomeData = await getData('income', 2);
     incomeData.data.reduce((item) => {
       chartData.push(
