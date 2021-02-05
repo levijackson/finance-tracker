@@ -14,6 +14,7 @@ interface FinanceFormProps {
 const FinanceForm = (props: FinanceFormProps) => {
     let editing = false;
     if (props.hasOwnProperty('item')) {
+        // react-datepicker needs a Date object
         props.item.date = new Date(props.item.date);
         editing = true;
     }

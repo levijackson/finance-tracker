@@ -1,7 +1,7 @@
 import { GetServerSideProps } from 'next';
 import FinanceForm from 'components/FinanceForm';
 import { connectToDatabase } from 'helpers/db';
-import { ItemInterface } from 'components/interfaces/item';
+import { ItemInterface } from 'components/interfaces/Item';
 import { ObjectId } from 'mongodb';
 import { toJson } from 'helpers/item';
 
