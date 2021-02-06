@@ -7,49 +7,53 @@ const toJson = (item: ItemInterface) => {
         id: item._id.toString() || null,
         amount: formatCurrency(item.amount),
         note: item.note || '',
-        date: item.date,
+        date: item.date.toString(),
         category: item.category,
         type: item.type
     };
 };
 
-const getData = async (type: string, numberMonths: number) => {
+const getData = async (numberMonths: number) => {
     const { db } = await connectToDatabase();
 
+    const types = ['expense', 'income'];
     const monthNames = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
     let currentDate = new Date();
-    let data = [];
-    let sum = 0.
+    let data = {};
     for (let i = 0; i < numberMonths; i++) {
         currentDate.setDate(0); // going to 1st of the month
         currentDate.setHours(-1); // going to last hour before this date even started.
         let monthName = monthNames[currentDate.getMonth()];
 
+        data[i] = {
+            'month': monthName,
+        };
+
         let startDate = currentDate.getFullYear() + '-' + (currentDate.getMonth()+1) + '-01';
         let endDate = currentDate.getFullYear() + '-' + (currentDate.getMonth()+1) + '-' + currentDate.getDate();
 
-        let items = await db
-            .collection('items')
-            .find({
-                'type': type,
-                'date': {
-                    $gt: new Date(startDate),
-                    $lt: new Date(endDate)
-                }
-            })
-            .toArray();
+        let sum = 0;
+        for (let key in types) {
+            let items = await db
+                .collection('items')
+                .find({
+                    'type': types[key],
+                    'date': {
+                        $gt: new Date(startDate),
+                        $lt: new Date(endDate)
+                    }
+                })
+                .toArray();
 
-        for (let item in items) {
-            sum += items[item].amount;
+            for (let item in items) {
+                sum += items[item].amount;
+            }
+
+            data[i][types[key]] = {
+                'items': items,
+                'sum': sum
+            };
         }
-
-        data.push({
-            'month': monthName,
-            'items': items,
-            'sum': sum
-        });
-
-        
     }
 
     return {

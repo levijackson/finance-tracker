@@ -2,7 +2,7 @@ import { GetServerSideProps } from 'next'
 import { useSession } from 'next-auth/client';
 import Recent from 'components/Recent';
 import { ItemInterface } from 'components/interfaces/Item';
-import { getData } from 'helpers/item';
+import { getData, toJson } from 'helpers/item';
 import {
   BarChart, Bar, Cell, XAxis, YAxis, CartesianGrid, Tooltip, Legend,
 } from 'recharts';
@@ -10,38 +10,38 @@ import {
 export const getServerSideProps: GetServerSideProps = async (context) => {
     let chartData = [];
 
-// refactor to merge the income/expense into a single item for the charts
 // check if we need toJson or formatDate now
 // maybe adjust formatData so it runs on inseert to stnadardize on yyyy-mm-dd
-    let incomeData = await getData('income', 2);
-    incomeData.data.reduce((item) => {
-      chartData.push(
-          {
-            'name': item.month, 'label': 'income', 'sum': item.sum,
-          }
-      );
-    });
+    let financeData = await getData(2);
 
-    let expenseData = await getData('expense', 2);
-    expenseData.data.reduce((item) => {
-      chartData.push(
-          {
-            'name': item.month, 'label': 'expense', 'sum': item.sum,
-          }
-      );
-    });
-    
+    for (let i in financeData.data) {
+        chartData.push(
+            {
+              'month': financeData.data[i].month,
+              'income': financeData.data[i].income.sum,
+              'expense': financeData.data[i].expense.sum
+            }
+        );
+
+        financeData.data[i].income.items = financeData.data[i].income.items.map((item) => {
+            return toJson(item);
+        });
+
+        financeData.data[i].expense.items = financeData.data[i].expense.items.map((item) => {
+          return toJson(item);
+      });
+    }
+
     return {
       props: {
-        // incomeData,
-        // expenseData,
         chartData,
+        financeData
       }
     }
 }
 
 interface ChartProps {
-  name: string;
+  month: string;
   expense: number;
   income: number;
 }
@@ -54,19 +54,19 @@ interface HomeProps {
     month: string;
     items: Array<ItemInterface>;
   };
-  chartData: Array<ChartProps>
+  data: Array<ChartProps>
 }
 
 export default function Home(props: HomeProps) {
     const [ session, loading ] = useSession();
 
-    if (!session) {
-      return (
-          <>
-              <p>You must log in to use this.</p>
-          </>
-      );
-    }
+    // if (!session) {
+    //   return (
+    //       <>
+    //           <p>You must log in to use this.</p>
+    //       </>
+    //   );
+    // }
 
     return (
       <>
@@ -84,15 +84,14 @@ export default function Home(props: HomeProps) {
             }}
           >
             <CartesianGrid strokeDasharray="3 3" />
-            <XAxis dataKey="name" />
+            <XAxis dataKey="month" />
             <YAxis />
             <Tooltip />
             <Legend />
-            <Bar dataKey="sum" fill="#8884d8" />
+            <Bar dataKey="income" fill="#8884d8" />
             <Bar dataKey="expense" fill="#82ca9d" />
         </BarChart>
-        {/* <Recent title="Income" data={props.incomeData} />
-        <Recent title="Expenses" data={props.expenseData} /> */}
+        <Recent data={props.financeData.data} />
       </>
     )
 }

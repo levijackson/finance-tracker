@@ -6,26 +6,39 @@ interface RecentProps {
         month: string;
         items: Array<ItemInterface>
     };
-    title: string;
 }
 
-const Recent = (props: RecentProps) => {    
+const Recent = (props: RecentProps) => {
+
+    let markup = [];
+    for(let i in props.data) {
+        markup.push(<h4>{ props.data[i].month } - Income</h4>);
+        let itemMarkup = [];
+        props.data[i].income.items.map((item, itemIndex) => {
+            itemMarkup.push(
+                <li key={itemIndex}>
+                    <Link href={"/item/edit/" + item.id}><a>${item.amount} ({item.date})</a></Link>
+                </li>
+            );
+        });
+        markup.push(<ul>{ itemMarkup }</ul>);
+
+        markup.push(<h4>{ props.data[i].month } - Expense</h4>);
+        itemMarkup = [];
+        props.data[i].expense.items.map((item, itemIndex) => {
+            itemMarkup.push(
+                <li key={itemIndex}>
+                    <Link href={"/item/edit/" + item.id}><a>${item.amount} ({item.date})</a></Link>
+                </li>
+            );
+        });
+        markup.push(<ul>{ itemMarkup }</ul>);
+    }
     return (
         <div className="col-xs-12 col-sm-6">
-            {props.data.map((data, monthIndex) => {
             return <>
-                <h4>{props.title} - {data.month}</h4>
-                <ul>
-                    {
-                        data.items.map((item, itemIndex) => {
-                            return <li key={itemIndex}>
-                                <Link href={"/item/edit/" + item.id}><a>${item.amount} ({item.date})</a></Link>
-                            </li>;
-                        })
-                    }
-                </ul>
+                { markup }
             </>
-            })}
         </div>
     );
 };
