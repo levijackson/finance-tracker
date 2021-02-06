@@ -1,6 +1,6 @@
 export interface ItemInterface {
-    _id?: string;
-    date: string;
+    id?: string;
+    date: Date;
     amount: number;
     type: string;
     note?: string;

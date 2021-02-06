@@ -9,10 +9,12 @@ export const getServerSideProps: GetServerSideProps = async ({ query }) => {
     const { db } = await connectToDatabase();
 
     let item = await db
-            .collection('items')
-            .findOne({
-                '_id': new ObjectId(query.id)
-            });
+        .collection('items')
+        .findOne({
+            '_id': new ObjectId(query.id)
+        });
+    item.id = item._id;
+    delete item._id;
     item = toJson(item);
 
     return {

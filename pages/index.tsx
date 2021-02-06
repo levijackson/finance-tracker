@@ -9,9 +9,6 @@ import {
 
 export const getServerSideProps: GetServerSideProps = async (context) => {
     let chartData = [];
-
-// check if we need toJson or formatDate now
-// maybe adjust formatData so it runs on inseert to stnadardize on yyyy-mm-dd
     let financeData = await getData(2);
 
     for (let i in financeData.data) {
@@ -60,13 +57,13 @@ interface HomeProps {
 export default function Home(props: HomeProps) {
     const [ session, loading ] = useSession();
 
-    // if (!session) {
-    //   return (
-    //       <>
-    //           <p>You must log in to use this.</p>
-    //       </>
-    //   );
-    // }
+    if (!session) {
+      return (
+          <>
+              <p>You must log in to use this.</p>
+          </>
+      );
+    }
 
     return (
       <>

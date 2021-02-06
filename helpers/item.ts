@@ -4,7 +4,7 @@ import { connectToDatabase } from 'helpers/db';
 
 const toJson = (item: ItemInterface) => {
     return {
-        id: item._id.toString() || null,
+        id: item.id.toString() || null,
         amount: formatCurrency(item.amount),
         note: item.note || '',
         date: item.date.toString(),
@@ -46,6 +46,8 @@ const getData = async (numberMonths: number) => {
                 .toArray();
 
             for (let item in items) {
+                items[item].id = items[item]._id;
+                delete items[item]._id;
                 sum += items[item].amount;
             }
 
