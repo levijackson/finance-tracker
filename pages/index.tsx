@@ -6,6 +6,7 @@ import { getData, toJson } from 'helpers/item';
 import {
   BarChart, Bar, Cell, XAxis, YAxis, CartesianGrid, Tooltip, Legend,
 } from 'recharts';
+import { formatCurrency } from 'utils/currency';
 
 export const getServerSideProps: GetServerSideProps = async (context) => {
     let chartData = [];
@@ -14,9 +15,9 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
     for (let i in financeData.data) {
         chartData.push(
             {
-              'month': financeData.data[i].month,
-              'income': financeData.data[i].income.sum,
-              'expense': financeData.data[i].expense.sum
+                'month': financeData.data[i].month,
+                'income': financeData.data[i].income.sum,
+                'expense': financeData.data[i].expense.sum
             }
         );
 
@@ -25,52 +26,57 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
         });
 
         financeData.data[i].expense.items = financeData.data[i].expense.items.map((item) => {
-          return toJson(item);
-      });
+            return toJson(item);
+        });
     }
 
     return {
       props: {
-        chartData,
-        financeData
+            chartData: chartData,
+            financeData: financeData.data
       }
     }
 }
 
-interface ChartProps {
-  month: string;
-  expense: number;
-  income: number;
+interface ChartData {
+    month: string;
+    expense: number;
+    income: number;
 }
 interface HomeProps {
-  incomeData: {
-    month: string;
-    items: Array<ItemInterface>;
-  };
-  expenseData: {
-    month: string;
-    items: Array<ItemInterface>;
-  };
-  data: Array<ChartProps>
+    financeData: {
+      [key: number]: {
+            month: string;
+            expense: {
+                    items: Array<ItemInterface>;
+                    sum: number;
+            },
+            income: {
+                    items: Array<ItemInterface>;
+                    sum: number;
+            }
+      }
+    }
+    chartData: Array<ChartData>;
 }
 
 export default function Home(props: HomeProps) {
     const [ session, loading ] = useSession();
-
+console.log(props);
     if (!session) {
       return (
-          <>
-              <p>You must log in to use this.</p>
-          </>
+            <>
+                <p>You must log in to use this.</p>
+            </>
       );
     }
 
     return (
       <>
         <h1 className="col-xs-12">
-          Welcome
-          { session && session.user.name && <span> {session.user.name}</span>}
-          !
+            Welcome
+            { session && session.user.name && <span> {session.user.name}</span>}
+            !
         </h1>
         <BarChart
             width={500}
@@ -83,12 +89,14 @@ export default function Home(props: HomeProps) {
             <CartesianGrid strokeDasharray="3 3" />
             <XAxis dataKey="month" />
             <YAxis />
-            <Tooltip />
+            <Tooltip 
+                formatter={(value) => '$' + formatCurrency(value)}
+            />
             <Legend />
             <Bar dataKey="income" fill="#8884d8" />
             <Bar dataKey="expense" fill="#82ca9d" />
         </BarChart>
-        <Recent data={props.financeData.data} />
+        <Recent data={props.financeData} />
       </>
     )
 }

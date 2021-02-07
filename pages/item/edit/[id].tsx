@@ -1,8 +1,9 @@
 import { GetServerSideProps } from 'next';
+import { ObjectId } from 'mongodb';
+
+import { ItemInterface } from 'components/interfaces/Item';
 import FinanceForm from 'components/FinanceForm';
 import { connectToDatabase } from 'helpers/db';
-import { ItemInterface } from 'components/interfaces/Item';
-import { ObjectId } from 'mongodb';
 import { toJson } from 'helpers/item';
 
 export const getServerSideProps: GetServerSideProps = async ({ query }) => {
@@ -19,8 +20,7 @@ export const getServerSideProps: GetServerSideProps = async ({ query }) => {
 
     return {
         props: {
-            item,
-            id: query.id
+            item
         }
       };
 };
@@ -33,8 +33,8 @@ interface EditProps {
 const EditForm = (props: EditProps) => {
     return (
         <>
-        <h1 className="col-xs-12">Edit</h1>
-        <FinanceForm type="expense" item={props.item} id={props.id} className="col-xs-12" />
+            <h1 className="col-xs-12">Edit</h1>
+            <FinanceForm type="expense" item={props.item} className="col-xs-12" />
         </>
     );
 }

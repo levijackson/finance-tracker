@@ -11,15 +11,15 @@ import 'styles/layout.css';
 function MyApp({ Component, pageProps }: AppProps) {
   return (
     <Provider session={pageProps.session}>
-      <div className="wrapper">
-          <Header />
+        <div className="wrapper">
+                <Header />
 
-          <div className="content row">
-            <Component {...pageProps} />
-          </div>
+                <div className="content row">
+                    <Component {...pageProps} />
+                </div>
 
-          <Footer />
-        </div>
+                <Footer />
+            </div>
       </Provider>
   );
 }

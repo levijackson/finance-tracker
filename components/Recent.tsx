@@ -1,41 +1,56 @@
-import { ItemInterface } from 'components/interfaces/Item';
 import Link from 'next/link';
+import { ItemInterface } from 'components/interfaces/Item';
 import { formatDate } from 'utils/date';
 
 interface RecentProps {
     data: {
-        month: string;
-        items: Array<ItemInterface>
-    };
+        [key: number]: {
+            month: string;
+            expense: {
+              items: Array<ItemInterface>;
+              sum: number;
+            },
+            income: {
+                items: Array<ItemInterface>;
+                sum: number;
+            }
+        }
+      }
 }
 
 const Recent = (props: RecentProps) => {
     let markup = [];
     for(let i in props.data) {
-        markup.push(<h4>{ props.data[i].month } - Income</h4>);
         let itemMarkup = [];
-        props.data[i].income.items.map((item: ItemInterface, itemIndex: number) => {
-            itemMarkup.push(
-                <li key={itemIndex}>
-                    <Link href={"/item/edit/" + item.id}><a>${item.amount} ({formatDate(new Date(item.date))})</a></Link>
-                </li>
-            );
-        });
-        markup.push(<ul>{ itemMarkup }</ul>);
 
-        markup.push(<h4>{ props.data[i].month } - Expense</h4>);
-        itemMarkup = [];
-        props.data[i].expense.items.map((item: ItemInterface, itemIndex: number) => {
-            itemMarkup.push(
-                <li key={itemIndex}>
-                    <Link href={"/item/edit/" + item.id}><a>${item.amount} ({formatDate(new Date(item.date))})</a></Link>
-                </li>
-            );
-        });
-        markup.push(<ul>{ itemMarkup }</ul>);
+        if (props.data[i].income.items.length > 0) {
+            markup.push(<h4 key={'income-header'+ i}>{ props.data[i].month } - Income</h4>);
+            props.data[i].income.items.map((item: ItemInterface, itemIndex: number) => {
+                itemMarkup.push(
+                    <li key={item.id}>
+                        <Link href={"/item/edit/" + item.id}><a>${item.amount} ({formatDate(new Date(item.date))})</a></Link>
+                    </li>
+                );
+            });
+            markup.push(<ul key={'income'+ i}>{ itemMarkup }</ul>);
+        }
+
+        if (props.data[i].expense.items.length > 0) {
+            markup.push(<h4 key={'expense-header'+ i}>{ props.data[i].month } - Expense</h4>);
+            itemMarkup = [];
+            props.data[i].expense.items.map((item: ItemInterface, itemIndex: number) => {
+                itemMarkup.push(
+                    <li key={item.id}>
+                        <Link href={"/item/edit/" + item.id}><a>${item.amount} ({formatDate(new Date(item.date))})</a></Link>
+                    </li>
+                );
+            });
+            markup.push(<ul key={'expense' + i}>{ itemMarkup }</ul>);
+        }
     }
     return (
         <div className="col-xs-12 col-sm-6">
+            <h2>Recent</h2>
             { markup }
         </div>
     );

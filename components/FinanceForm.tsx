@@ -1,14 +1,17 @@
-import { useState } from 'react';
+import { useState, SyntheticEvent } from 'react';
 import DatePicker from 'react-datepicker';
 import { useSession } from 'next-auth/client';
+
 import { ItemInterface } from 'components/interfaces/Item';
+import { formatCurrency } from 'utils/currency';
+import { ITEM_CATEGORIES, ITEM_TYPES } from 'helpers/item';
+
 import styles from 'styles/financeForm.module.scss';
 import 'react-datepicker/dist/react-datepicker.css';
 
 interface FinanceFormProps {
     type: string;
     item?: ItemInterface;
-    id?: string;
 }
 
 const FinanceForm = (props: FinanceFormProps) => {
@@ -20,41 +23,18 @@ const FinanceForm = (props: FinanceFormProps) => {
     }
 
     const defaultState: ItemInterface = {
-        date: '',
+        date: new Date(),
         amount: 0,
         type: 'expense',
         note: '',
         category: ''
     };
 
-    const categoryOptions = [
-        'other',
-        'utilities',
-        'transportation',
-        'groceries',
-        'health',
-        'insurance',
-        'restaurants',
-        'entertainment',
-        'travel',
-        'giving',
-        'education',
-        'payroll'
-    ];
-
-    const typeOptions = [
-        'income',
-        'expense'
-    ];
-
     const [ state, setState ] = useState((props.item ? props.item : defaultState));
     const [ message, setMessage ] = useState('');
     const [ session, loading ] = useSession();
     
     const isValid = (state: ItemInterface) => {
-        if (state.date === '') {
-            return false;
-        }
         if (state.amount === 0) {
             return false;
         }
@@ -73,7 +53,7 @@ const FinanceForm = (props: FinanceFormProps) => {
         let url: string = '/api/item';
 
         if (editing) {
-            url += '/' + props.id;
+            url += '/' + props.item.id;
         }
 
         try {
@@ -103,7 +83,7 @@ const FinanceForm = (props: FinanceFormProps) => {
         let name: string = e.target.name;
         let value: any = e.target.value;
         if (name === 'amount') {
-            value = parseFloat(value);
+            value = formatCurrency(value);
         }
 
         setState({ ...state, [name]: value });
@@ -116,7 +96,7 @@ const FinanceForm = (props: FinanceFormProps) => {
             <label htmlFor="type">
                     Type
                     <select name="type" value={state.type} onChange={handleInputChange}>
-                        { typeOptions.map((item, index) => {
+                        { ITEM_TYPES.map((item, index) => {
                             return <option value={item} key={index}>{item}</option>
                         })}
                     </select>
@@ -132,7 +112,7 @@ const FinanceForm = (props: FinanceFormProps) => {
                 <label htmlFor="category">
                     Category
                     <select name="category" value={state.category} onChange={handleInputChange}>
-                        { categoryOptions.map((item, index) => {
+                        { ITEM_CATEGORIES.map((item, index) => {
                             return <option value={item} key={index}>{item}</option>
                         })}
                     </select>

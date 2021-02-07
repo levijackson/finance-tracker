@@ -1,6 +1,7 @@
 import { formatCurrency } from 'utils/currency';
 import { ItemInterface } from 'components/interfaces/Item';
 import { connectToDatabase } from 'helpers/db';
+import { getMonthName } from 'utils/date';
 
 const toJson = (item: ItemInterface) => {
     return {
@@ -17,13 +18,12 @@ const getData = async (numberMonths: number) => {
     const { db } = await connectToDatabase();
 
     const types = ['expense', 'income'];
-    const monthNames = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
     let currentDate = new Date();
     let data = {};
     for (let i = 0; i < numberMonths; i++) {
         currentDate.setDate(0); // going to 1st of the month
         currentDate.setHours(-1); // going to last hour before this date even started.
-        let monthName = monthNames[currentDate.getMonth()];
+        let monthName = getMonthName(currentDate.getMonth());
 
         data[i] = {
             'month': monthName,
@@ -47,6 +47,7 @@ const getData = async (numberMonths: number) => {
 
             for (let item in items) {
                 items[item].id = items[item]._id;
+                // we change it from _id to id for consistency in rendering
                 delete items[item]._id;
                 sum += items[item].amount;
             }
@@ -63,7 +64,29 @@ const getData = async (numberMonths: number) => {
     };
 };
 
+const ITEM_CATEGORIES = [
+    'other',
+    'utilities',
+    'transportation',
+    'groceries',
+    'health',
+    'insurance',
+    'restaurants',
+    'entertainment',
+    'travel',
+    'giving',
+    'education',
+    'payroll'
+];
+
+const ITEM_TYPES = [
+    'income',
+    'expense'
+];
+
 export {
     toJson,
-    getData
+    getData,
+    ITEM_CATEGORIES,
+    ITEM_TYPES
 };
