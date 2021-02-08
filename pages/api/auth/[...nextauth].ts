@@ -9,7 +9,7 @@ const options: object = {
             clientSecret: process.env.NEXTAUTH_GOOGLE_CLIENT_SECRET
         })
     ],
-    database: process.env.MONGODB_URI
+    database: process.env.MYSQL_URI
 };
 
 export default (req: NextApiRequest, res: NextApiResponse) => NextAuth(req, res, options);
