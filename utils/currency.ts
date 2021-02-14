@@ -1,4 +1,4 @@
-const formatCurrency = (amount: number) => {
+const formatCurrency = (amount: number): number => {
     const stringAmount = amount.toString();
     const pieces = stringAmount.split('.');
 

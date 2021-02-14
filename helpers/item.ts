@@ -3,7 +3,7 @@ import { ItemInterface } from 'components/interfaces/Item';
 import { query } from 'helpers/db';
 import { getMonthName } from 'utils/date';
 
-const toJson = (item: ItemInterface) => {
+const toJson = (item: ItemInterface): object => {
     return {
         id: item.id || null,
         amount: formatCurrency(item.amount),
