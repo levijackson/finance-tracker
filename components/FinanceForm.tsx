@@ -1,10 +1,10 @@
-import { useState, SyntheticEvent } from 'react';
+import { useState } from 'react';
 import DatePicker from 'react-datepicker';
 import { useSession } from 'next-auth/client';
 
 import { ItemInterface } from 'components/interfaces/Item';
 import { formatCurrency } from 'utils/currency';
-import { ITEM_CATEGORIES, ITEM_TYPES } from 'helpers/item';
+import { EXPENSE_ITEM_CATEGORIES, INCOME_ITEM_CATEGORIES, ITEM_TYPES } from 'helpers/item';
 
 import styles from 'styles/financeForm.module.scss';
 import 'react-datepicker/dist/react-datepicker.css';
@@ -89,6 +89,11 @@ const FinanceForm = (props: FinanceFormProps) => {
         setState({ ...state, [name]: value });
     }
 
+    let itemCategories = INCOME_ITEM_CATEGORIES;
+    if (state.type === 'expense') {
+        itemCategories = EXPENSE_ITEM_CATEGORIES;
+    }
+
     return (
         <div className={styles.financeForm}>
             { message ? <p>{message}</p> : '' }
@@ -112,7 +117,7 @@ const FinanceForm = (props: FinanceFormProps) => {
                 <label htmlFor="category">
                     Category
                     <select name="category" value={state.category} onChange={handleInputChange}>
-                        { ITEM_CATEGORIES.map((item, index) => {
+                        { itemCategories.map((item, index) => {
                             return <option value={item} key={index}>{item}</option>
                         })}
                     </select>

@@ -62,7 +62,7 @@ const getData = async (numberMonths: number) => {
     };
 };
 
-const ITEM_CATEGORIES = [
+const EXPENSE_ITEM_CATEGORIES = [
     'other',
     'utilities',
     'transportation',
@@ -73,8 +73,13 @@ const ITEM_CATEGORIES = [
     'entertainment',
     'travel',
     'giving',
-    'education',
-    'payroll'
+    'education'
+];
+
+const INCOME_ITEM_CATEGORIES = [
+    'payroll',
+    'freelance',
+    'other'
 ];
 
 const ITEM_TYPES = [
@@ -85,6 +90,7 @@ const ITEM_TYPES = [
 export {
     toJson,
     getData,
-    ITEM_CATEGORIES,
+    INCOME_ITEM_CATEGORIES,
+    EXPENSE_ITEM_CATEGORIES,
     ITEM_TYPES
 };
