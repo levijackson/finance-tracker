@@ -1,18 +1,26 @@
 import type { NextApiRequest, NextApiResponse } from 'next';
-import { connectToDatabase } from 'helpers/db';
+import { query } from 'helpers/db';
 
 export default async (req: NextApiRequest, res: NextApiResponse) => {
     if (req.method !== 'POST') {
         res.status(405);
     }
 
-    const { db } = await connectToDatabase();
-
     try {        
-        await db
-            .collection('items')
-            .insertOne(req.body);
-
+        await query(
+            `
+            INSERT INTO items (type, category, amount, date, note)
+            VALUES (?, ?, ?, ?, ?)
+            `,
+            [
+                req.body.type,
+                req.body.category, 
+                req.body.amount, 
+                req.body.data, 
+                req.body.note
+            ]
+          )
+      
         res.status(201).json({ success: true });
     } catch (error) {
         console.log(error);

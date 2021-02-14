@@ -1,22 +1,21 @@
 import { GetServerSideProps } from 'next';
-import { ObjectId } from 'mongodb';
 
 import { ItemInterface } from 'components/interfaces/Item';
 import FinanceForm from 'components/FinanceForm';
-import { connectToDatabase } from 'helpers/db';
+import { query } from 'helpers/db';
 import { toJson } from 'helpers/item';
 
-export const getServerSideProps: GetServerSideProps = async ({ query }) => {
-    const { db } = await connectToDatabase();
+export const getServerSideProps: GetServerSideProps = async (context) => {
+    const results = await query(
+        `
+        SELECT *
+        FROM items
+        WHERE id = ?
+      `,
+        context.query.id
+    );
 
-    let item = await db
-        .collection('items')
-        .findOne({
-            '_id': new ObjectId(query.id)
-        });
-    item.id = item._id;
-    delete item._id;
-    item = toJson(item);
+    let item = toJson(results[0]);
 
     return {
         props: {

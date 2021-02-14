@@ -2,41 +2,41 @@ import { GetServerSideProps } from 'next'
 import { useSession } from 'next-auth/client';
 import Recent from 'components/Recent';
 import { ItemInterface } from 'components/interfaces/Item';
-// import { getData, toJson } from 'helpers/item';
+import { getData, toJson } from 'helpers/item';
 import {
   BarChart, Bar, Cell, XAxis, YAxis, CartesianGrid, Tooltip, Legend,
 } from 'recharts';
 import { formatCurrency } from 'utils/currency';
 
-// export const getServerSideProps: GetServerSideProps = async (context) => {
-//     let chartData = [];
-//     let financeData = await getData(2);
+export const getServerSideProps: GetServerSideProps = async (context) => {
+    let chartData = [];
+    let financeData = await getData(2);
 
-//     for (let i in financeData.data) {
-//         chartData.push(
-//             {
-//                 'month': financeData.data[i].month,
-//                 'income': financeData.data[i].income.sum,
-//                 'expense': financeData.data[i].expense.sum
-//             }
-//         );
+    for (let i in financeData.data) {
+        chartData.push(
+            {
+                'month': financeData.data[i].month,
+                'income': financeData.data[i].income.sum,
+                'expense': financeData.data[i].expense.sum
+            }
+        );
 
-//         financeData.data[i].income.items = financeData.data[i].income.items.map((item) => {
-//             return toJson(item);
-//         });
+        financeData.data[i].income.items = financeData.data[i].income.items.map((item) => {
+            return toJson(item);
+        });
 
-//         financeData.data[i].expense.items = financeData.data[i].expense.items.map((item) => {
-//             return toJson(item);
-//         });
-//     }
+        financeData.data[i].expense.items = financeData.data[i].expense.items.map((item) => {
+            return toJson(item);
+        });
+    }
 
-//     return {
-//       props: {
-//             chartData: chartData,
-//             financeData: financeData.data
-//       }
-//     }
-// }
+    return {
+      props: {
+            chartData: chartData,
+            financeData: financeData.data
+      }
+    }
+}
 
 interface ChartData {
     month: string;
@@ -78,7 +78,7 @@ export default function Home(props: HomeProps) {
             { session && session.user.name && <span> {session.user.name}</span>}
             !
         </h1>
-        {/* <BarChart
+        <BarChart
             width={500}
             height={300}
             data={props.chartData}
@@ -96,7 +96,7 @@ export default function Home(props: HomeProps) {
             <Bar dataKey="income" fill="#8884d8" />
             <Bar dataKey="expense" fill="#82ca9d" />
         </BarChart>
-        <Recent data={props.financeData} /> */}
+        <Recent data={props.financeData} />
       </>
     )
 }

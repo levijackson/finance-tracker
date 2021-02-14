@@ -1,11 +1,11 @@
 import { formatCurrency } from 'utils/currency';
 import { ItemInterface } from 'components/interfaces/Item';
-import { connectToDatabase } from 'helpers/db';
+import { query } from 'helpers/db';
 import { getMonthName } from 'utils/date';
 
 const toJson = (item: ItemInterface) => {
     return {
-        id: item.id.toString() || null,
+        id: item.id || null,
         amount: formatCurrency(item.amount),
         note: item.note || '',
         date: item.date.toString(),
@@ -15,8 +15,6 @@ const toJson = (item: ItemInterface) => {
 };
 
 const getData = async (numberMonths: number) => {
-    const { db } = await connectToDatabase();
-
     const types = ['expense', 'income'];
     let currentDate = new Date();
     let data = {};
@@ -32,23 +30,23 @@ const getData = async (numberMonths: number) => {
         let startDate = currentDate.getFullYear() + '-' + (currentDate.getMonth()+1) + '-01';
         let endDate = currentDate.getFullYear() + '-' + (currentDate.getMonth()+1) + '-' + currentDate.getDate();
 
-        let sum = 0;
         for (let key in types) {
-            let items = await db
-                .collection('items')
-                .find({
-                    'type': types[key],
-                    'date': {
-                        $gt: new Date(startDate),
-                        $lt: new Date(endDate)
-                    }
-                })
-                .toArray();
+            let sum = 0;
+            
+            let items = await query(
+                `
+                SELECT * FROM items
+                WHERE type = ?
+                AND date BETWEEN ? AND ?
+                `,
+                [
+                    types[key],
+                    startDate,
+                    endDate
+                ]
+            );
 
             for (let item in items) {
-                items[item].id = items[item]._id;
-                // we change it from _id to id for consistency in rendering
-                delete items[item]._id;
                 sum += items[item].amount;
             }
 

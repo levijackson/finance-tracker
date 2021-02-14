@@ -1,49 +1,24 @@
-// https://github.com/vercel/next.js/blob/canary/examples/with-mongodb/util/mongodb.js
-import { MongoClient } from 'mongodb';
+import mysql from 'serverless-mysql'
 
-const { MONGODB_URI, MONGODB_DB } = process.env;
+export const db = mysql({
+  config: {
+    host: process.env.MYSQL_HOST,
+    port: parseInt(process.env.MYSQL_PORT),
+    database: process.env.MYSQL_DATABASE,
+    user: process.env.MYSQL_USERNAME,
+    password: process.env.MYSQL_PASSWORD,
+  },
+})
 
-if (!MONGODB_URI) {
-    throw new Error(
-        'Please define the MONGODB_URI environment variable inside .env.local'
-    )
-}
-
-if (!MONGODB_DB) {
-    throw new Error(
-        'Please define the MONGODB_DB environment variable inside .env.local'
-    )
-}
-
-/**
- * Global is used here to maintain a cached connection across hot reloads
- * in development. This prevents connections growing exponentially
- * during API Route usage.
- */
-let cached = global.mongo;
-
-if (!cached) {
-    cached = global.mongo = { conn: null, promise: null };
-}
-
-export async function connectToDatabase() {
-    if (cached.conn) {
-        return cached.conn
-    }
-
-    if (!cached.promise) {
-        const opts = {
-            useNewUrlParser: true,
-            useUnifiedTopology: true,
-        }
-
-        cached.promise = MongoClient.connect(MONGODB_URI, opts).then((client) => {
-            return {
-                client,
-                db: client.db(MONGODB_DB),
-            }
-        })
-    }
-    cached.conn = await cached.promise
-    return cached.conn
+export async function query(
+  q: string,
+  values: (string | number)[] | string | number = []
+) {
+  try {
+    const results = await db.query(q, values)
+    await db.end()
+    return results
+  } catch (e) {
+    throw Error(e.message)
+  }
 }
