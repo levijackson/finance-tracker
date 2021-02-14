@@ -14,6 +14,8 @@ MYSQL_URI=mysql://user:password@localhost:3306/db_name
 ```
 - [Create the table schemas](https://next-auth.js.org/schemas/mysql)
 
+I used [docker-mysql](https://github.com/levijackson/docker-mysql) to create a development MySQL instance to use when testing this.
+
 6) Configure Google OAuth
 [Follow the steps](https://support.google.com/cloud/answer/6158849?hl=en) to generate a Client ID and Client Secret.
 

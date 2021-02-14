@@ -8,8 +8,7 @@ export default async (req: NextApiRequest, res: NextApiResponse) => {
     }
 
     try {
-        // convert time to mysql date time
-        // todo: write a test and move to helper function
+        // convert date into MySQL format
         const date = new Date(req.body.date).toISOString().slice(0, 19).replace('T', ' ');
 
         const results = await query(
