@@ -8,7 +8,7 @@ import {
 } from 'recharts';
 import { formatCurrency } from 'utils/currency';
 
-export const getServerSideProps: GetServerSideProps = async (context) => {
+export const getServerSideProps: GetServerSideProps = async () => {
     let chartData = [];
     let financeData = await getData(2);
 
