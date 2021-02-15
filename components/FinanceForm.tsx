@@ -57,8 +57,7 @@ const FinanceForm = (props: FinanceFormProps) => {
         }
 
         try {
-            const email: string = session.user.email;
-            const data: object = { ...state, email };
+            const data: object = { ...state, userId: session.userId };
             await fetch(url, {
                 method: 'POST',
                 headers: {

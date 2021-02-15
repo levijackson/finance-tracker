@@ -32,18 +32,48 @@ async function migrate() {
       
     await query(`
         CREATE TABLE IF NOT EXISTS items (
-        id INT AUTO_INCREMENT PRIMARY KEY,
-        type ENUM ("expense", "income") NOT NULL,
-        category tinytext NOT NULL,
-        amount float NOT NULL,
-        date TIMESTAMP NOT NULL,
-        note text,
-        created TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
-        updated 
-            TIMESTAMP 
-            NOT NULL 
-            DEFAULT CURRENT_TIMESTAMP 
-            ON UPDATE CURRENT_TIMESTAMP
+            id
+                INT
+                AUTO_INCREMENT
+                PRIMARY KEY,
+            type
+                ENUM ("expense", "income")
+                NOT NULL,
+            category
+                TINYTEXT
+                NOT NULL,
+            amount 
+                FLOAT
+                NOT NULL,
+            date
+                TIMESTAMP NOT NULL,
+            note 
+                TEXT,
+            created 
+                TIMESTAMP
+                NOT NULL
+                DEFAULT
+                CURRENT_TIMESTAMP,
+            updated 
+                TIMESTAMP
+                NOT NULL
+                DEFAULT CURRENT_TIMESTAMP
+                ON UPDATE CURRENT_TIMESTAMP
+        )
+    `)
+      
+    await query(`
+        CREATE TABLE IF NOT EXISTS user_items (
+            id
+                INT
+                AUTO_INCREMENT
+                PRIMARY KEY,
+            userId
+                INT
+                NOT NULL,
+            itemId
+                INT
+                NOT NULL
         )
     `)
     console.log('migration ran successfully')

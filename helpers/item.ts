@@ -14,10 +14,11 @@ const toJson = (item: ItemInterface): object => {
     };
 };
 
-const getData = async (numberMonths: number) => {
+const getData = async (userId: number, numberMonths: number) => {
     const types = ['expense', 'income'];
     let currentDate = new Date();
     let data = {};
+
     for (let i = 0; i < numberMonths; i++) {
         currentDate.setDate(0); // going to 1st of the month
         currentDate.setHours(-1); // going to last hour before this date even started.
@@ -32,34 +33,58 @@ const getData = async (numberMonths: number) => {
 
         for (let key in types) {
             let sum = 0;
-            
-            let items = await query(
-                `
-                SELECT * FROM items
-                WHERE type = ?
-                AND date BETWEEN ? AND ?
-                `,
-                [
-                    types[key],
-                    startDate,
-                    endDate
-                ]
-            );
+            await getItems(userId, types[key], startDate, endDate).then(function (results: Array<object>) {
+                const items = results.map((item) => {
+                    return toJson(item); 
+                });
 
-            for (let item in items) {
-                sum += items[item].amount;
-            }
-
-            data[i][types[key]] = {
-                'items': items,
-                'sum': sum
-            };
+                for (let item in items) {
+                    sum += items[item].amount;
+                }
+                
+                data[i][types[key]] = {
+                    'items': items,
+                    'sum': sum
+                };
+            });
         }
     }
 
     return {
         data
     };
+};
+
+/**
+ * Get items for a user in a specific type/date range
+ * 
+ * @param userId 
+ * @param type 
+ * @param startDate 
+ * @param endDate 
+ */
+const getItems = (userId: number, type: string, startDate: string, endDate: string ) => {
+    return new Promise(function (resolve, reject) {
+        query(
+            `
+        SELECT * FROM items i
+        LEFT JOIN user_items ui
+        ON i.id = ui.itemId
+        WHERE 
+        ui.userId = ?
+        AND i.type = ?
+        AND i.date BETWEEN ? AND ?
+        `,
+            [
+                userId,
+                type,
+                startDate,
+                endDate
+            ], function (error, results, fields) {
+                resolve(results);
+            }
+        );
+    });
 };
 
 const EXPENSE_ITEM_CATEGORIES = [
