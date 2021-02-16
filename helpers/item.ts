@@ -1,6 +1,6 @@
 import { formatCurrency } from 'utils/currency';
 import { ItemInterface } from 'components/interfaces/Item';
-import { query } from 'helpers/db';
+import ItemService from 'services/ItemService';
 import { getMonthName } from 'utils/date';
 
 const toJson = (item: ItemInterface): object => {
@@ -14,25 +14,59 @@ const toJson = (item: ItemInterface): object => {
     };
 };
 
+/**
+ * Get a config we'll use to search for items
+ * 
+ * @param monthNumber 
+ */
+const getMonthConfig = (monthNumber: number) => {
+    let date = new Date();
+
+    // I swear this makese sense.
+    // go one month forward
+    // go to the first day of the month
+    // go back an hour so we're on the LAST day of the month we actually want
+    date.setMonth((monthNumber + 1));
+    date.setDate(0); // going to 1st of the month
+    date.setHours(-1); // going to last hour before this date even started.
+
+    // add 1 because the month numbers start at 0 in JS and we store them in MySQL which starts at 1
+    const startDate = date.getFullYear() + '-' + (date.getMonth() + 1) + '-01';
+    const endDate = date.getFullYear() + '-' + (date.getMonth() + 1) + '-' + date.getDate();
+
+    return {
+        name: getMonthName(date.getMonth()),
+        startDate: startDate,
+        endDate: endDate
+    };
+};
+
+/**
+ * @param userId 
+ * @param numberMonths 
+ */
 const getData = async (userId: number, numberMonths: number) => {
-    let currentDate = new Date();
+    const service = new ItemService();
+    const currentDate = new Date();
+    let currentMonth = currentDate.getMonth();
     let data = {};
 
     for (let i = 0; i < numberMonths; i++) {
-        currentDate.setDate(0); // going to 1st of the month
-        currentDate.setHours(-1); // going to last hour before this date even started.
-        let monthName = getMonthName(currentDate.getMonth());
+        const monthConfig = getMonthConfig(currentMonth);
 
         data[i] = {
-            'month': monthName,
+            'month': monthConfig['name'],
         };
-
-        let startDate = currentDate.getFullYear() + '-' + (currentDate.getMonth()+1) + '-01';
-        let endDate = currentDate.getFullYear() + '-' + (currentDate.getMonth()+1) + '-' + currentDate.getDate();
 
         for (let key in ITEM_TYPES) {
             let sum = 0;
-            await getItems(userId, ITEM_TYPES[key], startDate, endDate).then(function (results: Array<object>) {
+            await service.getItemsByDateRange(
+                userId,
+                ITEM_TYPES[key],
+                monthConfig['startDate'],
+                monthConfig['endDate']
+            )
+            .then(function (results: Array<object>) {
                 const items = results.map((item: ItemInterface) => {
                     return toJson(item); 
                 });
@@ -47,43 +81,13 @@ const getData = async (userId: number, numberMonths: number) => {
                 };
             });
         }
+
+        currentMonth = currentMonth - 1;
     }
 
     return {
         data
     };
-};
-
-/**
- * Get items for a user in a specific type/date range
- * 
- * @param userId 
- * @param type 
- * @param startDate 
- * @param endDate 
- */
-const getItems = (userId: number, type: string, startDate: string, endDate: string ) => {
-    return new Promise(function (resolve, reject) {
-        query(
-            `
-        SELECT i.* FROM items i
-        LEFT JOIN user_items ui
-        ON i.id = ui.itemId
-        WHERE 
-        ui.userId = ?
-        AND i.type = ?
-        AND i.date BETWEEN ? AND ?
-        `,
-            [
-                userId,
-                type,
-                startDate,
-                endDate
-            ], function (error, results, fields) {
-                resolve(results);
-            }
-        );
-    });
 };
 
 const EXPENSE_ITEM_CATEGORIES = [

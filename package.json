@@ -10,6 +10,7 @@
     "migrate": "node migrations/init.js"
   },
   "dependencies": {
+    "@types/mysql": "^2.15.17",
     "mongodb": "^3.6.4",
     "mysql": "^2.18.1",
     "next": "10.0.6",
