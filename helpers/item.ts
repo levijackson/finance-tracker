@@ -15,7 +15,6 @@ const toJson = (item: ItemInterface): object => {
 };
 
 const getData = async (userId: number, numberMonths: number) => {
-    const types = ['expense', 'income'];
     let currentDate = new Date();
     let data = {};
 
@@ -31,10 +30,10 @@ const getData = async (userId: number, numberMonths: number) => {
         let startDate = currentDate.getFullYear() + '-' + (currentDate.getMonth()+1) + '-01';
         let endDate = currentDate.getFullYear() + '-' + (currentDate.getMonth()+1) + '-' + currentDate.getDate();
 
-        for (let key in types) {
+        for (let key in ITEM_TYPES) {
             let sum = 0;
-            await getItems(userId, types[key], startDate, endDate).then(function (results: Array<object>) {
-                const items = results.map((item) => {
+            await getItems(userId, ITEM_TYPES[key], startDate, endDate).then(function (results: Array<object>) {
+                const items = results.map((item: ItemInterface) => {
                     return toJson(item); 
                 });
 
@@ -42,7 +41,7 @@ const getData = async (userId: number, numberMonths: number) => {
                     sum += items[item].amount;
                 }
                 
-                data[i][types[key]] = {
+                data[i][ITEM_TYPES[key]] = {
                     'items': items,
                     'sum': sum
                 };
@@ -67,7 +66,7 @@ const getItems = (userId: number, type: string, startDate: string, endDate: stri
     return new Promise(function (resolve, reject) {
         query(
             `
-        SELECT * FROM items i
+        SELECT i.* FROM items i
         LEFT JOIN user_items ui
         ON i.id = ui.itemId
         WHERE 
