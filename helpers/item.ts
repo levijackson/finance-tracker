@@ -41,6 +41,10 @@ const getMonthConfig = (monthNumber: number) => {
     };
 };
 
+/**
+ * @param userId 
+ * @param numberMonths 
+ */
 const getData = async (userId: number, numberMonths: number) => {
     const service = new ItemService();
     const currentDate = new Date();
@@ -56,7 +60,13 @@ const getData = async (userId: number, numberMonths: number) => {
 
         for (let key in ITEM_TYPES) {
             let sum = 0;
-            await service.getItems(userId, ITEM_TYPES[key], monthConfig['startDate'], monthConfig['endDate']).then(function (results: Array<object>) {
+            await service.getItemsByDateRange(
+                userId,
+                ITEM_TYPES[key],
+                monthConfig['startDate'],
+                monthConfig['endDate']
+            )
+            .then(function (results: Array<object>) {
                 const items = results.map((item: ItemInterface) => {
                     return toJson(item); 
                 });

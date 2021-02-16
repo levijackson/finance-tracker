@@ -1,5 +1,6 @@
+import { ItemInterface } from 'components/interfaces/Item';
 import type { NextApiRequest, NextApiResponse } from 'next';
-import { query } from 'helpers/db';
+import ItemService from 'services/ItemService';
 
 
 export default async (req: NextApiRequest, res: NextApiResponse) => {
@@ -8,28 +9,16 @@ export default async (req: NextApiRequest, res: NextApiResponse) => {
     }
 
     try {
-        // convert date into MySQL format
-        const date = new Date(req.body.date).toISOString().slice(0, 19).replace('T', ' ');
-
-        await query(
-            `
-            UPDATE items
-            SET type = ?,
-            category = ?,
-            amount = ?,
-            date = ?,
-            note = ?
-            WHERE id = ?
-          `,
-            [
-                req.body.type,
-                req.body.category, 
-                req.body.amount, 
-                date, 
-                req.body.note, 
-                req.query.id
-            ]
-        );
+        const item: ItemInterface = {
+            date: req.body.date,
+            type: req.body.type,
+            category: req.body.category,
+            amount: req.body.amount,
+            note: req.body.note,
+            id: req.body.id
+        };
+        const service = new ItemService();
+        service.updateItem(item);
         
         res.status(201).json({ success: true });
     } catch (error) {

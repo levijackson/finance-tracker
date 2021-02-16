@@ -1,5 +1,7 @@
 import type { NextApiRequest, NextApiResponse } from 'next';
-import { query } from 'helpers/db';
+import ItemService from 'services/ItemService';
+import { ItemInterface } from 'components/interfaces/Item';
+
 
 export default async (req: NextApiRequest, res: NextApiResponse) => {
     if (req.method !== 'POST') {
@@ -7,31 +9,16 @@ export default async (req: NextApiRequest, res: NextApiResponse) => {
     }
 
     try {        
-        await query(
-            `
-            INSERT INTO items (type, category, amount, date, note)
-            VALUES (?, ?, ?, ?, ?)
-            `,
-            [
-                req.body.type,
-                req.body.category, 
-                req.body.amount, 
-                req.body.data, 
-                req.body.note
-            ],
-            function (error, result, fields) {
-                console.log(req.body.userId);
-                console.log(result);
-                query(
-                    `INSERT INTO user_items (userId, itemId)
-                    VALUES (?, ?)`,
-                    [
-                        req.body.userId,
-                        result.insertId
-                    ]
-                );
-            }
-          )
+        const service = new ItemService();
+        const item: ItemInterface = {
+            date: req.body.date,
+            type: req.body.type,
+            category: req.body.category,
+            amount: req.body.amount,
+            note: req.body.note,
+            id: req.body.id
+        };
+        service.addItem(req.body.userId, item);
       
         res.status(201).json({ success: true });
     } catch (error) {

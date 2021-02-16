@@ -1,7 +1,7 @@
+import { ItemInterface } from 'components/interfaces/Item';
 import mysql from 'serverless-mysql';
 
 export default class ItemService {
-    // todo what is the serverless connection type?
     db: object;
 
     constructor() {
@@ -44,7 +44,7 @@ export default class ItemService {
      * @param startDate 
      * @param endDate 
      */
-    getItems (userId: number, type: string, startDate: string, endDate: string ) {
+    getItemsByDateRange (userId: number, type: string, startDate: string, endDate: string ) {
         const db = this.db;
         return new Promise(function (resolve, reject) {
             db.query(
@@ -62,10 +62,100 @@ export default class ItemService {
                     type,
                     startDate,
                     endDate
-                ], function (error, results, fields) {
+                ], function (errors, results, fields) {
                     resolve(results);
                 }
             );
         });
+    }
+
+    /**
+     * @param userId 
+     * @param itemId 
+     */
+    getItem (userId: number, itemId: number) {
+        const db = this.db;
+        return new Promise(function (resolve, reject) {
+            db.query(
+                `
+                SELECT i.*
+                FROM items i
+                LEFT JOIN user_items ui
+                ON ui.itemId = i.id
+                WHERE
+                i.id = ?
+                AND
+                ui.userId = ?
+                `,
+                [
+                    itemId,
+                    userId
+                ],
+                function (errors, results, fields) {
+                    resolve(results);
+                }
+            )
+        });
+    }
+
+    formatDateTime(date: string) {
+        // convert date into MySQL format
+        return new Date(date).toISOString().slice(0, 19).replace('T', ' ');
+    }
+
+    /**
+     * @param item 
+     */
+    async updateItem(item: ItemInterface) {
+        await this.db.query(
+            `
+            UPDATE items
+            SET type = ?,
+            category = ?,
+            amount = ?,
+            date = ?,
+            note = ?
+            WHERE id = ?
+          `,
+            [
+                item.type,
+                item.category, 
+                item.amount, 
+                this.formatDateTime(item.date), 
+                item.note, 
+                item.id
+            ]
+        );
+    }
+
+    /**
+     * @param userId 
+     * @param item 
+     */
+    async addItem(userId: number, item: ItemInterface) {
+        const db = this.db;
+        await db.query(
+            `
+            INSERT INTO items (type, category, amount, date, note)
+            VALUES (?, ?, ?, ?, ?)
+            `,
+            [
+                item.type,
+                item.category, 
+                item.amount, 
+                this.formatDateTime(item.date), 
+                item.note
+            ],
+            function (error, result, fields) {
+                db.query(
+                    `INSERT INTO user_items (userId, itemId)
+                    VALUES (?, ?)`,
+                    [
+                        userId,
+                        result.insertId
+                    ]
+                );
+            }
+          )
     }
 }
