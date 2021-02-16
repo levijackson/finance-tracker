@@ -1,5 +1,5 @@
 import { GetServerSideProps } from 'next'
-import { useSession } from 'next-auth/client';
+import { useSession, getSession } from 'next-auth/client';
 import Recent from 'components/Recent';
 import { ItemInterface } from 'components/interfaces/Item';
 import { getData, toJson } from 'helpers/item';
@@ -8,9 +8,11 @@ import {
 } from 'recharts';
 import { formatCurrency } from 'utils/currency';
 
-export const getServerSideProps: GetServerSideProps = async () => {
+export const getServerSideProps: GetServerSideProps = async (context) => {
+    const session = await getSession(context);
+    
     let chartData = [];
-    let financeData = await getData(2);
+    let financeData = await getData(session.userId, 2);
 
     for (let i in financeData.data) {
         chartData.push(
@@ -70,7 +72,7 @@ export default function Home(props: HomeProps) {
             </>
       );
     }
-
+    
     return (
       <>
         <h1 className="col-xs-12">

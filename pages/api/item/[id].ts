@@ -11,7 +11,7 @@ export default async (req: NextApiRequest, res: NextApiResponse) => {
         // convert date into MySQL format
         const date = new Date(req.body.date).toISOString().slice(0, 19).replace('T', ' ');
 
-        const results = await query(
+        await query(
             `
             UPDATE items
             SET type = ?,

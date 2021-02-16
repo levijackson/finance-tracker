@@ -18,7 +18,19 @@ export default async (req: NextApiRequest, res: NextApiResponse) => {
                 req.body.amount, 
                 req.body.data, 
                 req.body.note
-            ]
+            ],
+            function (error, result, fields) {
+                console.log(req.body.userId);
+                console.log(result);
+                query(
+                    `INSERT INTO user_items (userId, itemId)
+                    VALUES (?, ?)`,
+                    [
+                        req.body.userId,
+                        result.insertId
+                    ]
+                );
+            }
           )
       
         res.status(201).json({ success: true });

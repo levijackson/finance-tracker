@@ -1,19 +1,48 @@
 import { GetServerSideProps } from 'next';
+import { getSession } from 'next-auth/client';
 
 import { ItemInterface } from 'components/interfaces/Item';
 import FinanceForm from 'components/FinanceForm';
 import { query } from 'helpers/db';
 import { toJson } from 'helpers/item';
 
+/**
+ * @param userId 
+ * @param itemId 
+ */
+const getItem = (userId: number, itemId: number) => {
+    return new Promise(function (resolve, reject) {
+        query(
+            `
+            SELECT i.*
+            FROM items i
+            LEFT JOIN user_items ui
+            ON ui.itemId = i.id
+            WHERE
+            i.id = ?
+            AND
+            ui.userId = ?
+            `,
+            [
+                itemId,
+                userId
+            ],
+            function (errors, results, fields) {
+                resolve(results);
+            }
+        )
+    });
+};
+
 export const getServerSideProps: GetServerSideProps = async (context) => {
-    const results = await query(
-        `
-        SELECT *
-        FROM items
-        WHERE id = ?
-      `,
-        context.query.id
-    );
+    const session = await getSession(context);
+    const results: ItemInterface[] = await getItem(session.userId, context.query.id);
+
+    if (results && results.length === 0) {
+        context.res.setHeader('Location', '/item/add');
+        context.res.statusCode = 302;
+        context.res.end();
+    }
 
     let item = toJson(results[0]);
 
