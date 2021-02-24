@@ -100,7 +100,7 @@ const FinanceForm = (props: FinanceFormProps) => {
         <div className={styles.financeForm}>
             { message ? <p>{message}</p> : '' }
             <form onSubmit={handleSubmit}>
-            <label htmlFor="type">
+                <label htmlFor="type">
                     Type
                     <select name="type" value={state.type} onChange={handleInputChange}>
                         { ITEM_TYPES.map((item, index) => {
