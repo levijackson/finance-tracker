@@ -83,6 +83,9 @@ const FinanceForm = (props: FinanceFormProps) => {
         let value: any = e.target.value;
         if (name === 'amount') {
             value = formatCurrency(value);
+            if (isNaN(value)) {
+                return;
+            }
         }
 
         setState({ ...state, [name]: value });

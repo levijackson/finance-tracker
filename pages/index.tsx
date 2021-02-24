@@ -10,7 +10,16 @@ import { formatCurrency } from 'utils/currency';
 
 export const getServerSideProps: GetServerSideProps = async (context) => {
     const session = await getSession(context);
-    
+
+    if (!session) {
+      return {
+        props: {
+          chartData: [],
+          financeData: null
+        }
+      }
+    }
+
     let chartData = [];
     let financeData = await getData(session.userId, 2);
 
@@ -80,25 +89,29 @@ export default function Home(props: HomeProps) {
             { session && session.user.name && <span> {session.user.name}</span>}
             !
         </h1>
-        <BarChart
-            width={500}
-            height={300}
-            data={props.chartData}
-            margin={{
-              top: 20, right: 30, left: 20, bottom: 5,
-            }}
-          >
-            <CartesianGrid strokeDasharray="3 3" />
-            <XAxis dataKey="month" />
-            <YAxis />
-            <Tooltip 
-                formatter={(value) => '$' + formatCurrency(value)}
-            />
-            <Legend />
-            <Bar dataKey="income" fill="#8884d8" />
-            <Bar dataKey="expense" fill="#82ca9d" />
-        </BarChart>
-        <Recent data={props.financeData} />
+        { (props.chartData.length > 0) ?
+          <BarChart
+              width={500}
+              height={300}
+              data={props.chartData}
+              margin={{
+                top: 20, right: 30, left: 20, bottom: 5,
+              }}
+            >
+              <CartesianGrid strokeDasharray="3 3" />
+              <XAxis dataKey="month" />
+              <YAxis />
+              <Tooltip 
+                  formatter={(value) => '$' + formatCurrency(value)}
+              />
+              <Legend />
+              <Bar dataKey="income" fill="#8884d8" />
+              <Bar dataKey="expense" fill="#82ca9d" />
+          </BarChart>
+          : ''
+        }
+        { props.financeData ? <Recent data={props.financeData} /> : ''}
+        
       </>
     )
 }

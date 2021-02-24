@@ -67,9 +67,12 @@ const getData = async (userId: number, numberMonths: number) => {
                 monthConfig['endDate']
             )
             .then(function (results: Array<object>) {
-                const items = results.map((item: ItemInterface) => {
-                    return toJson(item); 
-                });
+                let items = [];
+                if (results) {
+                    items = results.map((item: ItemInterface) => {
+                        return toJson(item); 
+                    });
+                }
 
                 for (let item in items) {
                     sum += items[item].amount;
