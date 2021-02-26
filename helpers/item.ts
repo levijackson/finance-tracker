@@ -3,6 +3,11 @@ import { ItemInterface } from 'components/interfaces/Item';
 import ItemService from 'services/ItemService';
 import { getMonthName } from 'utils/date';
 
+
+/**
+ * Convert to JSON
+ * @param item
+ */
 const toJson = (item: ItemInterface): object => {
     return {
         id: item.id || null,
@@ -93,7 +98,11 @@ const getData = async (userId: number, numberMonths: number) => {
     };
 };
 
-const sumItemsByDay = (items: Array<ItemInterface>) => {
+/**
+ * Given an array of ItemInterface, sum the income and expenses for the day
+ * @param items 
+ */
+const groupItemsByDay = (items: Array<ItemInterface>) => {
     let data = {};
     items.map((item) => {
         if (!data[item.date.getTime()]) {
@@ -111,13 +120,32 @@ const sumItemsByDay = (items: Array<ItemInterface>) => {
         }
     });
 
+    return data;
+};
+
+/**
+ * Given an array of ItemInterface, create a running total
+ * for each day of the month.
+ * Day 1: 100
+ * Day 2: +100 = 200
+ * Day 3: +50 = 250
+ * Day 4: +25 = 275
+ * @param items
+ */
+const sumItemsByDay = (items: Array<ItemInterface>) => {
+    let data = groupItemsByDay(items);
+
+    // sort the days
     let dataKeys = [];
     for (const key in data) {
         dataKeys.push(key);
     }
     dataKeys.sort();
 
+
     let dataArray = [];
+    // we keep track of the last item so we can add to it and create a 
+    // running total vs a daily total
     let lastItem = null;
     dataKeys.forEach((key) => {
         let item = data[key];
