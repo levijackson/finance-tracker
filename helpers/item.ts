@@ -93,6 +93,45 @@ const getData = async (userId: number, numberMonths: number) => {
     };
 };
 
+const sumItemsByDay = (items: Array<ItemInterface>) => {
+    let data = {};
+    items.map((item) => {
+        if (!data[item.date.getTime()]) {
+            data[item.date.getTime()] = {
+                'date': item.date,
+                'income': 0,
+                'expenses': 0
+            };
+        }
+
+        if (item.type == 'income') {
+            data[item.date.getTime()]['income'] += item.amount;
+        } else if (item.type == 'expense') {
+            data[item.date.getTime()]['expenses'] += item.amount;
+        }
+    });
+
+    let dataKeys = [];
+    for (const key in data) {
+        dataKeys.push(key);
+    }
+    dataKeys.sort();
+
+    let dataArray = [];
+    let lastItem = null;
+    dataKeys.forEach((key) => {
+        let item = data[key];
+        if (lastItem) {
+            item.income += lastItem.income;
+            item.expenses += lastItem.expenses;
+        }
+        dataArray.push(item);
+        lastItem = item;
+    });
+
+    return dataArray;
+};
+
 const EXPENSE_ITEM_CATEGORIES = [
     'other',
     'utilities',
@@ -121,6 +160,7 @@ const ITEM_TYPES = [
 export {
     toJson,
     getData,
+    sumItemsByDay,
     INCOME_ITEM_CATEGORIES,
     EXPENSE_ITEM_CATEGORIES,
     ITEM_TYPES

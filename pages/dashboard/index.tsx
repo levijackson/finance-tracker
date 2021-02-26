@@ -1,9 +1,17 @@
 import React from 'react';
 import { GetServerSideProps } from 'next';
 import { getSession, useSession } from 'next-auth/client';
-import ItemService from '../../services/ItemService';
 import { useState, useEffect } from 'react';
 import { useTable, useSortBy } from 'react-table';
+import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer } from 'recharts';
+
+import ItemService from '../../services/ItemService';
+import { sumItemsByDay } from '../../helpers/item';
+import { cloneObject } from '../../utils/object';
+import { formatCurrency } from '../../utils/currency';
+import { formatDate } from '../../utils/date';
+
+import styles from 'styles/dashboard.module.scss';
 
 export const getServerSideProps: GetServerSideProps = async (context) => {
     const session = await getSession(context);
@@ -56,7 +64,7 @@ function Table({ columns, data }) {
   
     return (
       <>
-        <table {...getTableProps()}>
+        <table {...getTableProps()} className={styles.tableData}>
           <thead>
             {headerGroups.map(headerGroup => (
               <tr {...headerGroup.getHeaderGroupProps()}>
@@ -121,8 +129,7 @@ const DashboardIndex = (props: DashboardOptions) => {
                 response.json().then((data) => {
                     let mergedData = [...data.income, ...data.expenses];
                     mergedData.map((item) => {
-                        const date = new Date(item.date);
-                        item.date = date.getFullYear() + '-' + ('0' + date.getMonth()).slice(-2) + '-' + ('0' + date.getDate()).slice(-2);
+                        item.date = new Date(item.date);
                     });
                     setData(mergedData);
                 });            
@@ -135,7 +142,7 @@ const DashboardIndex = (props: DashboardOptions) => {
     const columns = React.useMemo(
         () => [
           {
-            Header: 'Info',
+            Header: 'Data',
             columns: [
               {
                 Header: 'Amount',
@@ -157,12 +164,26 @@ const DashboardIndex = (props: DashboardOptions) => {
           },
         ],
         []
-      )
+      );
+
+    let chartData = sumItemsByDay(data);
+    chartData = chartData.map((item) => {
+        item.date = formatDate(new Date(item.date));
+        return item;
+    });
+    
+
+    const tableData = data.map((item) => {
+        item = cloneObject(item);
+        item.date = formatDate(new Date(item.date));
+        return item;
+    });
 
     return (
         <>
-            <h1 className="col-xs-12">Analyze</h1>
-            <label htmlFor="type">
+          <div className="col-xs-12">
+            <h1 className={styles.heading}>Analyze</h1>
+            <label htmlFor="type" className={styles.dateSelector}>
                 Month
                 <select name="date" value={date} onChange={e => setDate(e.target.value)}>
                     { props.options.map((item, index) => {
@@ -171,7 +192,28 @@ const DashboardIndex = (props: DashboardOptions) => {
                     })}
                 </select>
             </label>
-            <Table columns={columns} data={data} />
+            { date ? <Table columns={columns} data={tableData} /> : '' }
+            
+            { chartData.length > 0 ? 
+                <LineChart
+                    width={500}
+                    height={300}
+                    data={chartData}
+                >
+                    <CartesianGrid strokeDasharray="3 3" />
+                    <XAxis dataKey="date" />
+                    <YAxis />
+                    <Tooltip 
+                        formatter={(value) => '$' + formatCurrency(value)}
+                    />
+                    <Legend />
+                    <Line type="monotone" dataKey="income" stroke="#8884d8" />
+                    <Line type="monotone" dataKey="expenses" stroke="#82ca9d" />
+                </LineChart>
+                
+            : ''}
+          
+          </div>
         </>
     );
 }

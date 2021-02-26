@@ -58,6 +58,7 @@ const FinanceForm = (props: FinanceFormProps) => {
 
         try {
             const data: object = { ...state, userId: session.userId };
+            data.date.setHours(0,0,0,0);
             await fetch(url, {
                 method: 'POST',
                 headers: {
@@ -91,10 +92,11 @@ const FinanceForm = (props: FinanceFormProps) => {
         setState({ ...state, [name]: value });
     }
 
-    let itemCategories = INCOME_ITEM_CATEGORIES;
+    let itemCategories = [...INCOME_ITEM_CATEGORIES];
     if (state.type === 'expense') {
-        itemCategories = EXPENSE_ITEM_CATEGORIES;
+        itemCategories = [...EXPENSE_ITEM_CATEGORIES];
     }
+    itemCategories.unshift('');
 
     return (
         <div className={styles.financeForm}>
