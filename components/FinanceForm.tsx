@@ -58,6 +58,7 @@ const FinanceForm = (props: FinanceFormProps) => {
 
         try {
             const data: object = { ...state, userId: session.userId };
+            data.date.setHours(0,0,0,0);
             await fetch(url, {
                 method: 'POST',
                 headers: {
@@ -83,21 +84,25 @@ const FinanceForm = (props: FinanceFormProps) => {
         let value: any = e.target.value;
         if (name === 'amount') {
             value = formatCurrency(value);
+            if (isNaN(value)) {
+                return;
+            }
         }
 
         setState({ ...state, [name]: value });
     }
 
-    let itemCategories = INCOME_ITEM_CATEGORIES;
+    let itemCategories = [...INCOME_ITEM_CATEGORIES];
     if (state.type === 'expense') {
-        itemCategories = EXPENSE_ITEM_CATEGORIES;
+        itemCategories = [...EXPENSE_ITEM_CATEGORIES];
     }
+    itemCategories.unshift('');
 
     return (
         <div className={styles.financeForm}>
             { message ? <p>{message}</p> : '' }
             <form onSubmit={handleSubmit}>
-            <label htmlFor="type">
+                <label htmlFor="type">
                     Type
                     <select name="type" value={state.type} onChange={handleInputChange}>
                         { ITEM_TYPES.map((item, index) => {

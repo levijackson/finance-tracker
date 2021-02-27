@@ -1,0 +1,28 @@
+.header {
+    margin-bottom:0;
+}
+.dateSelector {
+    width:100%;
+}
+.tableData {
+   min-width:500px;
+   text-align:left;
+   border-spacing:0;
+   margin-top:3em;
+
+    td {
+        padding:5px;
+    }
+
+   tr:nth-child(odd) td {
+       background:#D3CEDF;
+   }
+
+   tr:hover td {
+       background:#8577A6;
+   }
+
+   tbody {
+       border:1px solid #ccc;
+   }
+}

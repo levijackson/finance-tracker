@@ -98,8 +98,12 @@ export default class ItemService {
         });
     }
 
+    /**
+     * Convert date into MySQL format
+     * 
+     * @param date 
+     */
     formatDateTime(date: string) {
-        // convert date into MySQL format
         return new Date(date).toISOString().slice(0, 19).replace('T', ' ');
     }
 
@@ -157,5 +161,31 @@ export default class ItemService {
                 );
             }
           )
+    }
+
+    /**
+     * Get the year/month options
+     * @param userId 
+     */
+    getDateOptions(userId: number) {
+        const db = this.db;
+        return new Promise(function (resolve, reject) {
+            const months = db.query(
+                `
+                SELECT DISTINCT
+                    DATE_FORMAT(i.date, '%Y') AS year,
+                    DATE_FORMAT(i.date, '%m') AS month
+                FROM items i
+                LEFT JOIN user_items ui
+                    ON i.id = ui.itemId
+                WHERE 
+                    ui.userId = ?
+                `,
+                [userId],
+                function (errors, results, fields) {
+                    resolve(results);
+                }
+            );
+        });
     }
 }
