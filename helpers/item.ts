@@ -160,6 +160,29 @@ const sumItemsByDay = (items: Array<ItemInterface>) => {
     return dataArray;
 };
 
+const groupItemsByCategory = (items: Array<ItemInterface>) => {
+    let income = {};
+    let expenses = {};
+
+    items.forEach((item) => {
+        if (item.type == 'income') {
+            if (!income[item.category]) {
+                income[item.category] = item.amount;
+            } else {
+                income[item.category] += item.amount;
+            }
+        } else if (item.type == 'expense') {
+            if (!expenses[item.category]) {
+                expenses[item.category] = item.amount;
+            } else {
+                expenses[item.category] += item.amount;
+            }
+        }
+    });
+
+    return { income, expenses };
+};
+
 const EXPENSE_ITEM_CATEGORIES = [
     'other',
     'utilities',
@@ -189,6 +212,7 @@ export {
     toJson,
     getData,
     sumItemsByDay,
+    groupItemsByCategory,
     INCOME_ITEM_CATEGORIES,
     EXPENSE_ITEM_CATEGORIES,
     ITEM_TYPES
