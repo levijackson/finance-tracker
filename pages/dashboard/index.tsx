@@ -3,10 +3,10 @@ import { GetServerSideProps } from 'next';
 import { getSession, useSession } from 'next-auth/client';
 import { useState, useEffect } from 'react';
 import { useTable, useSortBy } from 'react-table';
-import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer } from 'recharts';
+import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, Legend, PieChart, Pie } from 'recharts';
 
 import ItemService from '../../services/ItemService';
-import { sumItemsByDay } from '../../helpers/item';
+import { sumItemsByDay, groupItemsByCategory } from '../../helpers/item';
 import { cloneObject } from '../../utils/object';
 import { formatCurrency } from '../../utils/currency';
 import { formatDate } from '../../utils/date';
@@ -179,6 +179,18 @@ const DashboardIndex = (props: DashboardOptions) => {
         return item;
     });
 
+
+    const categoryData = groupItemsByCategory(data);
+    let incomePieChartData = [];
+    for (const key in categoryData.income) {
+        incomePieChartData.push({ 'name': key, 'value': categoryData.income[key] });
+    }
+
+    let expensePieChartData = [];
+    for (const key in categoryData.expenses) {
+        expensePieChartData.push({ 'name': key, 'value': categoryData.expenses[key] });
+    }
+
     return (
         <>
           <div className="col-xs-12">
@@ -210,8 +222,48 @@ const DashboardIndex = (props: DashboardOptions) => {
                     <Line type="monotone" dataKey="income" stroke="#8884d8" />
                     <Line type="monotone" dataKey="expenses" stroke="#82ca9d" />
                 </LineChart>
+                : ''
+            }
                 
-            : ''}
+            { incomePieChartData ?
+                <div>
+                    <h3>Income</h3>
+                    <PieChart width={400} height={200}>
+                        <Pie
+                            dataKey="value"
+                            isAnimationActive={false}
+                            data={incomePieChartData}
+                            cx="50%"
+                            cy="50%"
+                            outerRadius={80}
+                            fill="#8884d8"
+                            label
+                        />
+                        <Tooltip />
+                    </PieChart>
+                </div>
+                : ''
+            }
+
+            { expensePieChartData ?
+                <div>
+                    <h3>Expenses</h3>
+                    <PieChart width={400} height={200}>
+                        <Pie
+                            dataKey="value"
+                            isAnimationActive={false}
+                            data={expensePieChartData}
+                            cx="50%"
+                            cy="50%"
+                            outerRadius={80}
+                            fill="#8884d8"
+                            label
+                        />
+                        <Tooltip />
+                    </PieChart>
+                </div>
+                : ''
+            }
           
           </div>
         </>
