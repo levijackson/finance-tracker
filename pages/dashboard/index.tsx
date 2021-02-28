@@ -111,6 +111,15 @@ const DashboardIndex = (props: DashboardOptions) => {
     const [ date, setDate ] = useState('');
     const [ data, setData ] = useState([]);
     
+    const chartColors = [
+        '#545E75',
+        '#63ADF2',
+        '#A7CCED',
+        '#304D6D',
+        '#82A0BC',
+        '#3C4353'
+    ];
+    
 
     useEffect(() => {
         if (!date) {
@@ -180,53 +189,61 @@ const DashboardIndex = (props: DashboardOptions) => {
     });
 
 
+    
     const categoryData = groupItemsByCategory(data);
     let incomePieChartData = [];
+    let colorCounter = 0;
     for (const key in categoryData.income) {
-        incomePieChartData.push({ 'name': key, 'value': categoryData.income[key] });
+        incomePieChartData.push({ 'name': key, 'value': categoryData.income[key], 'fill': chartColors[colorCounter] });
+        colorCounter++;
     }
 
     let expensePieChartData = [];
+    colorCounter = 0;
     for (const key in categoryData.expenses) {
-        expensePieChartData.push({ 'name': key, 'value': categoryData.expenses[key] });
+        expensePieChartData.push({ 'name': key, 'value': categoryData.expenses[key], 'fill': chartColors[colorCounter] });
+        colorCounter++;
     }
 
     return (
         <>
-          <div className="col-xs-12">
-            <h1 className={styles.heading}>Analyze</h1>
-            <label htmlFor="type" className={styles.dateSelector}>
-                Month
-                <select name="date" value={date} onChange={e => setDate(e.target.value)}>
-                    { props.options.map((item, index) => {
-                        const value = item.year + '-' + item.month;
-                        return <option value={value} key={index}>{value}</option>
-                    })}
-                </select>
-            </label>
-            { date ? <Table columns={columns} data={tableData} /> : '' }
+            <div className="col-xs-12">
+                <h1 className={styles.heading}>Analyze</h1>
+                <label htmlFor="type" className={styles.dateSelector}>
+                    Month
+                    <select name="date" value={date} onChange={e => setDate(e.target.value)}>
+                        { props.options.map((item, index) => {
+                            const value = item.year + '-' + item.month;
+                            return <option value={value} key={index}>{value}</option>
+                        })}
+                    </select>
+                </label>
+            </div>
+            { date ? <div className="col-xs-12 col-sm-6"><Table columns={columns} data={tableData} /></div> : '' }
             
-            { chartData.length > 0 ? 
-                <LineChart
-                    width={500}
-                    height={300}
-                    data={chartData}
-                >
-                    <CartesianGrid strokeDasharray="3 3" />
-                    <XAxis dataKey="date" />
-                    <YAxis />
-                    <Tooltip 
-                        formatter={(value) => '$' + formatCurrency(value)}
-                    />
-                    <Legend />
-                    <Line type="monotone" dataKey="income" stroke="#8884d8" />
-                    <Line type="monotone" dataKey="expenses" stroke="#82ca9d" />
-                </LineChart>
+            { chartData.length > 0 ?
+                <div className="col-xs-12 col-sm-6">
+                    <LineChart
+                        width={500}
+                        height={300}
+                        data={chartData}
+                    >
+                        <CartesianGrid strokeDasharray="3 3" />
+                        <XAxis dataKey="date" />
+                        <YAxis />
+                        <Tooltip 
+                            formatter={(value) => '$' + formatCurrency(value)}
+                        />
+                        <Legend />
+                        <Line type="monotone" dataKey="income" stroke={chartColors[0]} />
+                        <Line type="monotone" dataKey="expenses" stroke={chartColors[1]} />
+                    </LineChart>
+                </div>
                 : ''
             }
                 
-            { incomePieChartData ?
-                <div>
+            { incomePieChartData.length > 0 ?
+                <div className="col-xs-12 col-sm-6">
                     <h3>Income</h3>
                     <PieChart width={400} height={200}>
                         <Pie
@@ -237,16 +254,15 @@ const DashboardIndex = (props: DashboardOptions) => {
                             cy="50%"
                             outerRadius={80}
                             fill="#8884d8"
-                            label
                         />
-                        <Tooltip />
+                        <Tooltip formatter={(value) => '$' + formatCurrency(value)} />
                     </PieChart>
                 </div>
                 : ''
             }
 
-            { expensePieChartData ?
-                <div>
+            { expensePieChartData.length > 0 ?
+                <div className="col-xs-12 col-sm-6">
                     <h3>Expenses</h3>
                     <PieChart width={400} height={200}>
                         <Pie
@@ -257,15 +273,12 @@ const DashboardIndex = (props: DashboardOptions) => {
                             cy="50%"
                             outerRadius={80}
                             fill="#8884d8"
-                            label
                         />
-                        <Tooltip />
+                        <Tooltip formatter={(value) => '$' + formatCurrency(value)} />
                     </PieChart>
                 </div>
                 : ''
             }
-          
-          </div>
         </>
     );
 }
