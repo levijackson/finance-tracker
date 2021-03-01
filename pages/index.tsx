@@ -84,33 +84,41 @@ export default function Home(props: HomeProps) {
     
     return (
       <>
-        <h1 className="col-xs-12">
-            Welcome
-            { session && session.user.name && <span> {session.user.name}</span>}
-            !
-        </h1>
+        <div className="col-xs-12">
+          <h1>
+              Welcome
+              { session && session.user.name && <span> {session.user.name}</span>}
+              !
+          </h1>
+        </div>
         { (props.chartData.length > 0) ?
-          <BarChart
-              width={500}
-              height={300}
-              data={props.chartData}
-              margin={{
-                top: 20, right: 30, left: 20, bottom: 5,
-              }}
-            >
-              <CartesianGrid strokeDasharray="3 3" />
-              <XAxis dataKey="month" />
-              <YAxis />
-              <Tooltip 
-                  formatter={(value) => '$' + formatCurrency(value)}
-              />
-              <Legend />
-              <Bar dataKey="income" fill="#8884d8" />
-              <Bar dataKey="expense" fill="#82ca9d" />
-          </BarChart>
+          <div className="col-xs-12 col-sm-6">
+            <BarChart
+                width={500}
+                height={300}
+                data={props.chartData}
+                margin={{
+                  top: 20, right: 30, left: 20, bottom: 5,
+                }}
+              >
+                <CartesianGrid strokeDasharray="3 3" />
+                <XAxis dataKey="month" />
+                <YAxis />
+                <Tooltip 
+                    formatter={(value) => '$' + formatCurrency(value)}
+                />
+                <Legend />
+                <Bar dataKey="income" fill="#8884d8" />
+                <Bar dataKey="expense" fill="#82ca9d" />
+            </BarChart>
+            </div>
           : ''
         }
-        { props.financeData ? <Recent data={props.financeData} /> : ''}
+        { props.financeData ? 
+          <div className="col-xs-12 col-sm-6">
+            <Recent data={props.financeData} />
+            </div>
+        : ''}
         
       </>
     )
