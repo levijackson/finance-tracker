@@ -133,6 +133,31 @@ export default class ItemService {
     }
 
     /**
+     * @param itemId 
+     */
+    async deleteItem(itemId: number) {
+        await this.db.query(
+            `
+            DELETE FROM items
+            WHERE id = ?
+          `,
+            [
+                itemId
+            ]
+        );
+
+        await this.db.query(
+            `
+            DELETE FROM user_items
+            WHERE itemId = ?
+          `,
+            [
+                itemId
+            ]
+        );   
+    }
+
+    /**
      * @param userId 
      * @param item 
      */

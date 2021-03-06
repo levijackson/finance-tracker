@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import DatePicker from 'react-datepicker';
 import { useSession } from 'next-auth/client';
+import { useRouter } from 'next/router';
 
 import { ItemInterface } from 'components/interfaces/Item';
 import { formatCurrency } from 'utils/currency';
@@ -33,6 +34,7 @@ const FinanceForm = (props: FinanceFormProps) => {
     const [ state, setState ] = useState((props.item ? props.item : defaultState));
     const [ message, setMessage ] = useState('');
     const [ session, loading ] = useSession();
+    const router = useRouter();
     
     const isValid = (state: ItemInterface) => {
         if (state.amount === 0) {
@@ -90,7 +92,32 @@ const FinanceForm = (props: FinanceFormProps) => {
         }
 
         setState({ ...state, [name]: value });
-    }
+    };
+
+    const handleDelete = async (e) => {
+        if (!confirm('Are you sure you want to delete?')) {
+            e.preventDefault();
+            return;
+        }
+
+        const url: string = '/api/item/' + props.item.id;
+
+        try {
+            await fetch(url, {
+                method: 'DELETE',
+                headers: {
+                'Accept': 'application/json',
+                'Content-Type': 'application/json;charset=UTF-8'
+            },
+                body: JSON.stringify({id: props.item.id}),
+            }).then(() => {
+                router.push('/');
+            });
+        } catch (error) {
+            console.log(error);
+            setMessage('Failed to delete ' + props.item.id);
+        }
+    };
 
     let itemCategories = [...INCOME_ITEM_CATEGORIES];
     if (state.type === 'expense') {
@@ -102,6 +129,7 @@ const FinanceForm = (props: FinanceFormProps) => {
         <div className={styles.financeForm}>
             { message ? <p>{message}</p> : '' }
             <form onSubmit={handleSubmit}>
+                { editing ? <a className={styles.delete} onClick={handleDelete}>DELETE</a> : '' }
                 <label htmlFor="type">
                     Type
                     <select name="type" value={state.type} onChange={handleInputChange}>
