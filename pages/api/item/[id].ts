@@ -4,6 +4,13 @@ import ItemService from 'services/ItemService';
 
 
 export default async (req: NextApiRequest, res: NextApiResponse) => {
+    const service = new ItemService();
+
+    if (req.method == 'DELETE') {
+        service.deleteItem(req.body.id);
+        return res.status(201).json({ success: true });
+    }
+
     if (req.method !== 'POST') {
         res.status(405);
     }
@@ -17,7 +24,6 @@ export default async (req: NextApiRequest, res: NextApiResponse) => {
             note: req.body.note,
             id: req.body.id
         };
-        const service = new ItemService();
         service.updateItem(item);
         
         res.status(201).json({ success: true });
