@@ -4,7 +4,7 @@ import { useSession } from 'next-auth/client';
 import { useRouter } from 'next/router';
 
 import { ItemInterface } from 'components/interfaces/Item';
-import { formatCurrency } from 'utils/currency';
+import { formatNumberToFloat } from 'utils/currency';
 import { EXPENSE_ITEM_CATEGORIES, INCOME_ITEM_CATEGORIES, ITEM_TYPES } from 'helpers/item';
 
 import styles from 'styles/financeForm.module.scss';
@@ -85,7 +85,7 @@ const FinanceForm = (props: FinanceFormProps) => {
         let name: string = e.target.name;
         let value: any = e.target.value;
         if (name === 'amount') {
-            value = formatCurrency(value);
+            value = formatNumberToFloat(value);
             if (isNaN(value)) {
                 return;
             }

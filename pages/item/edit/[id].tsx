@@ -36,7 +36,7 @@ interface EditProps {
 const EditForm = (props: EditProps) => {
     return (
         <>
-            <h1 className="col-xs-12">Edit</h1>
+            <h1 className="col-xs-12">Edit {props.item.type}</h1>
             <FinanceForm type="expense" item={props.item} className="col-xs-12" />
         </>
     );

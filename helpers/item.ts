@@ -1,4 +1,4 @@
-import { formatCurrency } from 'utils/currency';
+import { formatNumberToFloat } from 'utils/currency';
 import { ItemInterface } from 'components/interfaces/Item';
 import ItemService from 'services/ItemService';
 import { getMonthName } from 'utils/date';
@@ -11,7 +11,7 @@ import { getMonthName } from 'utils/date';
 const toJson = (item: ItemInterface): object => {
     return {
         id: item.id || null,
-        amount: formatCurrency(item.amount),
+        amount: formatNumberToFloat(item.amount),
         note: item.note || '',
         date: item.date.toString(),
         category: item.category,
