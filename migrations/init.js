@@ -58,7 +58,10 @@ async function migrate() {
                 TIMESTAMP
                 NOT NULL
                 DEFAULT CURRENT_TIMESTAMP
-                ON UPDATE CURRENT_TIMESTAMP
+                ON UPDATE CURRENT_TIMESTAMP,
+            KEY index_type (type),
+            KEY index_category (category(50)),
+            KEY index_date (date)
         )
     `)
       
@@ -73,7 +76,10 @@ async function migrate() {
                 NOT NULL,
             itemId
                 INT
-                NOT NULL
+                NOT NULL,
+            KEY index_user_id (userId),
+            KEY index_item_id (itemId),
+            KEY index_user_item_id (userId,itemId)
         )
     `)
     console.log('migration ran successfully')
