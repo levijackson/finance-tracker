@@ -194,7 +194,9 @@ const EXPENSE_ITEM_CATEGORIES = [
     'entertainment',
     'travel',
     'giving',
-    'education'
+    'education',
+    'lawn care',
+    'home improvement'
 ];
 
 const INCOME_ITEM_CATEGORIES = [
