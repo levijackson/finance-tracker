@@ -274,7 +274,7 @@ const DashboardIndex = (props: DashboardOptions) => {
                             outerRadius={80}
                             fill="#8884d8"
                         />
-                        <Tooltip formatter={(value) => '$' + formatCurrency(value)} />
+                        <Tooltip formatter={(value) => '$' + formatNumberToFloat(value)} />
                     </PieChart>
                 </div>
                 : ''

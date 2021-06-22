@@ -28,7 +28,7 @@ h1, h2 {
 }
 
 header {
-    background:#00272B;
+    background:#413C58;
     width:100%;
     padding:1em;
     flex: 1 0 auto;
@@ -38,27 +38,38 @@ header {
     flex: 1 0 auto;
 }
 
-.navigation {
-    width:100%;
-}
-.navigation a {
-    color:#ccc;
+.navigation a,
+.utility a {
+    color:#eee;
     text-decoration:none;
-    margin-right:3em;
+    margin-right:1.5em;
     cursor:pointer;
+    line-height:2em;
+    text-shadow:-1px -1px 3px #222;
 }
-.navigation a:hover {
+.navigation a:hover,
+.utility a:hover {
     color:#FF6663;
 }
-.logout span {
-    margin-left:10px;
-    font-size:0.7em;
+
+@media only screen and (max-width:48em){
+    .navigation {
+        margin:2em 0;
+    }
+
+    .navigation a {
+        margin-right:2.5em;
+    }
+
+    header {
+        text-align:center;
+    }
 }
 
 footer {
-    background:#00272B;
+    background:#413C58;
     padding:1em;
-    color:#ccc;
+    color:#eee;
     font-size:0.8em;
     flex-shrink:0;
 }

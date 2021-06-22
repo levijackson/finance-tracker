@@ -10,6 +10,9 @@
     "migrate": "node migrations/init.js"
   },
   "dependencies": {
+    "@fortawesome/fontawesome-svg-core": "^1.2.35",
+    "@fortawesome/free-solid-svg-icons": "^5.15.3",
+    "@fortawesome/react-fontawesome": "^0.1.14",
     "@types/mysql": "^2.15.18",
     "mongodb": "^3.6.9",
     "mysql": "^2.18.1",
