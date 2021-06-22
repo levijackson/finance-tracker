@@ -1,4 +1,10 @@
-const formatCurrency = (amount: number): number => {
+/**
+ * Convert a given number into a float.
+ * Useful to do computations.
+ * @param amount
+ * @returns 
+ */
+const formatNumberToFloat = (amount: number): number => {
     const stringAmount = amount.toString();
     const pieces = stringAmount.split('.');
 
@@ -13,6 +19,23 @@ const formatCurrency = (amount: number): number => {
     }
 };
 
+/**
+ * Convert a given number into the user's locally currency
+ * @param amount
+ * @param type 
+ * @returns 
+ */
+const formatCurrency = (amount: number, type: string): string => {
+    const formatter = new Intl.NumberFormat('en-US', {
+        style: 'currency',
+        currency: type,
+        minimumFractionDigits: 2
+    });
+
+    return formatter.format(amount);
+};
+
 export {
+    formatNumberToFloat,
     formatCurrency
 };

@@ -1,12 +1,74 @@
+
+import React from 'react';
 import { GetServerSideProps } from 'next'
 import { useSession, getSession } from 'next-auth/client';
 import Recent from 'components/Recent';
 import { ItemInterface } from 'components/interfaces/Item';
 import { getData, toJson } from 'helpers/item';
-import {
-  BarChart, Bar, Cell, XAxis, YAxis, CartesianGrid, Tooltip, Legend,
-} from 'recharts';
+import { cloneObject } from 'utils/object';
 import { formatCurrency } from 'utils/currency';
+import { useTable, useSortBy } from 'react-table';
+
+import styles from 'styles/dashboard.module.scss';
+
+function Table({ columns, data }) {
+  const {
+    getTableProps,
+    getTableBodyProps,
+    headerGroups,
+    rows,
+    prepareRow,
+  } = useTable(
+    {
+      columns,
+      data,
+    },
+    useSortBy
+  )
+
+  return (
+    <>
+      <table {...getTableProps()} className={styles.tableData}>
+        <thead>
+          {headerGroups.map(headerGroup => (
+            <tr {...headerGroup.getHeaderGroupProps()}>
+              {headerGroup.headers.map(column => (
+                // Add the sorting props to control sorting. For this example
+                // we can add them into the header props
+                <th {...column.getHeaderProps(column.getSortByToggleProps())}>
+                  {column.render('Header')}
+                  {/* Add a sort direction indicator */}
+                  <span>
+                    {column.isSorted
+                      ? column.isSortedDesc
+                        ? ' -'
+                        : ' +'
+                      : ''}
+                  </span>
+                </th>
+              ))}
+            </tr>
+          ))}
+        </thead>
+        <tbody {...getTableBodyProps()}>
+          {rows.map(
+            (row, i) => {
+              prepareRow(row);
+              return (
+                <tr {...row.getRowProps()}>
+                  {row.cells.map(cell => {
+                    return (
+                      <td {...cell.getCellProps()}>{cell.render('Cell')}</td>
+                    )
+                  })}
+                </tr>
+              )}
+          )}
+        </tbody>
+      </table>
+    </>
+  )
+}
 
 export const getServerSideProps: GetServerSideProps = async (context) => {
     const session = await getSession(context);
@@ -53,6 +115,7 @@ interface ChartData {
     month: string;
     expense: number;
     income: number;
+    saved: number;
 }
 interface HomeProps {
     financeData: {
@@ -74,6 +137,34 @@ interface HomeProps {
 export default function Home(props: HomeProps) {
     const [ session, loading ] = useSession();
 
+    const columns = React.useMemo(
+      () => [
+        {
+          Header: 'Progress Report',
+          columns: [
+            {
+              Header: 'Month',
+              accessor: 'month',
+            },
+            {
+              Header: 'Income',
+              accessor: 'income',
+            },
+            {
+              Header: 'Expenses',
+              accessor: 'expense',
+            },
+            {
+              Header: 'Saved',
+              accessor: 'saved',
+            },
+          ],
+        },
+      ],
+      []
+    );
+
+
     if (!session) {
       return (
             <>
@@ -81,36 +172,26 @@ export default function Home(props: HomeProps) {
             </>
       );
     }
-    
+
+    const formatter = new Intl.NumberFormat('en-US', {
+      style: 'currency',
+      currency: 'USD',
+      minimumFractionDigits: 2
+    })
+
+    const tableData = props.chartData.map((item) => {
+      item = cloneObject(item);
+      item.saved = formatCurrency(item.income - item.expense, 'USD');
+      item.income = formatCurrency(item.income, 'USD');
+      item.expense = formatCurrency(item.expense, 'USD');
+      return item;
+    });
+
     return (
       <>
-        <div className="col-xs-12">
-          <h1>
-              Welcome
-              { session && session.user.name && <span> {session.user.name}</span>}
-              !
-          </h1>
-        </div>
         { (props.chartData.length > 0) ?
           <div className="col-xs-12 col-sm-6">
-            <BarChart
-                width={500}
-                height={300}
-                data={props.chartData}
-                margin={{
-                  top: 20, right: 30, left: 20, bottom: 5,
-                }}
-              >
-                <CartesianGrid strokeDasharray="3 3" />
-                <XAxis dataKey="month" />
-                <YAxis />
-                <Tooltip 
-                    formatter={(value) => '$' + formatCurrency(value)}
-                />
-                <Legend />
-                <Bar dataKey="income" fill="#8884d8" />
-                <Bar dataKey="expense" fill="#82ca9d" />
-            </BarChart>
+            <Table columns={columns} data={tableData} />
             </div>
           : ''
         }

@@ -50,7 +50,7 @@ const Recent = (props: RecentProps) => {
     }
     return (
         <div className="col-xs-12 col-sm-6">
-            <h2>Recent</h2>
+            <h2>Recent Transactions</h2>
             { markup }
         </div>
     );

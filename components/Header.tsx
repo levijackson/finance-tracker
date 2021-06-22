@@ -1,23 +1,25 @@
 import Link from 'next/link';
 import { signIn, signOut, useSession } from 'next-auth/client';
 
+import styles from 'styles/header.module.scss';
+
 const Header = () => {
     const [ session, loading ] = useSession();
 
     return (
         <header className="row">
-            <div className="navigation col-xs-12 col-sm-8">
+            <div className="navigation col-xs-12">
             <Link href="/">Home</Link>
             {!session && (
-                <a onClick={signIn}>Sign in</a>
+                <a onClick={signIn}>Log in</a>
             )}
             {session && (
                 <>
-                <Link href="/item/add">Add item</Link>
                 <Link href="/dashboard">Dashboard</Link>
-                <a className="logout" onClick={signOut}>
-                    Sign out
-                    { session && <span>({session.user.email})</span> }
+                <Link href="/item/add">Add item</Link>
+                <a className={styles.logout} onClick={signOut}>
+                    Log out
+                    { session && <span> ({session.user.name})</span> }
                 </a>
                 </>
             )}

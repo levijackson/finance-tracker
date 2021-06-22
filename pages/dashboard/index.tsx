@@ -8,7 +8,7 @@ import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, Legend, PieChart
 import ItemService from '../../services/ItemService';
 import { sumItemsByDay, groupItemsByCategory } from '../../helpers/item';
 import { cloneObject } from '../../utils/object';
-import { formatCurrency } from '../../utils/currency';
+import { formatNumberToFloat } from '../../utils/currency';
 import { formatDate } from '../../utils/date';
 
 import styles from 'styles/dashboard.module.scss';
@@ -104,7 +104,7 @@ function Table({ columns, data }) {
         </table>
       </>
     )
-  }
+}
 
 const DashboardIndex = (props: DashboardOptions) => {
     const [ session, loading ] = useSession();
@@ -232,7 +232,7 @@ const DashboardIndex = (props: DashboardOptions) => {
                         <XAxis dataKey="date" />
                         <YAxis />
                         <Tooltip 
-                            formatter={(value) => '$' + formatCurrency(value)}
+                            formatter={(value) => '$' + formatNumberToFloat(value)}
                         />
                         <Legend />
                         <Line type="monotone" dataKey="income" stroke={chartColors[0]} />
@@ -255,7 +255,7 @@ const DashboardIndex = (props: DashboardOptions) => {
                             outerRadius={80}
                             fill="#8884d8"
                         />
-                        <Tooltip formatter={(value) => '$' + formatCurrency(value)} />
+                        <Tooltip formatter={(value) => '$' + formatNumberToFloat(value)} />
                     </PieChart>
                 </div>
                 : ''
