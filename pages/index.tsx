@@ -83,7 +83,7 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
     }
 
     let chartData = [];
-    let financeData = await getData(session.userId, 2);
+    let financeData = await getData(session.userId, 3);
 
     for (let i in financeData.data) {
         chartData.push(
@@ -173,12 +173,6 @@ export default function Home(props: HomeProps) {
       );
     }
 
-    const formatter = new Intl.NumberFormat('en-US', {
-      style: 'currency',
-      currency: 'USD',
-      minimumFractionDigits: 2
-    })
-
     const tableData = props.chartData.map((item) => {
       item = cloneObject(item);
       item.saved = formatCurrency(item.income - item.expense, 'USD');
@@ -186,6 +180,12 @@ export default function Home(props: HomeProps) {
       item.expense = formatCurrency(item.expense, 'USD');
       return item;
     });
+
+    // get just the last month of transactions
+    let recentData = {};
+    if (props.financeData) {
+      recentData = [props.financeData[0]];
+    }
 
     return (
       <>
@@ -197,7 +197,7 @@ export default function Home(props: HomeProps) {
         }
         { props.financeData ? 
           <div className="col-xs-12 col-sm-6">
-            <Recent data={props.financeData} />
+            <Recent data={recentData} />
             </div>
         : ''}
         

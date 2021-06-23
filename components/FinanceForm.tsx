@@ -139,7 +139,7 @@ const FinanceForm = (props: FinanceFormProps) => {
                     </select>
                 </label>
                 <label htmlFor="date">
-                    Date
+                    When
                     <DatePicker 
                         dateFormat="yyyy-MM-dd"
                         selected={state.date}
