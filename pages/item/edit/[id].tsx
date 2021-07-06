@@ -1,5 +1,4 @@
 import { GetServerSideProps } from 'next';
-import { getSession } from 'next-auth/client';
 
 import { ItemInterface } from 'components/interfaces/Item';
 import FinanceForm from 'components/FinanceForm';
@@ -10,7 +9,8 @@ import { toJson } from 'helpers/item';
 
 export const getServerSideProps: GetServerSideProps = async (context) => {
     const service = new ItemService();
-    const session = await getSession(context);
+    // const session = await getSession(context);
+    const session = null;
     const results: ItemInterface[] = await service.getItem(session.userId, context.query.id);
 
     if (results && results.length === 0) {

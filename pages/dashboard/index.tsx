@@ -1,6 +1,5 @@
 import React from 'react';
 import { GetServerSideProps } from 'next';
-import { getSession, useSession } from 'next-auth/client';
 import { useState, useEffect } from 'react';
 import { useTable, useSortBy } from 'react-table';
 import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, Legend, PieChart, Pie } from 'recharts';
@@ -14,7 +13,8 @@ import { formatDate } from '../../utils/date';
 import styles from 'styles/dashboard.module.scss';
 
 export const getServerSideProps: GetServerSideProps = async (context) => {
-    const session = await getSession(context);
+    // const session = await getSession(context);
+    const session = null;
     if (!session) {
         return {
             props: {}
@@ -107,7 +107,8 @@ function Table({ columns, data }) {
 }
 
 const DashboardIndex = (props: DashboardOptions) => {
-    const [ session, loading ] = useSession();
+    // const [ session, loading ] = useSession();
+    const session = null;
     const [ date, setDate ] = useState('');
     const [ data, setData ] = useState([]);
     

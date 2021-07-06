@@ -1,8 +1,13 @@
 import type { AppProps } from 'next/app';
 import React from 'react';
+import Amplify from 'aws-amplify';
+import awsconfig from './aws-exports';
+
 import Header from 'components/Header';
 import Footer from 'components/Footer';
-import { Provider } from 'next-auth/client'
+import { withAuthenticator } from '@aws-amplify/ui-react';
+
+Amplify.configure(awsconfig);
 
 // http://flexboxgrid.com/
 import 'styles/flexboxgrid.min.css';
@@ -10,18 +15,16 @@ import 'styles/layout.css';
 
 function MyApp({ Component, pageProps }: AppProps) {
   return (
-    <Provider session={pageProps.session}>
-        <div className="wrapper">
-                <Header />
+      <div className="wrapper">
+              <Header />
 
-                <div className="content row">
-                    <Component {...pageProps} />
-                </div>
+              <div className="content row">
+                  <Component {...pageProps} />
+              </div>
 
-                <Footer />
-            </div>
-      </Provider>
+              <Footer />
+          </div>
   );
 }
 
-export default MyApp
+export default withAuthenticator(MyApp);

@@ -1,6 +1,5 @@
 import { useState } from 'react';
 import DatePicker from 'react-datepicker';
-import { useSession } from 'next-auth/client';
 import { useRouter } from 'next/router';
 
 import { ItemInterface } from 'components/interfaces/Item';
@@ -33,7 +32,8 @@ const FinanceForm = (props: FinanceFormProps) => {
 
     const [ state, setState ] = useState((props.item ? props.item : defaultState));
     const [ message, setMessage ] = useState('');
-    const [ session, loading ] = useSession();
+    // const [ session, loading ] = useSession();
+    const session;
     const router = useRouter();
     
     const isValid = (state: ItemInterface) => {

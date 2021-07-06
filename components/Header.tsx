@@ -1,5 +1,4 @@
 import Link from 'next/link';
-import { signIn, signOut, useSession } from 'next-auth/client';
 
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faDollarSign } from '@fortawesome/free-solid-svg-icons'
@@ -7,7 +6,8 @@ import { faDollarSign } from '@fortawesome/free-solid-svg-icons'
 import styles from 'styles/header.module.scss';
 
 const Header = () => {
-    const [ session, loading ] = useSession();
+    // const [ session, loading ] = useSession();
+    const session = null;
 
     return (
         <header className="row">
@@ -19,9 +19,9 @@ const Header = () => {
                 </Link>
             </div>
             <div className="navigation col-sm-7 col-xs-12">
-            {!session && (
+            {/* {!session && (
                 <a onClick={signIn}>Log in</a>
-            )}
+            )} */}
             {session && (
                 <>
                 <Link href="/dashboard">Dashboard</Link>
@@ -32,10 +32,10 @@ const Header = () => {
             <div className="utility col-sm-4 col-xs-12">
             {session && (
                 <>
-                <a className={styles.logout} onClick={signOut}>
+                {/* <a className={styles.logout} onClick={signOut}>
                     Log out
                     { session && <span> ({session.user.name})</span> }
-                </a>
+                </a> */}
                 </>
             )}
             </div>

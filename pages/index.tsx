@@ -1,7 +1,6 @@
 
 import React from 'react';
 import { GetServerSideProps } from 'next'
-import { useSession, getSession } from 'next-auth/client';
 import Recent from 'components/Recent';
 import { ItemInterface } from 'components/interfaces/Item';
 import { getData, toJson } from 'helpers/item';
@@ -71,7 +70,8 @@ function Table({ columns, data }) {
 }
 
 export const getServerSideProps: GetServerSideProps = async (context) => {
-    const session = await getSession(context);
+    // const session = await getSession(context);
+    const session = null;
 
     if (!session) {
       return {
@@ -135,7 +135,8 @@ interface HomeProps {
 }
 
 export default function Home(props: HomeProps) {
-    const [ session, loading ] = useSession();
+    // const [ session, loading ] = useSession();
+    const session = null;
 
     const columns = React.useMemo(
       () => [

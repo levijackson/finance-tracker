@@ -29,3 +29,9 @@ This will generate all the tables needed to power the application.
 - `NEXTAUTH_URL` should be your application URL. My development URL is http://localhost:3000
 - `NEXTAUTH_GOOGLE_CLIENT_ID` and `NEXTAUTH_GOOGLE_CLIENT_SECRET` will be the values you generated in step 6.
 
+
+
+
+----
+
+amplify init
