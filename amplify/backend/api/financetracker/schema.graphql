@@ -1,0 +1,16 @@
+enum TYPE {
+  EXPENSE
+  INCOME
+}
+
+type Item
+  @model @auth(rules: [{ allow: owner }]) {
+  user_uuid: String!
+  type: TYPE!
+  category: String!
+  amount: Float!
+  date: String!
+  created: String!
+  updated: String!
+  note: String
+}

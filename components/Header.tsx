@@ -1,13 +1,12 @@
 import Link from 'next/link';
+import { AmplifySignOut } from '@aws-amplify/ui-react';
 
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faDollarSign } from '@fortawesome/free-solid-svg-icons'
 
 import styles from 'styles/header.module.scss';
 
-const Header = () => {
-    // const [ session, loading ] = useSession();
-    const session = null;
+const Header = ({ user }) => {
 
     return (
         <header className="row">
@@ -22,7 +21,7 @@ const Header = () => {
             {/* {!session && (
                 <a onClick={signIn}>Log in</a>
             )} */}
-            {session && (
+            {user && (
                 <>
                 <Link href="/dashboard">Dashboard</Link>
                 <Link href="/item/add">+ Add item</Link>
@@ -30,12 +29,9 @@ const Header = () => {
             )}
             </div>
             <div className="utility col-sm-4 col-xs-12">
-            {session && (
+            {user && (
                 <>
-                {/* <a className={styles.logout} onClick={signOut}>
-                    Log out
-                    { session && <span> ({session.user.name})</span> }
-                </a> */}
+                    <AmplifySignOut />
                 </>
             )}
             </div>
