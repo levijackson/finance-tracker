@@ -1,7 +1,6 @@
-import { API, graphqlOperation } from 'aws-amplify';
-import { CreateItemMutation } from '../API';
 import { createItem } from '../graphql/mutations';
 import { ItemInterface } from '../components/interfaces/Item';
+
 
 
 export default class ItemService {
@@ -163,8 +162,15 @@ export default class ItemService {
     // /**
     //  * @param item 
     //  */
-    async addItem(item: ItemInterface) {
-        return (await API.graphql(graphqlOperation(createItem, item)));
+    // async addItem(item: ItemInterface) {
+    //     return (
+    //       await API.graphql({
+    //         query: createItem,
+    //         variables: {input: item},
+    //         authMode: 'AMAZON_COGNITO_USER_POOLS'
+    //       })
+    //     );
+        // graphqlOperation(createItem, item)));
 
         // const db = this.db;
         // await db.query(
@@ -190,7 +196,7 @@ export default class ItemService {
         //         );
         //     }
         //   )
-    }
+    // }
 
     // /**
     //  * Get the year/month options

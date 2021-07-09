@@ -8,13 +8,13 @@ export const createItem = /* GraphQL */ `
     $condition: ModelItemConditionInput
   ) {
     createItem(input: $input, condition: $condition) {
+      PK
+      SK
       user_uuid
       type
       category
       amount
       date
-      created
-      updated
       note
       createdAt
       updatedAt
@@ -28,13 +28,13 @@ export const updateItem = /* GraphQL */ `
     $condition: ModelItemConditionInput
   ) {
     updateItem(input: $input, condition: $condition) {
+      PK
+      SK
       user_uuid
       type
       category
       amount
       date
-      created
-      updated
       note
       createdAt
       updatedAt
@@ -48,13 +48,13 @@ export const deleteItem = /* GraphQL */ `
     $condition: ModelItemConditionInput
   ) {
     deleteItem(input: $input, condition: $condition) {
+      PK
+      SK
       user_uuid
       type
       category
       amount
       date
-      created
-      updated
       note
       createdAt
       updatedAt

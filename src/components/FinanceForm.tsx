@@ -5,6 +5,7 @@ import { useRouter } from 'next/router';
 import { ItemInterface } from 'components/interfaces/Item';
 import { UserInterface } from 'components/interfaces/User';
 import { formatNumberToFloat } from 'utils/currency';
+import { formatDate } from '../utils/date';
 import { EXPENSE_ITEM_CATEGORIES, INCOME_ITEM_CATEGORIES, ITEM_TYPES } from 'helpers/item';
 
 import styles from 'styles/financeForm.module.scss';
@@ -61,6 +62,8 @@ const FinanceForm = (props: FinanceFormProps) => {
         try {
             const data: object = { ...state, user_uuid: props.user.uuid };
             data.date.setHours(0,0,0,0);
+            data.date = formatDate(data.date);
+
             await fetch(url, {
                 method: 'POST',
                 headers: {

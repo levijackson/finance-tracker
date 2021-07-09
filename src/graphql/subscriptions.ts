@@ -5,13 +5,13 @@
 export const onCreateItem = /* GraphQL */ `
   subscription OnCreateItem($owner: String!) {
     onCreateItem(owner: $owner) {
+      PK
+      SK
       user_uuid
       type
       category
       amount
       date
-      created
-      updated
       note
       createdAt
       updatedAt
@@ -22,13 +22,13 @@ export const onCreateItem = /* GraphQL */ `
 export const onUpdateItem = /* GraphQL */ `
   subscription OnUpdateItem($owner: String!) {
     onUpdateItem(owner: $owner) {
+      PK
+      SK
       user_uuid
       type
       category
       amount
       date
-      created
-      updated
       note
       createdAt
       updatedAt
@@ -39,13 +39,13 @@ export const onUpdateItem = /* GraphQL */ `
 export const onDeleteItem = /* GraphQL */ `
   subscription OnDeleteItem($owner: String!) {
     onDeleteItem(owner: $owner) {
+      PK
+      SK
       user_uuid
       type
       category
       amount
       date
-      created
-      updated
       note
       createdAt
       updatedAt

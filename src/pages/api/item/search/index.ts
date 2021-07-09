@@ -1,35 +1,37 @@
 import type { NextApiRequest, NextApiResponse } from 'next';
-import ItemService from 'services/ItemService';
+import Amplify, { withSSRContext } from 'aws-amplify';
+import awsconfig from '../../../../aws-exports.js';
+import { listItems } from '../../../../graphql/queries';
 import { ItemInterface } from 'components/interfaces/Item';
 import { toJson } from 'helpers/item';
 
+// needs to be enabled in each API route
+Amplify.configure({ ...awsconfig, ssr: true });
 
 export default async (req: NextApiRequest, res: NextApiResponse) => {
-    if (req.method !== 'POST') {
-        res.status(405);
-    }
-    
-    try {        
-        const service = new ItemService();
-        const startDate = req.body.date + '-01';
-        const endDate = req.body.date + '-31';
-        let expenses = [];
-        await service.getItemsByDateRange(req.body.userId, 'expense', startDate, endDate).then(function (response) {
-            expenses = response.map((item: ItemInterface) => {
-                return toJson(item);
-            });
-        });
-        
-        let income = [];
-        await service.getItemsByDateRange(req.body.userId, 'income', startDate, endDate).then(function (response) {
-            income = response.map((item: ItemInterface) => {
-                return toJson(item);
-            });
-        });
+  if (req.method !== 'POST') {
+    res.status(405);
+  }
 
-        res.status(201).json({ success: true, income: income, expenses: expenses });
-    } catch (error) {
-        console.log(error);
-        res.status(400).json({ success: false });
-    }
+  const { API, Auth } = withSSRContext({ req });
+
+  const user = await Auth.currentAuthenticatedUser();
+
+  try {
+    const type = req.body.type;
+
+    const items = await API.graphql({
+      query: listItems,
+      variables: {
+        PK: user.attributes.sub + '#' + type,
+        SK: { beginsWith: req.body.date }
+      },
+      authMode: 'AMAZON_COGNITO_USER_POOLS'
+    });
+
+    res.status(201).json({ success: true, items: items.data.listItems.items });
+  } catch (error) {
+    console.log(error);
+    res.status(400).json({ success: false });
+  }
 }

@@ -1,50 +1,22 @@
 import React from 'react';
-import { GetServerSideProps } from 'next';
 import { useState, useEffect } from 'react';
 import { useTable, useSortBy } from 'react-table';
 import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, Legend, PieChart, Pie } from 'recharts';
 
-import ItemService from '../../services/ItemService';
 import { sumItemsByDay, groupItemsByCategory } from '../../helpers/item';
 import { cloneObject } from '../../utils/object';
 import { formatNumberToFloat } from '../../utils/currency';
 import { formatDate } from '../../utils/date';
+import { UserInterface } from 'components/interfaces/User';
 
 import styles from 'styles/dashboard.module.scss';
 
-export const getServerSideProps: GetServerSideProps = async (context) => {
-    // const session = await getSession(context);
-    const session = null;
-    if (!session) {
-        return {
-            props: {}
-        };
-    }
-
-    const service = new ItemService();
-    let options = {};
-    await service.getDateOptions(session.userId).then(function (results) {
-        options = results.map(function(item) {
-            return {
-                'year': item.year,
-                'month': item.month
-            }
-        });
-    });
-
-    return {
-        props: {
-            options
-        }
-    }
-}
-
 interface MonthOption {
-    year: number,
-    month: number
+  year: number,
+  month: number
 }
 interface DashboardOptions {
-    options: Array<MonthOption>
+  user: UserInterface
 }
 
 function Table({ columns, data }) {
@@ -107,43 +79,54 @@ function Table({ columns, data }) {
 }
 
 const DashboardIndex = (props: DashboardOptions) => {
-    // const [ session, loading ] = useSession();
-    const session = null;
     const [ date, setDate ] = useState('');
     const [ data, setData ] = useState([]);
     
     const chartColors = [
-        '#545E75',
-        '#63ADF2',
-        '#A7CCED',
-        '#304D6D',
-        '#82A0BC',
-        '#3C4353'
+      '#545E75',
+      '#63ADF2',
+      '#A7CCED',
+      '#304D6D',
+      '#82A0BC',
+      '#3C4353'
     ];
     
 
     useEffect(() => {
         if (!date) {
-            return;
+          return;
         }
 
+        setData([]);
+
         try {
-            fetch('/api/item/search', {
+          fetch('/api/item/search', {
+            method: 'POST',
+            headers: {
+                'Accept': 'application/json',
+                'Content-Type': 'application/json;charset=UTF-8'
+            },
+            body: JSON.stringify({'date': date, 'type': 'expense'}),
+          }).then((response) => {
+            response.json().then((expenseData) => {
+              fetch('/api/item/search', {
                 method: 'POST',
                 headers: {
                     'Accept': 'application/json',
                     'Content-Type': 'application/json;charset=UTF-8'
                 },
-                body: JSON.stringify({'date': date, 'userId': session.userId}),
-            }).then((response) => {
-                response.json().then((data) => {
-                    let mergedData = [...data.income, ...data.expenses];
-                    mergedData.map((item) => {
-                        item.date = new Date(item.date);
-                    });
-                    setData(mergedData);
+                body: JSON.stringify({'date': date, 'type': 'income'}),
+              }).then((response) => {
+                response.json().then((incomeData) => {
+                  let mergedData = [...expenseData.items, ...incomeData.items];
+                  mergedData.map((item) => {
+                    item.date = new Date(item.date);
+                  });
+                  setData(mergedData);
                 });            
-            });
+              });
+            });            
+          });
         } catch (error) {
 
         }
@@ -213,10 +196,13 @@ const DashboardIndex = (props: DashboardOptions) => {
                 <label htmlFor="type" className={styles.dateSelector}>
                     Month
                     <select name="date" value={date} onChange={e => setDate(e.target.value)}>
-                        { props.options.map((item, index) => {
-                            const value = item.year + '-' + item.month;
-                            return <option value={value} key={index}>{value}</option>
-                        })}
+                      <option value="2021-01">2021-01</option>
+                      <option value="2021-02">2021-02</option>
+                      <option value="2021-03">2021-03</option>
+                      <option value="2021-04">2021-04</option>
+                      <option value="2021-05">2021-05</option>
+                      <option value="2021-06">2021-06</option>
+                      <option value="2021-07">2021-07</option>
                     </select>
                 </label>
             </div>

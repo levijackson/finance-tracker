@@ -1,6 +1,6 @@
 export enum TYPE {
-  EXPENSE = "EXPENSE",
-  INCOME = "INCOME",
+  EXPENSE = "income",
+  INCOME = "expense",
 }
   
 export interface ItemInterface {
@@ -9,7 +9,5 @@ export interface ItemInterface {
   category: string,
   amount: number,
   date: string,
-  created: string,
-  updated: string,
   note?: string | null,
 }
