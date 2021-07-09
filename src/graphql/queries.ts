@@ -7,6 +7,7 @@ export const getItem = /* GraphQL */ `
     getItem(PK: $PK, SK: $SK) {
       PK
       SK
+      item_uuid
       user_uuid
       type
       category
@@ -39,6 +40,40 @@ export const listItems = /* GraphQL */ `
       items {
         PK
         SK
+        item_uuid
+        user_uuid
+        type
+        category
+        amount
+        date
+        note
+        createdAt
+        updatedAt
+        owner
+      }
+      nextToken
+    }
+  }
+`;
+export const byItemUuid = /* GraphQL */ `
+  query ByItemUuid(
+    $item_uuid: String
+    $sortDirection: ModelSortDirection
+    $filter: ModelItemFilterInput
+    $limit: Int
+    $nextToken: String
+  ) {
+    byItemUuid(
+      item_uuid: $item_uuid
+      sortDirection: $sortDirection
+      filter: $filter
+      limit: $limit
+      nextToken: $nextToken
+    ) {
+      items {
+        PK
+        SK
+        item_uuid
         user_uuid
         type
         category

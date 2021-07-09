@@ -10,6 +10,7 @@ export const createItem = /* GraphQL */ `
     createItem(input: $input, condition: $condition) {
       PK
       SK
+      item_uuid
       user_uuid
       type
       category
@@ -30,6 +31,7 @@ export const updateItem = /* GraphQL */ `
     updateItem(input: $input, condition: $condition) {
       PK
       SK
+      item_uuid
       user_uuid
       type
       category
@@ -50,6 +52,7 @@ export const deleteItem = /* GraphQL */ `
     deleteItem(input: $input, condition: $condition) {
       PK
       SK
+      item_uuid
       user_uuid
       type
       category

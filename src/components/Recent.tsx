@@ -27,8 +27,8 @@ const Recent = (props: RecentProps) => {
             markup.push(<h4 key={'income-header'+ i}>{ props.data[i].month } - Income</h4>);
             props.data[i].income.items.map((item: ItemInterface, itemIndex: number) => {
                 itemMarkup.push(
-                    <li key={item.id}>
-                        <Link href={"/item/edit/" + item.id}><a>${item.amount} ({formatDate(new Date(item.date))})</a></Link>
+                    <li key={item.item_uuid}>
+                        <Link href={"/item/edit/" + item.item_uuid}><a>${item.amount} ({formatDate(new Date(item.date))})</a></Link>
                     </li>
                 );
             });
@@ -40,8 +40,8 @@ const Recent = (props: RecentProps) => {
             itemMarkup = [];
             props.data[i].expense.items.map((item: ItemInterface, itemIndex: number) => {
                 itemMarkup.push(
-                    <li key={item.id}>
-                        <Link href={"/item/edit/" + item.id}><a>${item.amount} ({formatDate(new Date(item.date))})</a></Link>
+                    <li key={item.item_uuid}>
+                        <Link href={"/item/edit/" + item.item_uuid}><a>${item.amount} ({formatDate(new Date(item.date))})</a></Link>
                     </li>
                 );
             });

@@ -10,4 +10,5 @@ export interface ItemInterface {
   amount: number,
   date: string,
   note?: string | null,
+  createdAt?: string | null
 }

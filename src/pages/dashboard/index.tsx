@@ -11,10 +11,6 @@ import { UserInterface } from 'components/interfaces/User';
 
 import styles from 'styles/dashboard.module.scss';
 
-interface MonthOption {
-  year: number,
-  month: number
-}
 interface DashboardOptions {
   user: UserInterface
 }

@@ -2,8 +2,6 @@ import type { NextApiRequest, NextApiResponse } from 'next';
 import Amplify, { withSSRContext } from 'aws-amplify';
 import awsconfig from '../../../../aws-exports.js';
 import { listItems } from '../../../../graphql/queries';
-import { ItemInterface } from 'components/interfaces/Item';
-import { toJson } from 'helpers/item';
 
 // needs to be enabled in each API route
 Amplify.configure({ ...awsconfig, ssr: true });
@@ -23,8 +21,8 @@ export default async (req: NextApiRequest, res: NextApiResponse) => {
     const items = await API.graphql({
       query: listItems,
       variables: {
-        PK: user.attributes.sub + '#' + type,
-        SK: { beginsWith: req.body.date }
+        PK: 'USER#' + user.attributes.sub,
+        SK: { beginsWith: type + '#' + req.body.date }
       },
       authMode: 'AMAZON_COGNITO_USER_POOLS'
     });

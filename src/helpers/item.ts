@@ -1,8 +1,21 @@
 import { formatNumberToFloat } from 'utils/currency';
 import { ItemInterface } from 'components/interfaces/Item';
-import ItemService from 'services/ItemService';
 import { getMonthName } from 'utils/date';
+import { listItems } from '../graphql/queries';
+import { v5 as uuidv5 } from 'uuid';
 
+const getPrimaryKey = (item: ItemInterface): string => {
+    return 'USER#' + item.user_uuid;
+};
+
+const getSortKey = (item: ItemInterface): string => {
+    return item.type + '#' + item.date + '#' + item.category + '#' + item.createdAt;
+}
+
+const getItemUuid = (item: ItemInterface): string => {
+    const UUID_NAMESPACE = 'daf8a0be-41bb-4a62-b982-615e8412d604';
+    return uuidv5(getSortKey(item), UUID_NAMESPACE);
+}
 
 /**
  * Convert to JSON
@@ -10,7 +23,7 @@ import { getMonthName } from 'utils/date';
  */
 const toJson = (item: ItemInterface): object => {
     return {
-        id: item.id || null,
+        item_uuid: getItemUuid(item) || null,
         amount: formatNumberToFloat(item.amount),
         note: item.note || '',
         date: item.date.toString(),
@@ -35,14 +48,9 @@ const getMonthConfig = (monthNumber: number) => {
     date.setDate(0); // going to 1st of the month
     date.setHours(-1); // going to last hour before this date even started.
 
-    // add 1 because the month numbers start at 0 in JS and we store them in MySQL which starts at 1
-    const startDate = date.getFullYear() + '-' + (date.getMonth() + 1) + '-01';
-    const endDate = date.getFullYear() + '-' + (date.getMonth() + 1) + '-' + date.getDate();
-
     return {
         name: getMonthName(date.getMonth()),
-        startDate: startDate,
-        endDate: endDate
+        yearMonth: date.getFullYear() + '-' + ('0' + (date.getMonth() + 1)).slice(-2),
     };
 };
 
@@ -50,8 +58,7 @@ const getMonthConfig = (monthNumber: number) => {
  * @param userId 
  * @param numberMonths 
  */
-const getData = async (userId: number, numberMonths: number) => {
-    const service = new ItemService();
+const getData = async (API: any, user_uuid: string, numberMonths: number) => {
     const currentDate = new Date();
     let currentMonth = currentDate.getMonth();
     let data = {};
@@ -63,31 +70,31 @@ const getData = async (userId: number, numberMonths: number) => {
             'month': monthConfig['name'],
         };
 
+        // todo: working on the query. How to search/combine. 
+        // are the keys I have the best? 
+        //     perhaps sort PK should be just user id and sort key starts with the type?
         for (let key in ITEM_TYPES) {
             let sum = 0;
-            await service.getItemsByDateRange(
-                userId,
-                ITEM_TYPES[key],
-                monthConfig['startDate'],
-                monthConfig['endDate']
-            )
-            .then(function (results: Array<object>) {
-                let items = [];
-                if (results) {
-                    items = results.map((item: ItemInterface) => {
-                        return toJson(item); 
-                    });
-                }
 
-                for (let item in items) {
-                    sum += items[item].amount;
-                }
-                
-                data[i][ITEM_TYPES[key]] = {
-                    'items': items,
-                    'sum': sum
-                };
+            const response = await API.graphql({
+              query: listItems,
+              variables: {
+                PK: 'USER#' + user_uuid,
+                SK: { beginsWith: ITEM_TYPES[key] + '#' + monthConfig['yearMonth'] }
+              },
+              authMode: 'AMAZON_COGNITO_USER_POOLS'
             });
+            const itemsByType = response.data.listItems.items;
+
+            for (let item in itemsByType) {
+                sum += itemsByType[item].amount;
+            }
+            
+            data[i][ITEM_TYPES[key]] = {
+                'items': itemsByType,
+                'sum': sum
+            };
+            
         }
 
         currentMonth = currentMonth - 1;
@@ -215,6 +222,9 @@ export {
     getData,
     sumItemsByDay,
     groupItemsByCategory,
+    getPrimaryKey,
+    getSortKey,
+    getItemUuid,
     INCOME_ITEM_CATEGORIES,
     EXPENSE_ITEM_CATEGORIES,
     ITEM_TYPES

@@ -7,6 +7,7 @@ export const onCreateItem = /* GraphQL */ `
     onCreateItem(owner: $owner) {
       PK
       SK
+      item_uuid
       user_uuid
       type
       category
@@ -24,6 +25,7 @@ export const onUpdateItem = /* GraphQL */ `
     onUpdateItem(owner: $owner) {
       PK
       SK
+      item_uuid
       user_uuid
       type
       category
@@ -41,6 +43,7 @@ export const onDeleteItem = /* GraphQL */ `
     onDeleteItem(owner: $owner) {
       PK
       SK
+      item_uuid
       user_uuid
       type
       category

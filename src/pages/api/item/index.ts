@@ -3,6 +3,9 @@ import Amplify, { withSSRContext } from 'aws-amplify';
 import awsconfig from '../../../aws-exports.js';
 import { createItem } from '../../../graphql/mutations';
 import { CreateItemInput } from '../../../API';
+import { getPrimaryKey, getSortKey, getItemUuid } from '../../../helpers/item';
+import { ItemInterface } from 'src/components/interfaces/Item.js';
+
 
 // needs to be enabled in each API route
 Amplify.configure({ ...awsconfig, ssr: true });
@@ -14,22 +17,28 @@ export default async (req: NextApiRequest, res: NextApiResponse) => {
 
   const { API } = withSSRContext({ req });
 
-  try {       
-    const currentTime = Date.now();
-    const item: CreateItemInput = {
-      PK: req.body.user_uuid + '#' + req.body.type,
-      SK: req.body.date + '#' + req.body.category + '#' + currentTime,
+  try {
+    const currentTime = new Date().toISOString();
+    const item: ItemInterface = {
       date: req.body.date,
       type: req.body.type,
       category: req.body.category,
       amount: req.body.amount,
       note: req.body.note,
-      user_uuid: req.body.user_uuid
+      user_uuid: req.body.user_uuid,
+      createdAt: currentTime
+    };
+
+    const dynamoItem: CreateItemInput = {
+      ...item,
+      PK: getPrimaryKey(item),
+      SK: getSortKey(item),
+      item_uuid: getItemUuid(item)
     };
 
     await API.graphql({
       query: createItem,
-      variables: {input: item},
+      variables: {input: dynamoItem},
       authMode: 'AMAZON_COGNITO_USER_POOLS'
     });
   
