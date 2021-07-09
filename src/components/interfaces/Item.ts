@@ -1,8 +1,15 @@
+export enum TYPE {
+  EXPENSE = "EXPENSE",
+  INCOME = "INCOME",
+}
+  
 export interface ItemInterface {
-    id?: number;
-    date: Date;
-    amount: number;
-    type: string;
-    note?: string;
-    category: string;
+  user_uuid: string,
+  type: TYPE,
+  category: string,
+  amount: number,
+  date: string,
+  created: string,
+  updated: string,
+  note?: string | null,
 }

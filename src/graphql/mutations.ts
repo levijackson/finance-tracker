@@ -8,7 +8,6 @@ export const createItem = /* GraphQL */ `
     $condition: ModelItemConditionInput
   ) {
     createItem(input: $input, condition: $condition) {
-      id
       user_uuid
       type
       category
@@ -29,7 +28,6 @@ export const updateItem = /* GraphQL */ `
     $condition: ModelItemConditionInput
   ) {
     updateItem(input: $input, condition: $condition) {
-      id
       user_uuid
       type
       category
@@ -50,7 +48,6 @@ export const deleteItem = /* GraphQL */ `
     $condition: ModelItemConditionInput
   ) {
     deleteItem(input: $input, condition: $condition) {
-      id
       user_uuid
       type
       category

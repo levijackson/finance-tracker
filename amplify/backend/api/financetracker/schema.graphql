@@ -4,13 +4,18 @@ enum TYPE {
 }
 
 type Item
-  @model @auth(rules: [{ allow: owner }]) {
+  @model
+  @auth(rules: [{ allow: owner }])
+  @aws_cognito_user_pools
+  @key(fields: ["user_uuid", "type"])
+  @key(name: "itemsByDate", fields: ["date"], queryField: "itemsByDate")
+  {
   user_uuid: String!
   type: TYPE!
   category: String!
   amount: Float!
-  date: String!
-  created: String!
-  updated: String!
+  date: AWSDate!
+  created: AWSDateTime!
+  updated: AWSDateTime!
   note: String
 }

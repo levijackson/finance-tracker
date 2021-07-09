@@ -16,9 +16,10 @@ export default async (req: NextApiRequest, res: NextApiResponse) => {
             category: req.body.category,
             amount: req.body.amount,
             note: req.body.note,
-            id: req.body.id
+            id: req.body.id,
+            user_uuid: req.body.user_uuid
         };
-        service.addItem(req.body.userId, item);
+        service.addItem(item);
       
         res.status(201).json({ success: true });
     } catch (error) {

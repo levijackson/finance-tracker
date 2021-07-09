@@ -3,7 +3,6 @@
 //  This file was automatically generated and should not be edited.
 
 export type CreateItemInput = {
-  id?: string | null,
   user_uuid: string,
   type: TYPE,
   category: string,
@@ -21,8 +20,6 @@ export enum TYPE {
 
 
 export type ModelItemConditionInput = {
-  user_uuid?: ModelStringInput | null,
-  type?: ModelTYPEInput | null,
   category?: ModelStringInput | null,
   amount?: ModelFloatInput | null,
   date?: ModelStringInput | null,
@@ -74,11 +71,6 @@ export type ModelSizeInput = {
   between?: Array< number | null > | null,
 };
 
-export type ModelTYPEInput = {
-  eq?: TYPE | null,
-  ne?: TYPE | null,
-};
-
 export type ModelFloatInput = {
   ne?: number | null,
   eq?: number | null,
@@ -93,7 +85,6 @@ export type ModelFloatInput = {
 
 export type Item = {
   __typename: "Item",
-  id: string,
   user_uuid: string,
   type: TYPE,
   category: string,
@@ -108,8 +99,8 @@ export type Item = {
 };
 
 export type UpdateItemInput = {
-  user_uuid?: string | null,
-  type?: TYPE | null,
+  user_uuid: string,
+  type: TYPE,
   category?: string | null,
   amount?: number | null,
   date?: string | null,
@@ -119,7 +110,18 @@ export type UpdateItemInput = {
 };
 
 export type DeleteItemInput = {
-  id: string,
+  user_uuid: string,
+  type: TYPE,
+};
+
+export type ModelStringKeyConditionInput = {
+  eq?: string | null,
+  le?: string | null,
+  lt?: string | null,
+  ge?: string | null,
+  gt?: string | null,
+  between?: Array< string | null > | null,
+  beginsWith?: string | null,
 };
 
 export type ModelItemFilterInput = {
@@ -136,6 +138,17 @@ export type ModelItemFilterInput = {
   not?: ModelItemFilterInput | null,
 };
 
+export type ModelTYPEInput = {
+  eq?: TYPE | null,
+  ne?: TYPE | null,
+};
+
+export enum ModelSortDirection {
+  ASC = "ASC",
+  DESC = "DESC",
+}
+
+
 export type ModelItemConnection = {
   __typename: "ModelItemConnection",
   items?:  Array<Item | null > | null,
@@ -150,7 +163,6 @@ export type CreateItemMutationVariables = {
 export type CreateItemMutation = {
   createItem?:  {
     __typename: "Item",
-    id: string,
     user_uuid: string,
     type: TYPE,
     category: string,
@@ -173,7 +185,6 @@ export type UpdateItemMutationVariables = {
 export type UpdateItemMutation = {
   updateItem?:  {
     __typename: "Item",
-    id: string,
     user_uuid: string,
     type: TYPE,
     category: string,
@@ -196,7 +207,6 @@ export type DeleteItemMutationVariables = {
 export type DeleteItemMutation = {
   deleteItem?:  {
     __typename: "Item",
-    id: string,
     user_uuid: string,
     type: TYPE,
     category: string,
@@ -212,13 +222,13 @@ export type DeleteItemMutation = {
 };
 
 export type GetItemQueryVariables = {
-  id: string,
+  user_uuid: string,
+  type: TYPE,
 };
 
 export type GetItemQuery = {
   getItem?:  {
     __typename: "Item",
-    id: string,
     user_uuid: string,
     type: TYPE,
     category: string,
@@ -234,9 +244,12 @@ export type GetItemQuery = {
 };
 
 export type ListItemsQueryVariables = {
+  user_uuid?: string | null,
+  type?: ModelStringKeyConditionInput | null,
   filter?: ModelItemFilterInput | null,
   limit?: number | null,
   nextToken?: string | null,
+  sortDirection?: ModelSortDirection | null,
 };
 
 export type ListItemsQuery = {
@@ -244,7 +257,35 @@ export type ListItemsQuery = {
     __typename: "ModelItemConnection",
     items?:  Array< {
       __typename: "Item",
-      id: string,
+      user_uuid: string,
+      type: TYPE,
+      category: string,
+      amount: number,
+      date: string,
+      created: string,
+      updated: string,
+      note?: string | null,
+      createdAt: string,
+      updatedAt: string,
+      owner?: string | null,
+    } | null > | null,
+    nextToken?: string | null,
+  } | null,
+};
+
+export type ItemsByDateQueryVariables = {
+  date?: string | null,
+  sortDirection?: ModelSortDirection | null,
+  filter?: ModelItemFilterInput | null,
+  limit?: number | null,
+  nextToken?: string | null,
+};
+
+export type ItemsByDateQuery = {
+  itemsByDate?:  {
+    __typename: "ModelItemConnection",
+    items?:  Array< {
+      __typename: "Item",
       user_uuid: string,
       type: TYPE,
       category: string,
@@ -268,7 +309,6 @@ export type OnCreateItemSubscriptionVariables = {
 export type OnCreateItemSubscription = {
   onCreateItem?:  {
     __typename: "Item",
-    id: string,
     user_uuid: string,
     type: TYPE,
     category: string,
@@ -290,7 +330,6 @@ export type OnUpdateItemSubscriptionVariables = {
 export type OnUpdateItemSubscription = {
   onUpdateItem?:  {
     __typename: "Item",
-    id: string,
     user_uuid: string,
     type: TYPE,
     category: string,
@@ -312,7 +351,6 @@ export type OnDeleteItemSubscriptionVariables = {
 export type OnDeleteItemSubscription = {
   onDeleteItem?:  {
     __typename: "Item",
-    id: string,
     user_uuid: string,
     type: TYPE,
     category: string,

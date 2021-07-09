@@ -3,9 +3,8 @@
 // this is an auto generated file. This will be overwritten
 
 export const getItem = /* GraphQL */ `
-  query GetItem($id: ID!) {
-    getItem(id: $id) {
-      id
+  query GetItem($user_uuid: String!, $type: TYPE!) {
+    getItem(user_uuid: $user_uuid, type: $type) {
       user_uuid
       type
       category
@@ -22,13 +21,54 @@ export const getItem = /* GraphQL */ `
 `;
 export const listItems = /* GraphQL */ `
   query ListItems(
+    $user_uuid: String
+    $type: ModelStringKeyConditionInput
+    $filter: ModelItemFilterInput
+    $limit: Int
+    $nextToken: String
+    $sortDirection: ModelSortDirection
+  ) {
+    listItems(
+      user_uuid: $user_uuid
+      type: $type
+      filter: $filter
+      limit: $limit
+      nextToken: $nextToken
+      sortDirection: $sortDirection
+    ) {
+      items {
+        user_uuid
+        type
+        category
+        amount
+        date
+        created
+        updated
+        note
+        createdAt
+        updatedAt
+        owner
+      }
+      nextToken
+    }
+  }
+`;
+export const itemsByDate = /* GraphQL */ `
+  query ItemsByDate(
+    $date: AWSDate
+    $sortDirection: ModelSortDirection
     $filter: ModelItemFilterInput
     $limit: Int
     $nextToken: String
   ) {
-    listItems(filter: $filter, limit: $limit, nextToken: $nextToken) {
+    itemsByDate(
+      date: $date
+      sortDirection: $sortDirection
+      filter: $filter
+      limit: $limit
+      nextToken: $nextToken
+    ) {
       items {
-        id
         user_uuid
         type
         category

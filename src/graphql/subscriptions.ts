@@ -5,7 +5,6 @@
 export const onCreateItem = /* GraphQL */ `
   subscription OnCreateItem($owner: String!) {
     onCreateItem(owner: $owner) {
-      id
       user_uuid
       type
       category
@@ -23,7 +22,6 @@ export const onCreateItem = /* GraphQL */ `
 export const onUpdateItem = /* GraphQL */ `
   subscription OnUpdateItem($owner: String!) {
     onUpdateItem(owner: $owner) {
-      id
       user_uuid
       type
       category
@@ -41,7 +39,6 @@ export const onUpdateItem = /* GraphQL */ `
 export const onDeleteItem = /* GraphQL */ `
   subscription OnDeleteItem($owner: String!) {
     onDeleteItem(owner: $owner) {
-      id
       user_uuid
       type
       category

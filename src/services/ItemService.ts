@@ -1,4 +1,8 @@
-import { ItemInterface } from 'components/interfaces/Item';
+import { API, graphqlOperation } from 'aws-amplify';
+import { CreateItemMutation } from '../API';
+import { createItem } from '../graphql/mutations';
+import { ItemInterface } from '../components/interfaces/Item';
+
 
 export default class ItemService {
     // db: object;
@@ -157,35 +161,36 @@ export default class ItemService {
     // }
 
     // /**
-    //  * @param userId 
     //  * @param item 
     //  */
-    // async addItem(userId: number, item: ItemInterface) {
-    //     const db = this.db;
-    //     await db.query(
-    //         `
-    //         INSERT INTO items (type, category, amount, date, note)
-    //         VALUES (?, ?, ?, ?, ?)
-    //         `,
-    //         [
-    //             item.type,
-    //             item.category, 
-    //             item.amount, 
-    //             this.formatDateTime(item.date), 
-    //             item.note
-    //         ],
-    //         function (error, result, fields) {
-    //             db.query(
-    //                 `INSERT INTO user_items (userId, itemId)
-    //                 VALUES (?, ?)`,
-    //                 [
-    //                     userId,
-    //                     result.insertId
-    //                 ]
-    //             );
-    //         }
-    //       )
-    // }
+    async addItem(item: ItemInterface) {
+        return (await API.graphql(graphqlOperation(createItem, item)));
+
+        // const db = this.db;
+        // await db.query(
+        //     `
+        //     INSERT INTO items (type, category, amount, date, note)
+        //     VALUES (?, ?, ?, ?, ?)
+        //     `,
+        //     [
+        //         item.type,
+        //         item.category, 
+        //         item.amount, 
+        //         this.formatDateTime(item.date), 
+        //         item.note
+        //     ],
+        //     function (error, result, fields) {
+        //         db.query(
+        //             `INSERT INTO user_items (userId, itemId)
+        //             VALUES (?, ?)`,
+        //             [
+        //                 userId,
+        //                 result.insertId
+        //             ]
+        //         );
+        //     }
+        //   )
+    }
 
     // /**
     //  * Get the year/month options

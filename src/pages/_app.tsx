@@ -31,7 +31,7 @@ function MyApp({ Component, pageProps }: AppProps) {
               <Header user={currentUser} />
 
               <div className="content row">
-                  <Component {...pageProps} />
+                  <Component {...pageProps} user={currentUser} />
               </div>
 
               <Footer />

@@ -3,6 +3,7 @@ import DatePicker from 'react-datepicker';
 import { useRouter } from 'next/router';
 
 import { ItemInterface } from 'components/interfaces/Item';
+import { UserInterface } from 'components/interfaces/User';
 import { formatNumberToFloat } from 'utils/currency';
 import { EXPENSE_ITEM_CATEGORIES, INCOME_ITEM_CATEGORIES, ITEM_TYPES } from 'helpers/item';
 
@@ -11,6 +12,7 @@ import 'react-datepicker/dist/react-datepicker.css';
 
 interface FinanceFormProps {
     type: string;
+    user: UserInterface;
     item?: ItemInterface;
 }
 
@@ -32,8 +34,6 @@ const FinanceForm = (props: FinanceFormProps) => {
 
     const [ state, setState ] = useState((props.item ? props.item : defaultState));
     const [ message, setMessage ] = useState('');
-    // const [ session, loading ] = useSession();
-    const session;
     const router = useRouter();
     
     const isValid = (state: ItemInterface) => {
@@ -59,7 +59,7 @@ const FinanceForm = (props: FinanceFormProps) => {
         }
 
         try {
-            const data: object = { ...state, userId: session.userId };
+            const data: object = { ...state, user_uuid: props.user.uuid };
             data.date.setHours(0,0,0,0);
             await fetch(url, {
                 method: 'POST',
