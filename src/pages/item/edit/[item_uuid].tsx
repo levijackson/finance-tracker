@@ -10,24 +10,24 @@ import { byItemUuid } from '../../../graphql/queries';
 
 export const getServerSideProps: GetServerSideProps = async (context) => {
     const { API } = withSSRContext(context);
-console.log(context.query);
-    // const results = await API.graphql({
-    //     query: byItemUuid,
-    //     variables: {
-    //         item_uuid: context.query.item_uuid,
-    //     },
-    //     authMode: 'AMAZON_COGNITO_USER_POOLS'
-    //   });
 
-    // console.log(results);
+    const results = await API.graphql({
+        query: byItemUuid,
+        variables: {
+            item_uuid: context.query.item_uuid,
+        },
+        authMode: 'AMAZON_COGNITO_USER_POOLS'
+      });
 
-    // if (results && results.length === 0) {
-    //     context.res.setHeader('Location', '/item/add');
-    //     context.res.statusCode = 302;
-    //     context.res.end();
-    // }
 
-    // let item = toJson(results[0]);
+    if (results.data.byItemUuid.items.length === 0) {
+        context.res.setHeader('Location', '/item/add');
+        context.res.statusCode = 302;
+        context.res.end();
+    }
+
+    // todo: actually try editing an entry!
+    let item = toJson(results.data.byItemUuid.items[0]);
 
     return {
         props: {
