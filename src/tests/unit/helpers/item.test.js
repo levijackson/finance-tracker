@@ -1,13 +1,14 @@
-import { toJson, sumItemsByDay } from '../../../helpers/item';
+import { toJson, getPrimaryKey, getSortKey, getItemUuid, sumItemsByDay } from '../../../helpers/item';
 
 describe('toJson tests', () => {
-    test('An object can be turned into json', () => {
+    test('An object can be turned into json without an existing item_uuid', () => {
         const item = {
             amount: 12,
             note: 'some note',
             date: new Date('2021-01-03T00:00:00.000Z'),
             type: 'income',
-            category: 'Transportation'
+            category: 'Transportation',
+            createdAt: new Date('2021-01-03T00:00:00.000Z')
         };
     
         const jsonItem = toJson(item);
@@ -16,6 +17,27 @@ describe('toJson tests', () => {
         expect(jsonItem.category).toBeDefined();
         expect(jsonItem.type).toBeDefined();
         expect(jsonItem.date).toBeDefined();
+        expect(jsonItem.item_uuid).toBeDefined();
+    });
+
+    test('An object can be turned into json with an existing item_uuid, and it stays the same', () => {
+        const item = {
+            item_uuid: '23532024-914c-5674-b76b-00337d851b63',
+            amount: 12,
+            note: 'some note',
+            date: new Date('2021-01-03T00:00:00.000Z'),
+            type: 'income',
+            category: 'Transportation',
+            createdAt: new Date('2021-01-03T00:00:00.000Z')
+        };
+    
+        const jsonItem = toJson(item);
+        expect(jsonItem.amount).toBeDefined();
+        expect(jsonItem.note).toBeDefined();
+        expect(jsonItem.category).toBeDefined();
+        expect(jsonItem.type).toBeDefined();
+        expect(jsonItem.date).toBeDefined();
+        expect(jsonItem.item_uuid).toBe(item.item_uuid);
     });
     
     test('Handles undefined notes', () => {
@@ -24,7 +46,8 @@ describe('toJson tests', () => {
             note: undefined,
             date: new Date('2021-01-03T00:00:00.000Z'),
             type: 'income',
-            category: 'Transportation'
+            category: 'Transportation',
+            createdAt: new Date('2021-01-03T00:00:00.000Z')
         };
     
         const jsonItem = toJson(item);
@@ -38,6 +61,135 @@ describe('toJson tests', () => {
     });
 });
 
+describe('getPrimaryKey tests', () => {
+    test('Has all the data - succeeds', () => {
+        const item = {
+            user_uuid: '00337d851b63-914c-5674-b76b-23532024',
+            amount: 12,
+            note: 'some note',
+            date: new Date('2021-01-03T00:00:00.000Z'),
+            type: 'income',
+            category: 'Transportation',
+            createdAt: new Date('2021-01-03T00:00:00.000Z')
+        };
+    
+        const primaryKey = getPrimaryKey(item);
+        expect(primaryKey).toBeDefined();
+    });
+
+    test('Is missing user_uuid - fails', () => {
+        const item = {
+            amount: 12,
+            note: 'some note',
+            date: new Date('2021-01-03T00:00:00.000Z'),
+            type: 'income',
+            category: 'Transportation',
+            createdAt: new Date('2021-01-03T00:00:00.000Z')
+        };
+    
+        const primaryKey = getPrimaryKey(item);
+        expect(primaryKey).not.toBeDefined();
+    });
+});
+
+describe('getSortKey tests', () => {
+    test('Has all the data - succeeds', () => {
+        const item = {
+            user_uuid: '00337d851b63-914c-5674-b76b-23532024',
+            amount: 12,
+            note: 'some note',
+            date: new Date('2021-01-03T00:00:00.000Z'),
+            type: 'income',
+            category: 'Transportation',
+            createdAt: new Date('2021-01-03T00:00:00.000Z')
+        };
+    
+        const sortKey = getSortKey(item);
+        expect(sortKey).toBeDefined();
+    });
+
+    test('Is missing type - fails', () => {
+        const item = {
+            amount: 12,
+            note: 'some note',
+            date: new Date('2021-01-03T00:00:00.000Z'),
+            category: 'Transportation',
+            createdAt: new Date('2021-01-03T00:00:00.000Z')
+        };
+    
+        const sortKey = getSortKey(item);
+        expect(sortKey).not.toBeDefined();
+    });
+
+    test('Is missing date - fails', () => {
+        const item = {
+            amount: 12,
+            note: 'some note',
+            type: 'income',
+            category: 'Transportation',
+            createdAt: new Date('2021-01-03T00:00:00.000Z')
+        };
+    
+        const sortKey = getSortKey(item);
+        expect(sortKey).not.toBeDefined();
+    });
+
+    test('Is missing category - fails', () => {
+        const item = {
+            amount: 12,
+            note: 'some note',
+            date: new Date('2021-01-03T00:00:00.000Z'),
+            type: 'income',
+            createdAt: new Date('2021-01-03T00:00:00.000Z')
+        };
+    
+        const sortKey = getSortKey(item);
+        expect(sortKey).not.toBeDefined();
+    });
+
+    test('Is missing createdAt - fails', () => {
+        const item = {
+            amount: 12,
+            note: 'some note',
+            date: new Date('2021-01-03T00:00:00.000Z'),
+            type: 'income',
+            category: 'Transportation',
+        };
+    
+        const sortKey = getSortKey(item);
+        expect(sortKey).not.toBeDefined();
+    });
+});
+
+describe('getItemUuid tests', () => {
+    test('Has all the data - succeeds', () => {
+        const item = {
+            user_uuid: '00337d851b63-914c-5674-b76b-23532024',
+            amount: 12,
+            note: 'some note',
+            date: new Date('2021-01-03T00:00:00.000Z'),
+            type: 'income',
+            category: 'Transportation',
+            createdAt: new Date('2021-01-03T00:00:00.000Z')
+        };
+    
+        const itemUuid = getItemUuid(item);
+        expect(itemUuid).toBeDefined();
+    });
+
+    test('Is missing type - fails', () => {
+        const item = {
+            amount: 12,
+            note: 'some note',
+            date: new Date('2021-01-03T00:00:00.000Z'),
+            category: 'Transportation',
+            createdAt: new Date('2021-01-03T00:00:00.000Z')
+        };
+    
+        const itemUuid = getItemUuid(item);
+        expect(itemUuid).not.toBeDefined();
+    });
+});
 
 describe('sumItemsByDay tests', () => {
     test('Amounts on the same day are added together', () => {

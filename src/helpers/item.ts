@@ -4,17 +4,42 @@ import { getMonthName } from 'utils/date';
 import { listItems } from 'graphql/queries';
 import { v5 as uuidv5 } from 'uuid';
 
+/**
+ * @param item 
+ * @return string | null
+ */
 const getPrimaryKey = (item: ItemInterface): string => {
+    if (!item.user_uuid) {
+        return;
+    }
+
     return 'USER#' + item.user_uuid;
 };
 
+/**
+ * @param item 
+ * @return string | null
+ */
 const getSortKey = (item: ItemInterface): string => {
+    if (!item.type || !item.date || !item.category || !item.createdAt) {
+        return;
+    }
+
     return item.type + '#' + item.date + '#' + item.category + '#' + item.createdAt;
 }
 
+/**
+ * @param item 
+ * @return string | null
+ */
 const getItemUuid = (item: ItemInterface): string => {
     const UUID_NAMESPACE = 'daf8a0be-41bb-4a62-b982-615e8412d604';
-    return uuidv5(getSortKey(item), UUID_NAMESPACE);
+    const sortKey = getSortKey(item);
+    if (!sortKey) {
+        return;
+    }
+
+    return uuidv5(sortKey, UUID_NAMESPACE);
 }
 
 /**
@@ -24,7 +49,7 @@ const getItemUuid = (item: ItemInterface): string => {
 const toJson = (item: ItemInterface): object => {
     return {
         // generate an item_item_uuid if one doesn't exist yet
-        item_uuid: item.item_uuid ? item.item_uuid :getItemUuid(item),
+        item_uuid: item.item_uuid ? item.item_uuid : getItemUuid(item),
         amount: formatNumberToFloat(item.amount),
         note: item.note || '',
         date: item.date,
