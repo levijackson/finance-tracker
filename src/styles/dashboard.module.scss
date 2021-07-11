@@ -4,25 +4,3 @@
 .dateSelector {
     width:100%;
 }
-.tableData {
-   min-width:500px;
-   text-align:left;
-   border-spacing:0;
-   margin-top:3em;
-
-    td {
-        padding:5px;
-    }
-
-   tr:nth-child(odd) td {
-       background:#A7CCED;
-   }
-
-   tr:hover td {
-       background:#63ADF2;
-   }
-
-   tbody {
-       border:1px solid #ccc;
-   }
-}

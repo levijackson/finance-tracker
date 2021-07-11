@@ -11,71 +11,14 @@ import { UserInterface } from 'components/interfaces/User';
 import { getData, toJson } from 'helpers/item';
 import { cloneObject } from 'utils/object';
 import { formatCurrency } from 'utils/currency';
-import { useTable, useSortBy } from 'react-table';
+import SummaryTable from 'components/SummaryTable';
 
 import styles from 'styles/dashboard.module.scss';
 
 
 Amplify.configure({ ...awsconfig, ssr: true });
 
-function Table({ columns, data }) {
-  const {
-    getTableProps,
-    getTableBodyProps,
-    headerGroups,
-    rows,
-    prepareRow,
-  } = useTable(
-    {
-      columns,
-      data,
-    },
-    useSortBy
-  )
 
-  return (
-    <>
-      <table {...getTableProps()} className={styles.tableData}>
-        <thead>
-          {headerGroups.map(headerGroup => (
-            <tr {...headerGroup.getHeaderGroupProps()}>
-              {headerGroup.headers.map(column => (
-                // Add the sorting props to control sorting. For this example
-                // we can add them into the header props
-                <th {...column.getHeaderProps(column.getSortByToggleProps())}>
-                  {column.render('Header')}
-                  {/* Add a sort direction indicator */}
-                  <span>
-                    {column.isSorted
-                      ? column.isSortedDesc
-                        ? ' -'
-                        : ' +'
-                      : ''}
-                  </span>
-                </th>
-              ))}
-            </tr>
-          ))}
-        </thead>
-        <tbody {...getTableBodyProps()}>
-          {rows.map(
-            (row, i) => {
-              prepareRow(row);
-              return (
-                <tr {...row.getRowProps()}>
-                  {row.cells.map(cell => {
-                    return (
-                      <td {...cell.getCellProps()}>{cell.render('Cell')}</td>
-                    )
-                  })}
-                </tr>
-              )}
-          )}
-        </tbody>
-      </table>
-    </>
-  )
-}
 
 export const getServerSideProps: GetServerSideProps = async (context) => {
   const { Auth, API } = withSSRContext(context);
@@ -144,34 +87,6 @@ interface HomeProps {
 }
 
 export default function Home(props: HomeProps) {
-  const columns = React.useMemo(
-    () => [
-      {
-        Header: 'Progress Report',
-        columns: [
-          {
-            Header: 'Month',
-            accessor: 'month',
-          },
-          {
-            Header: 'Income',
-            accessor: 'income',
-          },
-          {
-            Header: 'Expenses',
-            accessor: 'expense',
-          },
-          {
-            Header: 'Saved',
-            accessor: 'saved',
-          },
-        ],
-      },
-    ],
-    []
-  );
-
-
   if (!props.user) {
     return (
       <>
@@ -198,8 +113,8 @@ export default function Home(props: HomeProps) {
     <>
       { (props.chartData.length > 0) ?
         <div className="col-xs-12 col-sm-6">
-          <Table columns={columns} data={tableData} />
-          </div>
+          <SummaryTable data={tableData} />
+        </div>
         : ''
       }
       { props.financeData ? 
