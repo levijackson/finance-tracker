@@ -3,6 +3,7 @@ import { GetServerSideProps } from 'next';
 import { withSSRContext } from 'aws-amplify';
 
 import { ItemInterface } from 'components/interfaces/Item';
+import { UserInterface } from 'src/components/interfaces/User';
 import FinanceForm from 'components/FinanceForm';
 import { toJson } from 'helpers/item';
 import { byItemUuid } from '../../../graphql/queries';
@@ -26,7 +27,6 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
         context.res.end();
     }
 
-    // todo: actually try editing an entry!
     let item = toJson(results.data.byItemUuid.items[0]);
 
     return {
@@ -38,14 +38,14 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
 
 interface EditProps {
     item: ItemInterface;
-    id: string
+    user: UserInterface;
 }
 
 const EditForm = (props: EditProps) => {
     return (
         <>
             <h1 className="col-xs-12">Edit {props.item.type}</h1>
-            <FinanceForm type="expense" item={props.item} className="col-xs-12" />
+            <FinanceForm user={props.user} type="expense" item={props.item} className="col-xs-12" />
         </>
     );
 }

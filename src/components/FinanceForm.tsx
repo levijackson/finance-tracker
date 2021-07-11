@@ -21,6 +21,12 @@ const FinanceForm = (props: FinanceFormProps) => {
     let editing = false;
     if (props.hasOwnProperty('item')) {
         // react-datepicker needs a Date object
+        if (typeof props.item.date === 'string') {
+            // add 12 hours to overcome issue with timezone when loading just yyyy-mm-dd
+            // may not be permanent fix.
+            props.item.date = (props.item.date + 'T12:00:00');
+        }
+
         props.item.date = new Date(props.item.date);
         editing = true;
     }
@@ -56,13 +62,14 @@ const FinanceForm = (props: FinanceFormProps) => {
         let url: string = '/api/item';
 
         if (editing) {
-            url += '/' + props.item.id;
+            url += '/' + props.item.item_uuid;
         }
 
         try {
             const data: object = { ...state, user_uuid: props.user.uuid };
             data.date.setHours(0,0,0,0);
             data.date = formatDate(data.date);
+
 
             await fetch(url, {
                 method: 'POST',
@@ -71,9 +78,14 @@ const FinanceForm = (props: FinanceFormProps) => {
                 'Content-Type': 'application/json;charset=UTF-8'
             },
                 body: JSON.stringify(data),
-            }).then(() => {
+            }).then((response) => {
                 if (editing) {
                     setMessage('Updated!');
+                    response.json().then((jsonResponse) => {
+                      if (jsonResponse.item_uuid !== props.item.item_uuid) {
+                        console.log('redirect to actual uuid');
+                      }
+                    });
                 } else {
                     setState(defaultState);
                     setMessage('Added!');
@@ -103,7 +115,7 @@ const FinanceForm = (props: FinanceFormProps) => {
             return;
         }
 
-        const url: string = '/api/item/' + props.item.id;
+        const url: string = '/api/item/' + props.item.item_uuid;
 
         try {
             await fetch(url, {
@@ -112,13 +124,13 @@ const FinanceForm = (props: FinanceFormProps) => {
                 'Accept': 'application/json',
                 'Content-Type': 'application/json;charset=UTF-8'
             },
-                body: JSON.stringify({id: props.item.id}),
+                body: JSON.stringify({id: props.item.item_uuid}),
             }).then(() => {
                 router.push('/');
             });
         } catch (error) {
             console.log(error);
-            setMessage('Failed to delete ' + props.item.id);
+            setMessage('Failed to delete ' + props.item.item_uuid);
         }
     };
 

@@ -1,10 +1,15 @@
 import FinanceForm from 'components/FinanceForm';
+import { UserInterface } from 'src/components/interfaces/User';
 
-const AddForm = ({ user }) => {
+interface AddProps {
+    user: UserInterface;
+}
+
+const AddForm = (props: AddProps) => {
     return (
         <>
             <h1 className="col-xs-12">Add</h1>
-            <FinanceForm user={user} type="expense" className="col-xs-12" />
+            <FinanceForm user={props.user} type="expense" className="col-xs-12" />
         </>
     );
 }

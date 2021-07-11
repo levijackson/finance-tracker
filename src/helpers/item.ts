@@ -26,7 +26,7 @@ const toJson = (item: ItemInterface): object => {
         item_uuid: getItemUuid(item) || null,
         amount: formatNumberToFloat(item.amount),
         note: item.note || '',
-        date: item.date.toString(),
+        date: item.date,
         category: item.category,
         type: item.type
     };
