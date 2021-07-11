@@ -6,7 +6,7 @@ import { ItemInterface } from 'components/interfaces/Item';
 import { UserInterface } from 'src/components/interfaces/User';
 import FinanceForm from 'components/FinanceForm';
 import { toJson } from 'helpers/item';
-import { byItemUuid } from '../../../graphql/queries';
+import { byItemUuid } from 'graphql/queries';
 
 
 export const getServerSideProps: GetServerSideProps = async (context) => {

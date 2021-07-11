@@ -1,7 +1,7 @@
 import type { NextApiRequest, NextApiResponse } from 'next';
 import Amplify, { withSSRContext } from 'aws-amplify';
-import awsconfig from '../../../../aws-exports.js';
-import { listItems } from '../../../../graphql/queries';
+import awsconfig from 'aws-exports.js';
+import { listItems } from 'graphql/queries';
 
 // needs to be enabled in each API route
 Amplify.configure({ ...awsconfig, ssr: true });

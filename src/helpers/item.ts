@@ -1,7 +1,7 @@
 import { formatNumberToFloat } from 'utils/currency';
 import { ItemInterface } from 'components/interfaces/Item';
 import { getMonthName } from 'utils/date';
-import { listItems } from '../graphql/queries';
+import { listItems } from 'graphql/queries';
 import { v5 as uuidv5 } from 'uuid';
 
 const getPrimaryKey = (item: ItemInterface): string => {

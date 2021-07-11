@@ -1,9 +1,9 @@
 import type { NextApiRequest, NextApiResponse } from 'next';
 import Amplify, { withSSRContext } from 'aws-amplify';
-import awsconfig from '../../../aws-exports.js';
-import { createItem } from '../../../graphql/mutations';
-import { CreateItemInput } from '../../../API';
-import { getPrimaryKey, getSortKey, getItemUuid } from '../../../helpers/item';
+import awsconfig from 'aws-exports.js';
+import { createItem } from 'graphql/mutations';
+import { CreateItemInput } from 'API';
+import { getPrimaryKey, getSortKey, getItemUuid } from 'helpers/item';
 import { ItemInterface } from 'src/components/interfaces/Item.js';
 
 

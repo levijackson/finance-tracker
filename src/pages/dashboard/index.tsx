@@ -3,10 +3,10 @@ import { useState, useEffect } from 'react';
 import { useTable, useSortBy } from 'react-table';
 import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, Legend, PieChart, Pie } from 'recharts';
 
-import { sumItemsByDay, groupItemsByCategory } from '../../helpers/item';
-import { cloneObject } from '../../utils/object';
-import { formatNumberToFloat } from '../../utils/currency';
-import { formatDate } from '../../utils/date';
+import { sumItemsByDay, groupItemsByCategory } from 'helpers/item';
+import { cloneObject } from 'utils/object';
+import { formatNumberToFloat } from 'utils/currency';
+import { formatDate } from 'utils/date';
 import { UserInterface } from 'components/interfaces/User';
 
 import styles from 'styles/dashboard.module.scss';

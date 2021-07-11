@@ -1,10 +1,10 @@
 import type { NextApiRequest, NextApiResponse } from 'next';
 import Amplify, { withSSRContext } from 'aws-amplify';
-import awsconfig from '../../../aws-exports.js';
-import { byItemUuid } from '../../../graphql/queries';
-import { updateItem, deleteItem } from '../../../graphql/mutations';
-import { UpdateItemInput, DeleteItemInput, Item } from '../../../API';
-import { getItemUuid } from '../../../helpers/item';
+import awsconfig from 'aws-exports.js';
+import { byItemUuid } from 'graphql/queries';
+import { updateItem, deleteItem } from 'graphql/mutations';
+import { UpdateItemInput, DeleteItemInput, Item } from 'API';
+import { getItemUuid } from 'helpers/item';
 
 // needs to be enabled in each API route
 Amplify.configure({ ...awsconfig, ssr: true });

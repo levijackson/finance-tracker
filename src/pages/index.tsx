@@ -3,7 +3,7 @@ import React from 'react';
 import { GetServerSideProps } from 'next'
 
 import Amplify, { withSSRContext } from 'aws-amplify';
-import awsconfig from '../aws-exports.js';
+import awsconfig from 'aws-exports.js';
 
 import Recent from 'components/Recent';
 import { ItemInterface } from 'components/interfaces/Item';
