@@ -34,7 +34,7 @@ const toJson = (item: ItemInterface): object => {
 };
 
 /**
- * Get a config we'll use to search for items
+ * Get a config we'll use to search for items.
  * 
  * @param monthNumber 
  */
@@ -56,6 +56,8 @@ const getMonthConfig = (monthNumber: number) => {
 };
 
 /**
+ * Get the combined income and expense data and sum them
+ * 
  * @param userId 
  * @param numberMonths 
  */
@@ -71,9 +73,6 @@ const getData = async (API: any, user_uuid: string, numberMonths: number) => {
             'month': monthConfig['name'],
         };
 
-        // todo: working on the query. How to search/combine. 
-        // are the keys I have the best? 
-        //     perhaps sort PK should be just user id and sort key starts with the type?
         for (let key in ITEM_TYPES) {
             let sum = 0;
 

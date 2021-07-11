@@ -1,7 +1,7 @@
 import type { AppProps } from 'next/app';
 import React, { useState, useEffect } from 'react';
 import Amplify, { Auth } from 'aws-amplify';
-import awsconfig from 'src/aws-exports';
+import awsconfig from 'aws-exports';
 
 import Header from 'components/Header';
 import Footer from 'components/Footer';

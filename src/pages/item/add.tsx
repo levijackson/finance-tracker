@@ -1,5 +1,5 @@
 import FinanceForm from 'components/FinanceForm';
-import { UserInterface } from 'src/components/interfaces/User';
+import { UserInterface } from 'components/interfaces/User';
 
 interface AddProps {
     user: UserInterface;

@@ -3,11 +3,11 @@ import { GetServerSideProps } from 'next';
 import { withSSRContext } from 'aws-amplify';
 
 import { ItemInterface } from 'components/interfaces/Item';
-import { UserInterface } from 'src/components/interfaces/User';
+import { UserInterface } from 'components/interfaces/User';
 import FinanceForm from 'components/FinanceForm';
 import { toJson } from 'helpers/item';
 import { byItemUuid } from 'graphql/queries';
-import ItemService from 'src/services/ItemService';
+import ItemService from 'services/ItemService';
 
 
 export const getServerSideProps: GetServerSideProps = async (context) => {
