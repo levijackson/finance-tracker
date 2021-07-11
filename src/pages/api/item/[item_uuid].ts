@@ -1,39 +1,25 @@
 import type { NextApiRequest, NextApiResponse } from 'next';
 import Amplify, { withSSRContext } from 'aws-amplify';
 import awsconfig from 'aws-exports.js';
-import { byItemUuid } from 'graphql/queries';
-import { updateItem, deleteItem } from 'graphql/mutations';
-import { UpdateItemInput, DeleteItemInput, Item } from 'API';
-import { getItemUuid } from 'helpers/item';
+import ItemService from 'src/services/ItemService';
+import { ItemInterface } from 'src/components/interfaces/Item';
 
 // needs to be enabled in each API route
 Amplify.configure({ ...awsconfig, ssr: true });
 
 export default async (req: NextApiRequest, res: NextApiResponse) => {
+  const service = new ItemService();
   const { API } = withSSRContext({ req });
   const item_uuid = req.body.item_uuid;
 
-  const results = await API.graphql({
-    query: byItemUuid,
-    variables: {item_uuid: item_uuid},
-    authMode: 'AMAZON_COGNITO_USER_POOLS'
-  });
-  let item: Item = results.data.byItemUuid.items[0];
+  const item = await service.getItemByUuid(API, item_uuid);
 
   if (!item) {
     return res.status(405);
   }
 
   if (req.method == 'DELETE') {
-    const dynamoItem: DeleteItemInput = {
-      PK: item.PK,
-      SK: item.SK
-    }
-    await API.graphql({
-      query: deleteItem,
-      variables: {input: dynamoItem},
-      authMode: 'AMAZON_COGNITO_USER_POOLS'
-    });
+    service.deleteItem(API, item);
     return res.status(201).json({ success: true });
   }
 
@@ -42,27 +28,16 @@ export default async (req: NextApiRequest, res: NextApiResponse) => {
   }
 
   try {
-    let dynamoItem: UpdateItemInput = {
-      PK: item.PK,
-      SK: item.SK,
-      user_uuid: item.user_uuid,
+    const itemChanges: ItemInterface = {
       type: req.body.type,
       category: req.body.category,
       amount: req.body.amount,
       date: req.body.date,
       note: req.body.note,
-      createdAt: item.createdAt
     }
-    // Set it after we change the data
-    dynamoItem.item_uuid = getItemUuid(dynamoItem);
-
-    await API.graphql({
-      query: updateItem,
-      variables: {input: dynamoItem},
-      authMode: 'AMAZON_COGNITO_USER_POOLS'
-    });
+    const return_item_uuid = await service.updateItem(API, item, itemChanges);
       
-    res.status(201).json({ success: true, item_uuid: dynamoItem.item_uuid });
+    res.status(201).json({ success: true, item_uuid: return_item_uuid });
   } catch (error) {
     console.log(error);
     res.status(400).json({ success: false });

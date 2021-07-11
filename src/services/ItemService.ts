@@ -1,23 +1,12 @@
-import { createItem } from '../graphql/mutations';
-import { ItemInterface } from '../components/interfaces/Item';
+import { ItemInterface } from 'components/interfaces/Item';
+import { createItem, updateItem, deleteItem } from 'graphql/mutations';
+import { byItemUuid } from 'graphql/queries';
+import { CreateItemInput, UpdateItemInput, DeleteItemInput, Item } from 'API';
+import { getPrimaryKey, getSortKey, getItemUuid } from 'helpers/item';
 
 
 
 export default class ItemService {
-    // db: object;
-
-    // constructor() {
-    //     this.db = mysql({
-    //         config: {
-    //             host: process.env.MYSQL_HOST,
-    //             port: parseInt(process.env.MYSQL_PORT),
-    //             database: process.env.MYSQL_DATABASE,
-    //             user: process.env.MYSQL_USERNAME,
-    //             password: process.env.MYSQL_PASSWORD,
-    //         },
-    //     });
-    // }
-
     // async query(
     //     q: string,
     //     values: (string | number)[] | string | number = [],
@@ -109,94 +98,111 @@ export default class ItemService {
     //     return new Date(date).toISOString().slice(0, 19).replace('T', ' ');
     // }
 
-    // /**
-    //  * @param item 
-    //  */
-    // async updateItem(item: ItemInterface) {
-    //     await this.db.query(
-    //         `
-    //         UPDATE items
-    //         SET type = ?,
-    //         category = ?,
-    //         amount = ?,
-    //         date = ?,
-    //         note = ?
-    //         WHERE id = ?
-    //       `,
-    //         [
-    //             item.type,
-    //             item.category, 
-    //             item.amount, 
-    //             this.formatDateTime(item.date), 
-    //             item.note, 
-    //             item.id
-    //         ]
-    //     );
-    // }
 
-    // /**
-    //  * @param itemId 
-    //  */
-    // async deleteItem(itemId: number) {
-    //     await this.db.query(
-    //         `
-    //         DELETE FROM items
-    //         WHERE id = ?
-    //       `,
-    //         [
-    //             itemId
-    //         ]
-    //     );
+    /**
+     * @param API  Amplify authenticated API object
+     * @param item_uuid 
+     * 
+     * @returns object|null
+     */
+    async getItemByUuid(API: any, item_uuid: string) {
+      try {
+        const results = await API.graphql({
+          query: byItemUuid,
+          variables: {item_uuid: item_uuid},
+          authMode: 'AMAZON_COGNITO_USER_POOLS'
+        });
+        if (results.data.byItemUuid.items) {
+          return results.data.byItemUuid.items[0];
+        }
+      } catch (error) {
+        console.log('getItemByUuid failed');
+        console.log(error);
+      }
+    }
 
-    //     await this.db.query(
-    //         `
-    //         DELETE FROM user_items
-    //         WHERE itemId = ?
-    //       `,
-    //         [
-    //             itemId
-    //         ]
-    //     );   
-    // }
 
-    // /**
-    //  * @param item 
-    //  */
-    // async addItem(item: ItemInterface) {
-    //     return (
-    //       await API.graphql({
-    //         query: createItem,
-    //         variables: {input: item},
-    //         authMode: 'AMAZON_COGNITO_USER_POOLS'
-    //       })
-    //     );
-        // graphqlOperation(createItem, item)));
+    /**
+     * @param API  Amplify authenticated API object
+     * @param currentItem
+     * @param itemChanges  JSON object of changes to make to item. Key=>Value
+     * 
+     * @return string  item_uuid for the item
+     */
+    async updateItem(API: any, currentItem: Item, itemChanges: Item) {
+      try {
+        let dynamoItem: UpdateItemInput = {
+          PK: currentItem.PK,
+          SK: currentItem.SK,
+          user_uuid: currentItem.user_uuid,
+          type: itemChanges.type,
+          category: itemChanges.category,
+          amount: itemChanges.amount,
+          date: itemChanges.date,
+          note: itemChanges.note,
+          createdAt: currentItem.createdAt
+        }
+        // Set it after we change the data
+        dynamoItem.item_uuid = getItemUuid(dynamoItem);
 
-        // const db = this.db;
-        // await db.query(
-        //     `
-        //     INSERT INTO items (type, category, amount, date, note)
-        //     VALUES (?, ?, ?, ?, ?)
-        //     `,
-        //     [
-        //         item.type,
-        //         item.category, 
-        //         item.amount, 
-        //         this.formatDateTime(item.date), 
-        //         item.note
-        //     ],
-        //     function (error, result, fields) {
-        //         db.query(
-        //             `INSERT INTO user_items (userId, itemId)
-        //             VALUES (?, ?)`,
-        //             [
-        //                 userId,
-        //                 result.insertId
-        //             ]
-        //         );
-        //     }
-        //   )
-    // }
+        await API.graphql({
+          query: updateItem,
+          variables: {input: dynamoItem},
+          authMode: 'AMAZON_COGNITO_USER_POOLS'
+        });
+
+        return dynamoItem.item_uuid;
+      } catch (error) {
+        console.log('updateItem failed');
+        console.log(error);
+      }
+    }
+
+    /**
+     * @param API  Amplify authenticated API object
+     * @param item
+     */
+    async deleteItem(API: any, item: Item) {
+      try {
+        const dynamoItem: DeleteItemInput = {
+          PK: item.PK,
+          SK: item.SK
+        }
+
+        await API.graphql({
+          query: deleteItem,
+          variables: {input: dynamoItem},
+          authMode: 'AMAZON_COGNITO_USER_POOLS'
+        });
+      } catch (error) {
+        console.log('deleteItem failed');
+        console.log(error);
+      }
+    }
+
+    /**
+     * @param API  Amplify authenticated API object
+     * @param item 
+     */
+    async addItem(API: any, item: ItemInterface) {
+      try {
+        const dynamoItem: CreateItemInput = {
+          ...item,
+          PK: getPrimaryKey(item),
+          SK: getSortKey(item),
+          item_uuid: getItemUuid(item)
+        };
+    
+        await API.graphql({
+          query: createItem,
+          variables: {input: dynamoItem},
+          authMode: 'AMAZON_COGNITO_USER_POOLS'
+        });
+      } catch(error) {
+        console.log('addItem failed');
+        console.log(error);
+      }
+    }
 
     // /**
     //  * Get the year/month options
