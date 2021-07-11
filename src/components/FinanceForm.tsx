@@ -21,6 +21,7 @@ const FinanceForm = (props: FinanceFormProps) => {
     let editing = false;
     if (props.hasOwnProperty('item')) {
         // react-datepicker needs a Date object
+        // It is a string the first time the page loads
         if (typeof props.item.date === 'string') {
             // add 12 hours to overcome issue with timezone when loading just yyyy-mm-dd
             // may not be permanent fix.
@@ -78,14 +79,9 @@ const FinanceForm = (props: FinanceFormProps) => {
                 'Content-Type': 'application/json;charset=UTF-8'
             },
                 body: JSON.stringify(data),
-            }).then((response) => {
+            }).then(() => {
                 if (editing) {
                     setMessage('Updated!');
-                    response.json().then((jsonResponse) => {
-                      if (jsonResponse.item_uuid !== props.item.item_uuid) {
-                        console.log('redirect to actual uuid');
-                      }
-                    });
                 } else {
                     setState(defaultState);
                     setMessage('Added!');

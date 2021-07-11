@@ -7,31 +7,25 @@ import { UserInterface } from 'src/components/interfaces/User';
 import FinanceForm from 'components/FinanceForm';
 import { toJson } from 'helpers/item';
 import { byItemUuid } from 'graphql/queries';
+import ItemService from 'src/services/ItemService';
 
 
 export const getServerSideProps: GetServerSideProps = async (context) => {
+    const service = new ItemService();
     const { API } = withSSRContext(context);
-
-    const results = await API.graphql({
-        query: byItemUuid,
-        variables: {
-            item_uuid: context.query.item_uuid,
-        },
-        authMode: 'AMAZON_COGNITO_USER_POOLS'
-      });
+    
+    const item = await service.getItemByUuid(API, context.query.item_uuid);
 
 
-    if (results.data.byItemUuid.items.length === 0) {
+    if (!item) {
         context.res.setHeader('Location', '/item/add');
         context.res.statusCode = 302;
         context.res.end();
     }
-
-    let item = toJson(results.data.byItemUuid.items[0]);
-
+    
     return {
         props: {
-            item
+            item: toJson(item)
         }
       };
 };

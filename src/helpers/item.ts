@@ -23,7 +23,8 @@ const getItemUuid = (item: ItemInterface): string => {
  */
 const toJson = (item: ItemInterface): object => {
     return {
-        item_uuid: getItemUuid(item) || null,
+        // generate an item_item_uuid if one doesn't exist yet
+        item_uuid: item.item_uuid ? item.item_uuid :getItemUuid(item),
         amount: formatNumberToFloat(item.amount),
         note: item.note || '',
         date: item.date,
