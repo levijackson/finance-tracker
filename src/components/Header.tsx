@@ -1,4 +1,5 @@
 import Link from 'next/link';
+import { Auth } from 'aws-amplify';
 import { AmplifySignOut } from '@aws-amplify/ui-react';
 
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
@@ -18,9 +19,6 @@ const Header = ({ user }) => {
                 </Link>
             </div>
             <div className="navigation col-sm-7 col-xs-12">
-            {/* {!session && (
-                <a onClick={signIn}>Log in</a>
-            )} */}
             {user && (
                 <>
                 <Link href="/dashboard">Dashboard</Link>
@@ -29,11 +27,14 @@ const Header = ({ user }) => {
             )}
             </div>
             <div className="utility col-sm-4 col-xs-12">
-            {user && (
+            {user ? (
                 <>
-                    <AmplifySignOut />
+                    <button onClick={() => Auth.signOut()}>Log Out ({user.email})</button>
                 </>
-            )}
+            ) :
+            // <button onClick={() => Auth.federatedSignIn()}>Sign In</button>
+            <button onClick={() => Auth.federatedSignIn({provider: 'Google'})}>Sign In</button>
+            }
             </div>
         </header>
     );

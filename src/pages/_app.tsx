@@ -30,7 +30,7 @@ function MyApp({ Component, pageProps }: AppProps) {
   return (
       <div className="wrapper">
               <Header user={currentUser} />
-
+              
               <div className="content row">
                   <Component {...pageProps} user={currentUser} />
               </div>
@@ -40,4 +40,4 @@ function MyApp({ Component, pageProps }: AppProps) {
   );
 }
 
-export default withAuthenticator(MyApp);
+export default MyApp;

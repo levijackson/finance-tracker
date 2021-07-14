@@ -1,8 +1,8 @@
 {
-    "identityPoolName": "financetracker059af71a_identitypool_059af71a",
+    "identityPoolName": "financetrackerceb2393f_identitypool_ceb2393f",
     "allowUnauthenticatedIdentities": false,
-    "resourceNameTruncated": "financ059af71a",
-    "userPoolName": "financetracker059af71a_userpool_059af71a",
+    "resourceNameTruncated": "financceb2393f",
+    "userPoolName": "financetrackerceb2393f_userpool_ceb2393f",
     "autoVerifiedAttributes": [
         "email"
     ],
@@ -28,10 +28,10 @@
     "userpoolClientReadAttributes": [
         "email"
     ],
-    "userpoolClientLambdaRole": "financ059af71a_userpoolclient_lambda_role",
+    "userpoolClientLambdaRole": "financceb2393f_userpoolclient_lambda_role",
     "userpoolClientSetAttributes": false,
-    "sharedId": "059af71a",
-    "resourceName": "financetracker059af71a",
+    "sharedId": "ceb2393f",
+    "resourceName": "financetrackerceb2393f",
     "authSelections": "identityPoolAndUserPool",
     "authRoleArn": {
         "Fn::GetAtt": [
@@ -45,15 +45,19 @@
             "Arn"
         ]
     },
-    "useDefault": "default",
-    "triggers": "{}",
+    "useDefault": "defaultSocial",
+    "hostedUI": true,
+    "usernameAttributes": [
+        "email"
+    ],
+    "hostedUIDomainName": "financetrackerceb2393f-ceb2393f",
+    "authProvidersUserPool": [
+        "Google"
+    ],
+    "hostedUIProviderMeta": "[{\"ProviderName\":\"Google\",\"authorize_scopes\":\"openid email profile\",\"AttributeMapping\":{\"email\":\"email\",\"username\":\"sub\"}}]",
+    "oAuthMetadata": "{\"AllowedOAuthFlows\":[\"code\"],\"AllowedOAuthScopes\":[\"phone\",\"email\",\"openid\",\"profile\",\"aws.cognito.signin.user.admin\"],\"CallbackURLs\":[\"http://localhost:3000/\"],\"LogoutURLs\":[\"http://localhost:3000/\"]}",
     "userPoolGroupList": [],
     "serviceName": "Cognito",
     "usernameCaseSensitive": false,
-    "parentStack": {
-        "Ref": "AWS::StackId"
-    },
-    "breakCircularDependency": true,
-    "permissions": [],
     "dependsOn": []
 }

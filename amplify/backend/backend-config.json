@@ -1,6 +1,6 @@
 {
   "auth": {
-    "financetracker059af71a": {
+    "financetrackerceb2393f": {
       "service": "Cognito",
       "providerPlugin": "awscloudformation",
       "dependsOn": [],
@@ -16,7 +16,7 @@
           "defaultAuthentication": {
             "authenticationType": "AMAZON_COGNITO_USER_POOLS",
             "userPoolConfig": {
-              "userPoolId": "authfinancetracker059af71a"
+              "userPoolId": "authfinancetrackerceb2393f"
             }
           },
           "additionalAuthenticationProviders": []

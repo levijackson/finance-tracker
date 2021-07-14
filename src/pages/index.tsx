@@ -13,16 +13,18 @@ import { cloneObject } from 'utils/object';
 import { formatCurrency } from 'utils/currency';
 import SummaryTable from 'components/SummaryTable';
 
-import styles from 'styles/dashboard.module.scss';
-
 
 Amplify.configure({ ...awsconfig, ssr: true });
 
-
-
 export const getServerSideProps: GetServerSideProps = async (context) => {
   const { Auth, API } = withSSRContext(context);
-  const user = await Auth.currentAuthenticatedUser();
+  let user = null;
+  try {
+    // todo: whydoesn't this work on home page?
+    user = await Auth.currentAuthenticatedUser();
+  } catch (e) {
+    console.log(e);
+  }
 
   if (!user) {
     return {
