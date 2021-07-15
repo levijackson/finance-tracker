@@ -6,8 +6,18 @@ import { faSpinner } from '@fortawesome/free-solid-svg-icons';
 import styles from 'styles/summaryTable.module.scss';
 
 
-const SummaryTable = ({ data }) => {
-  if (data.length === 0)  {
+interface DataItem {
+  expense: string,
+  income: string,
+  month: string,
+  saved: string
+}
+interface SummaryTableProps {
+  data: Array<DataItem>
+}
+
+const SummaryTable = (props: SummaryTableProps) => {
+  if (props.data.length === 0)  {
     return (
       <>
         <h2>Summary</h2>
@@ -106,7 +116,7 @@ const SummaryTable = ({ data }) => {
 return (
   <>
     <h2>Summary</h2>
-    <Table columns={columns} data={data} />
+    <Table columns={columns} data={props.data} />
   </>
 );
 

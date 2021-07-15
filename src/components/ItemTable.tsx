@@ -1,9 +1,14 @@
 import { useMemo } from 'react';
 import { useTable, useSortBy } from 'react-table';
+import { Item } from 'src/API';
 import styles from 'styles/itemTable.module.scss';
 
 
-const ItemTable = ({ data }) => {
+interface ItemTableProps {
+  data: Array<Item>
+}
+
+const ItemTable = (props: ItemTableProps) => {
 
   const columns = useMemo(
     () => [
@@ -91,7 +96,7 @@ function Table({ columns, data }) {
   )
 }
 
-return <Table columns={columns} data={data} />;
+return <Table columns={columns} data={props.data} />;
 
 };
 
