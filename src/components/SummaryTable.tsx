@@ -68,14 +68,13 @@ const SummaryTable = (props: SummaryTableProps) => {
       },
       useSortBy
     )
-  
+  console.log(headerGroups);
     return (
       <>
         <table {...getTableProps()} className={styles.tableData}>
           <thead>
-            {headerGroups.map(headerGroup => (
-              <tr {...headerGroup.getHeaderGroupProps()}>
-                {headerGroup.headers.map(column => (
+              <tr {...headerGroups[1].getHeaderGroupProps()}>
+                {headerGroups[1].headers.map(column => (
                   // Add the sorting props to control sorting. For this example
                   // we can add them into the header props
                   <th {...column.getHeaderProps(column.getSortByToggleProps())}>
@@ -91,7 +90,6 @@ const SummaryTable = (props: SummaryTableProps) => {
                   </th>
                 ))}
               </tr>
-            ))}
           </thead>
           <tbody {...getTableBodyProps()}>
             {rows.map(

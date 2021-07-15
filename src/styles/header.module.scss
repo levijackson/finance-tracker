@@ -1,6 +1,3 @@
-.logout {
-
-}
 .logo {
     font-size:2em;
     border-radius: 50%;
@@ -11,5 +8,27 @@
 
     &:hover {
         color:#FF6663;
+    }
+}
+.logout {
+    background:#ccc;
+    border:1px solid #333;
+    padding:10px;
+    border-radius:5px;
+    cursor:pointer;
+
+    &:hover {
+        background:#E0FF4F;
+    }
+}
+.login {
+    background:#ccc;
+    border:1px solid #333;
+    padding:10px;
+    border-radius:5px;
+    cursor:pointer;
+
+    &:hover {
+        background:#E0FF4F;
     }
 }

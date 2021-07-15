@@ -111,7 +111,7 @@ const DashboardIndex = (props: DashboardProps) => {
           { loading ? <FontAwesomeIcon icon={faSpinner} className="fa-spin" /> : '' }
           { (date && data.length > 0) ? 
             <ItemTable data={tableData} />
-            : '' 
+            : 'No data' 
           }
         </div> 
     
@@ -120,7 +120,7 @@ const DashboardIndex = (props: DashboardProps) => {
           { loading ? <FontAwesomeIcon icon={faSpinner} className="fa-spin" /> : '' }
           { chartData.length > 0 ?
             <IncomeExpenseLineChart data={chartData} />
-            : ''
+            : 'No data'
           }
         </div>
 
@@ -129,7 +129,7 @@ const DashboardIndex = (props: DashboardProps) => {
             { loading ? <FontAwesomeIcon icon={faSpinner} className="fa-spin" /> : '' }
             { incomePieChartData.length > 0 ?
               <CategoryPieChart data={incomePieChartData} />
-              : ''
+              : 'No data'
             }
         </div>
 
@@ -138,7 +138,7 @@ const DashboardIndex = (props: DashboardProps) => {
           { loading ? <FontAwesomeIcon icon={faSpinner} className="fa-spin" /> : '' }
           { expensePieChartData.length > 0 ?
             <CategoryPieChart data={expensePieChartData} />
-            : ''
+            : 'No data'
           }
         </div>
       </>

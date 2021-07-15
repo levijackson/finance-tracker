@@ -28,11 +28,11 @@ const Header = ({ user }) => {
             <div className="utility col-sm-4 col-xs-12">
             {user ? (
                 <>
-                    <button onClick={() => Auth.signOut()}>Log Out ({user.email})</button>
+                    <button className={styles.logout} onClick={() => Auth.signOut()}>Log Out ({user.email})</button>
                 </>
             ) :
             // <button onClick={() => Auth.federatedSignIn()}>Sign In</button>
-            <button onClick={() => Auth.federatedSignIn({provider: 'Google'})}>Sign In</button>
+            <button className={styles.login} onClick={() => Auth.federatedSignIn({provider: 'Google'})}>Sign In</button>
             }
             </div>
         </header>
