@@ -1,8 +1,10 @@
 import React from 'react';
 import { useState, useEffect } from 'react';
 import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, Legend, PieChart, Pie } from 'recharts';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faSpinner } from '@fortawesome/free-solid-svg-icons';
 
-import { sumItemsByDay, groupItemsByCategory } from 'helpers/item';
+import { sumItemsByDay, groupItemsByCategory, getMonthlyData } from 'helpers/item';
 import { cloneObject } from 'utils/object';
 import { formatNumberToFloat, formatCurrency } from 'utils/currency';
 import { formatDate, getMonthName } from 'utils/date';
@@ -19,6 +21,7 @@ interface DashboardOptions {
 
 const DashboardIndex = (props: DashboardOptions) => {
     const [ date, setDate ] = useState('');
+    const [ loading, setLoading ] = useState(false);
     const [ data, setData ] = useState([]);
     const [ message, setMessage ] = useState(null);
     
@@ -37,36 +40,12 @@ const DashboardIndex = (props: DashboardOptions) => {
       if (!date) {
         return;
       }
+      setLoading(true);
 
       try {
-        fetch('/api/item/search?type=expense&date=' + date, {
-          method: 'GET',
-          headers: {
-            'Accept': 'application/json',
-            'Content-Type': 'application/json;charset=UTF-8'
-          },
-        }).then((response) => {
-          response.json().then((expenseData) => {
-            fetch('/api/item/search?type=income&date=' + date, {
-              method: 'GET',
-              headers: {
-                'Accept': 'application/json',
-                'Content-Type': 'application/json;charset=UTF-8'
-              },
-            }).then((response) => {
-              response.json().then((incomeData) => {
-                let mergedData = [...expenseData.items, ...incomeData.items];
-                mergedData.map((item) => {
-                  item.date = new Date(item.date);
-                });
-
-                if (mergedData.length === 0) {
-                  setMessage('There is no data for ' + date);
-                }
-                setData(mergedData);
-              });            
-            });
-          });            
+        getMonthlyData(date).then((response) => {
+          setData(response);
+          setLoading(false);
         });
       } catch (error) {
 
@@ -135,7 +114,7 @@ const DashboardIndex = (props: DashboardOptions) => {
             </label>
         </div>
         { (date && data.length > 0) ? <div className="col-xs-12 col-sm-6"><ItemTable data={tableData} /></div> : '' }
-        
+        { loading ? <FontAwesomeIcon icon={faSpinner} className="fa-spin" /> : '' }
         { chartData.length > 0 ?
             <div className="col-xs-12 col-sm-6">
                 <LineChart

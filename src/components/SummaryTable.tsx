@@ -1,7 +1,7 @@
 import { useMemo } from 'react';
 import { useTable, useSortBy } from 'react-table';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { faSpinner } from '@fortawesome/free-solid-svg-icons'
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faSpinner } from '@fortawesome/free-solid-svg-icons';
 
 import styles from 'styles/summaryTable.module.scss';
 
