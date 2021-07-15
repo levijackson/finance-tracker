@@ -7,7 +7,7 @@ import ItemService from 'services/ItemService';
 Amplify.configure({ ...awsconfig, ssr: true });
 
 export default async (req: NextApiRequest, res: NextApiResponse) => {
-  if (req.method !== 'POST') {
+  if (req.method !== 'GET') {
     res.status(405);
   }
 
@@ -16,7 +16,7 @@ export default async (req: NextApiRequest, res: NextApiResponse) => {
   const service = new ItemService();
 
   try {
-    const items = await service.getItemsByMonth(API, user.attributes.sub, req.body.type, req.body.date)
+    const items = await service.getItemsByMonth(API, user.attributes.sub, req.query.type, req.query.date)
     res.status(201).json({ success: true, items: items });
   } catch (error) {
     console.log(error);

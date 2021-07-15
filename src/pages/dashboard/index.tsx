@@ -39,22 +39,20 @@ const DashboardIndex = (props: DashboardOptions) => {
       }
 
       try {
-        fetch('/api/item/search', {
-          method: 'POST',
+        fetch('/api/item/search?type=expense&date=' + date, {
+          method: 'GET',
           headers: {
             'Accept': 'application/json',
             'Content-Type': 'application/json;charset=UTF-8'
           },
-          body: JSON.stringify({'date': date, 'type': 'expense'}),
         }).then((response) => {
           response.json().then((expenseData) => {
-            fetch('/api/item/search', {
-              method: 'POST',
+            fetch('/api/item/search?type=income&date=' + date, {
+              method: 'GET',
               headers: {
                 'Accept': 'application/json',
                 'Content-Type': 'application/json;charset=UTF-8'
               },
-              body: JSON.stringify({'date': date, 'type': 'income'}),
             }).then((response) => {
               response.json().then((incomeData) => {
                 let mergedData = [...expenseData.items, ...incomeData.items];

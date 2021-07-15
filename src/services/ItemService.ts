@@ -120,7 +120,7 @@ export default class ItemService {
    * @param string type   income|expense
    * @param string date    2021-02
    */
-    async getItemsByMonth(API: any, user_uuid: string, type: string, date: string) {
+  async getItemsByMonth(API: any, user_uuid: string, type: string, date: string) {
     try {
       const items = await API.graphql({
         query: listItems,

@@ -80,54 +80,88 @@ const getMonthConfig = (monthNumber: number) => {
     };
 };
 
+const getMonthlyData = async (yearMonth: string) => {
+  try {
+    let response = await fetch('/api/item/search?type=expense&date=' + yearMonth, {
+      method: 'GET',
+      headers: {
+      'Accept': 'application/json',
+      'Content-Type': 'application/json;charset=UTF-8'
+      },
+    });
+    const expenses = await response.json();
+
+    response = await fetch('/api/item/search?type=income&date=' + yearMonth, {
+      method: 'GET',
+      headers: {
+      'Accept': 'application/json',
+      'Content-Type': 'application/json;charset=UTF-8'
+      },
+    });
+    const income = await response.json();
+
+    let mergedData = [...expenses.items, ...income.items];
+    mergedData.map((item) => {
+        item.date = new Date(item.date);
+    });
+
+    return mergedData;
+
+  } catch (error) {
+    console.log('Failed to getData()');
+  }
+};
+
 /**
  * Get the combined income and expense data and sum them
  * 
  * @param userId 
  * @param numberMonths 
  */
-const getData = async (API: any, user_uuid: string, numberMonths: number) => {
-    const currentDate = new Date();
-    let currentMonth = currentDate.getMonth();
-    let data = {};
+const getSummarizedData = async (numberMonths: number) => {
+  const currentDate = new Date();
+  let currentMonth = currentDate.getMonth();
+  let data = {};
 
-    for (let i = 0; i < numberMonths; i++) {
-        const monthConfig = getMonthConfig(currentMonth);
+  for (let i = 0; i < numberMonths; i++) {
+    const monthConfig = getMonthConfig(currentMonth);
 
-        data[i] = {
-            'month': monthConfig['name'],
-        };
+    data[i] = {
+      'month': monthConfig['name'],
+    };
 
-        for (let key in ITEM_TYPES) {
-            let sum = 0;
+    const monthlyData = await getMonthlyData(monthConfig['yearMonth']);
 
-            const response = await API.graphql({
-              query: listItems,
-              variables: {
-                PK: 'USER#' + user_uuid,
-                SK: { beginsWith: ITEM_TYPES[key] + '#' + monthConfig['yearMonth'] }
-              },
-              authMode: 'AMAZON_COGNITO_USER_POOLS'
-            });
-            const itemsByType = response.data.listItems.items;
-
-            for (let item in itemsByType) {
-                sum += itemsByType[item].amount;
-            }
-            
-            data[i][ITEM_TYPES[key]] = {
-                'items': itemsByType,
-                'sum': sum
-            };
-            
-        }
-
-        currentMonth = currentMonth - 1;
+    let incomeSum = 0;
+    let expenseSum = 0;
+    let incomeItems = [];
+    let expenseItems = [];
+    for (let key in monthlyData) {
+      if (monthlyData[key].type === 'expense') {
+        expenseSum += monthlyData[key].amount;
+        expenseItems.push(monthlyData[key]);
+      } else {
+        incomeSum += monthlyData[key].amount;
+        incomeItems.push(monthlyData[key]);
+      }
     }
 
-    return {
-        data
-    };
+    data[i]['income'] = {
+      'items': incomeItems,
+      'sum': incomeSum
+    };  
+
+    data[i]['expense'] = {
+      'items': expenseItems,
+      'sum': expenseSum
+    };  
+
+    currentMonth = currentMonth - 1;
+  }
+
+  return {
+      data
+  };
 };
 
 /**
@@ -244,7 +278,8 @@ const ITEM_TYPES = [
 
 export {
     toJson,
-    getData,
+    getMonthlyData,
+    getSummarizedData,
     sumItemsByDay,
     groupItemsByCategory,
     getPrimaryKey,

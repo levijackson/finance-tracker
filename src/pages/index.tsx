@@ -1,68 +1,14 @@
 
-import React from 'react';
-import { GetServerSideProps } from 'next'
-
-import Amplify, { withSSRContext } from 'aws-amplify';
-import awsconfig from 'aws-exports.js';
+import React, { useEffect, useState } from 'react';
 
 import Recent from 'components/Recent';
 import { ItemInterface } from 'components/interfaces/Item';
 import { UserInterface } from 'components/interfaces/User';
-import { getData, toJson } from 'helpers/item';
+import { getSummarizedData } from 'helpers/item';
 import { cloneObject } from 'utils/object';
 import { formatCurrency } from 'utils/currency';
 import SummaryTable from 'components/SummaryTable';
 
-
-Amplify.configure({ ...awsconfig, ssr: true });
-
-export const getServerSideProps: GetServerSideProps = async (context) => {
-  const { Auth, API } = withSSRContext(context);
-  let user = null;
-  try {
-    // todo: whydoesn't this work on home page?
-    user = await Auth.currentAuthenticatedUser();
-  } catch (e) {
-    console.log(e);
-  }
-
-  if (!user) {
-    return {
-      props: {
-        chartData: [],
-        financeData: null
-      }
-    }
-  }
-
-  let chartData = [];
-  let financeData = await getData(API, user.attributes.sub, 3);
-
-  for (let i in financeData.data) {
-    chartData.push(
-      {
-          'month': financeData.data[i].month,
-          'income': financeData.data[i].income.sum,
-          'expense': financeData.data[i].expense.sum
-      }
-    );
-
-    financeData.data[i].income.items = financeData.data[i].income.items.map((item) => {
-      return toJson(item);
-    });
-
-    financeData.data[i].expense.items = financeData.data[i].expense.items.map((item) => {
-      return toJson(item);
-    });
-  }
-
-  return {
-    props: {
-      chartData: chartData,
-      financeData: financeData.data
-    }
-  }
-}
 
 interface ChartData {
   month: string;
@@ -97,7 +43,30 @@ export default function Home(props: HomeProps) {
     );
   }
 
-  const tableData = props.chartData.map((item) => {
+  const [chartData, setChartData] = useState([]);
+  const [financeData, setFinanceData] = useState([]);
+
+  useEffect(() => {
+    getSummarizedData(3).then((response) => {
+      setFinanceData(response.data);
+
+      let formattedChartData = [];
+      for (let i in response.data) {
+        formattedChartData.push(
+          {
+              'month': response.data[i].month,
+              'income': response.data[i].income.sum,
+              'expense': response.data[i].expense.sum
+          }
+        );
+      }
+
+      setChartData(formattedChartData);
+    });
+  }, []);
+
+
+  const tableData = chartData.map((item) => {
     item = cloneObject(item);
     item.saved = formatCurrency(item.income - item.expense, 'USD');
     item.income = formatCurrency(item.income, 'USD');
@@ -107,24 +76,19 @@ export default function Home(props: HomeProps) {
 
   // get just the last month of transactions
   let recentData = {};
-  if (props.financeData) {
-    recentData = [props.financeData[0]];
+  if (financeData) {
+    recentData = [financeData[0]];
   }
 
   return (
     <>
-      { (props.chartData.length > 0) ?
-        <div className="col-xs-12 col-sm-6">
-          <SummaryTable data={tableData} />
-        </div>
-        : ''
-      }
-      { props.financeData ? 
-        <div className="col-xs-12 col-sm-6">
-          <Recent data={recentData} />
-          </div>
-      : ''}
-      
+      <div className="col-xs-12 col-sm-6">
+        <SummaryTable data={tableData} />
+      </div>
+
+      <div className="col-xs-12 col-sm-6">
+        <Recent data={recentData} />
+      </div>
     </>
   )
 }

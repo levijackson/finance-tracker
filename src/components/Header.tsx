@@ -1,6 +1,5 @@
 import Link from 'next/link';
 import { Auth } from 'aws-amplify';
-import { AmplifySignOut } from '@aws-amplify/ui-react';
 
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faDollarSign } from '@fortawesome/free-solid-svg-icons'

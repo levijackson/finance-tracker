@@ -1,14 +1,26 @@
 import { useMemo } from 'react';
 import { useTable, useSortBy } from 'react-table';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
+import { faSpinner } from '@fortawesome/free-solid-svg-icons'
+
 import styles from 'styles/summaryTable.module.scss';
 
 
 const SummaryTable = ({ data }) => {
+  if (data.length === 0)  {
+    return (
+      <>
+        <h2>Summary</h2>
+        <FontAwesomeIcon icon={faSpinner} className="fa-spin" />
+      </>
+    );
+  }
+  
 
   const columns = useMemo(
     () => [
       {
-        Header: 'Progress Report',
+        Header: 'Summary',
         columns: [
           {
             Header: 'Month',
@@ -91,7 +103,12 @@ const SummaryTable = ({ data }) => {
     )
   }
 
-return <Table columns={columns} data={data} />;
+return (
+  <>
+    <h2>Summary</h2>
+    <Table columns={columns} data={data} />
+  </>
+);
 
 };
 

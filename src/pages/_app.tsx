@@ -5,7 +5,6 @@ import awsconfig from 'aws-exports';
 
 import Header from 'components/Header';
 import Footer from 'components/Footer';
-import { withAuthenticator } from '@aws-amplify/ui-react';
 
 Amplify.configure({ ...awsconfig, ssr: true });
 
@@ -17,14 +16,18 @@ function MyApp({ Component, pageProps }: AppProps) {
   const [ currentUser, setCurrentUser ] = useState();
 
   useEffect(() => {
-    Auth.currentAuthenticatedUser().then((userData) => {
-        setCurrentUser({
-          email: userData.attributes.email,
-          username: userData.username,
-          uuid: userData.attributes.sub,
-          jwtToken: userData.signInUserSession.accessToken.jwtToken
+      Auth.currentAuthenticatedUser()
+        .then((userData) => {
+          setCurrentUser({
+            email: userData.attributes.email,
+            username: userData.username,
+            uuid: userData.attributes.sub,
+            jwtToken: userData.signInUserSession.accessToken.jwtToken
+          });
+        })
+        .catch((error) => {
+          console.log(error);
         });
-    });
   }, []);
   
   return (
