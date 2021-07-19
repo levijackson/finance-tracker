@@ -1,31 +1,23 @@
 # Finance Tracker
-A nice private way to track your expenses and income month over month
+A private way to track your expenses and income month over month. It uses AWS Amplify to build the resources. 
 
-
-# Setup
+# Local Setup
 1) `npm install`
 
 2) Copy `.env.local.example` to `.env.local`
 
-3) Configure MySQL
-- Set the `MYSQL_URI` environment variable in `.env`.
+3) If you don't have an access key set up already, you'll want to add one. [How do I create an AWS access key?](https://aws.amazon.com/premiumsupport/knowledge-center/create-access-key/)
+
+4) [Follow the guide on Amplify's documentation](https://docs.amplify.aws/cli/start/install#option-2-follow-the-instructions) to configure the CLI tool. It starts with `amplify configure`
+
+5) Once configured you can push your resources to AWS
 ```
-MYSQL_URI=mysql://user:password@localhost:3306/db_name
+amplify push
 ```
-- [Create the table schemas](https://next-auth.js.org/schemas/mysql)
 
-I used [docker-mysql](https://github.com/levijackson/docker-mysql) to create a development MySQL instance to use when testing this.
-
-4) Generate tables
+6) Start NPM locally
 ```
-npm run migrate
+npm run dev
 ```
-This will generate all the tables needed to power the application.
 
-5) Configure Google OAuth
-[Follow the steps](https://support.google.com/cloud/answer/6158849?hl=en) to generate a Client ID and Client Secret.
-
-6) Update the [Next Auth](https://next-auth.js.org) config.
-- `NEXTAUTH_URL` should be your application URL. My development URL is http://localhost:3000
-- `NEXTAUTH_GOOGLE_CLIENT_ID` and `NEXTAUTH_GOOGLE_CLIENT_SECRET` will be the values you generated in step 6.
-
+7) Load it in the browser [http://localhost:3000](http://localhost:3000) and you'll be able to create an account on the site.

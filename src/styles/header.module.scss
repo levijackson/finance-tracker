@@ -1,0 +1,34 @@
+.logo {
+    font-size:2em;
+    border-radius: 50%;
+    background:#eee;
+    padding:5px 15px;
+    color:#413C58;
+    text-decoration:none;
+
+    &:hover {
+        color:#FF6663;
+    }
+}
+.logout {
+    background:#ccc;
+    border:1px solid #333;
+    padding:10px;
+    border-radius:5px;
+    cursor:pointer;
+
+    &:hover {
+        background:#E0FF4F;
+    }
+}
+.login {
+    background:#ccc;
+    border:1px solid #333;
+    padding:10px;
+    border-radius:5px;
+    cursor:pointer;
+
+    &:hover {
+        background:#E0FF4F;
+    }
+}
