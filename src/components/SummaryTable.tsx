@@ -67,8 +67,8 @@ const SummaryTable = (props: SummaryTableProps) => {
         data,
       },
       useSortBy
-    )
-  console.log(headerGroups);
+    );
+
     return (
       <>
         <table {...getTableProps()} className={styles.tableData}>
@@ -111,12 +111,12 @@ const SummaryTable = (props: SummaryTableProps) => {
     )
   }
 
-return (
-  <>
-    <h2>Summary</h2>
-    <Table columns={columns} data={props.data} />
-  </>
-);
+  return (
+    <>
+      <h2>Summary</h2>
+      <Table columns={columns} data={props.data} />
+    </>
+  );
 
 };
 

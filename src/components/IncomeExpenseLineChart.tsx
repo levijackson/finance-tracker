@@ -6,12 +6,12 @@ import { chartColors } from 'helpers/chart';
 
 
 interface DataItem {
-    date: string,
-    income: number,
-    expenses: number
+  date: string,
+  income: number,
+  expenses: number
 }
 interface IncomeExpenseLineChartProps {
-    data: Array<DataItem>
+  data: Array<DataItem>
 }
 
 const IncomeExpenseLineChart = (props: IncomeExpenseLineChartProps) => {
@@ -24,25 +24,25 @@ const IncomeExpenseLineChart = (props: IncomeExpenseLineChartProps) => {
     );
   }
 
-return (
-  <>
-    <LineChart
+  return (
+    <>
+      <LineChart
         width={500}
         height={300}
         data={props.data}
-    >
+      >
         <CartesianGrid strokeDasharray="3 3" />
         <XAxis dataKey="date" />
         <YAxis />
         <Tooltip 
-            formatter={(value) => '$' + formatNumberToFloat(value)}
+          formatter={(value) => '$' + formatNumberToFloat(value)}
         />
         <Legend />
         <Line type="monotone" dataKey="income" stroke={chartColors[0]} />
         <Line type="monotone" dataKey="expenses" stroke={chartColors[1]} />
-    </LineChart>
-  </>
-);
+      </LineChart>
+    </>
+  );
 
 };
 

@@ -31,15 +31,15 @@ function MyApp({ Component, pageProps }: AppProps) {
   }, []);
   
   return (
-      <div className="wrapper">
-              <Header user={currentUser} />
-              
-              <div className="content row">
-                  <Component {...pageProps} user={currentUser} />
-              </div>
+    <div className="wrapper">
+      <Header user={currentUser} />
+      
+      <div className="content row">
+        <Component {...pageProps} user={currentUser} />
+      </div>
 
-              <Footer />
-          </div>
+      <Footer />
+    </div>
   );
 }
 

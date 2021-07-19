@@ -5,12 +5,12 @@ import { formatNumberToFloat } from 'utils/currency';
 
 
 interface DataItem {
-    fill: string,
-    name: string,
-    value: number
+  fill: string,
+  name: string,
+  value: number
 }
 interface CategoryPieChartProps {
-    data: Array<DataItem>
+  data: Array<DataItem>
 }
 
 const CategoryPieChart = (props: CategoryPieChartProps) => {
@@ -26,16 +26,16 @@ const CategoryPieChart = (props: CategoryPieChartProps) => {
 return (
   <>
     <PieChart width={400} height={200}>
-        <Pie
-            dataKey="value"
-            isAnimationActive={false}
-            data={props.data}
-            cx="50%"
-            cy="50%"
-            outerRadius={80}
-            fill="#8884d8"
-        />
-        <Tooltip formatter={(value) => '$' + formatNumberToFloat(value)} />
+      <Pie
+        dataKey="value"
+        isAnimationActive={false}
+        data={props.data}
+        cx="50%"
+        cy="50%"
+        outerRadius={80}
+        fill="#8884d8"
+      />
+      <Tooltip formatter={(value) => '$' + formatNumberToFloat(value)} />
     </PieChart>
   </>
 );

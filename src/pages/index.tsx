@@ -20,15 +20,15 @@ interface HomeProps {
   user: UserInterface
   financeData: {
     [key: number]: {
-          month: string;
-          expense: {
-            items: Array<ItemInterface>;
-            sum: number;
-          },
-          income: {
-            items: Array<ItemInterface>;
-            sum: number;
-          }
+      month: string;
+      expense: {
+        items: Array<ItemInterface>;
+        sum: number;
+      },
+      income: {
+        items: Array<ItemInterface>;
+        sum: number;
+      }
     }
   }
   chartData: Array<ChartData>;

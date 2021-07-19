@@ -1,7 +1,6 @@
 import { formatNumberToFloat } from 'utils/currency';
 import { ItemInterface } from 'components/interfaces/Item';
 import { getMonthName } from 'utils/date';
-import { listItems } from 'graphql/queries';
 import { v5 as uuidv5 } from 'uuid';
 
 /**
@@ -9,11 +8,11 @@ import { v5 as uuidv5 } from 'uuid';
  * @return string | null
  */
 const getPrimaryKey = (item: ItemInterface): string => {
-    if (!item.user_uuid) {
-        return;
-    }
+  if (!item.user_uuid) {
+    return;
+  }
 
-    return 'USER#' + item.user_uuid;
+  return 'USER#' + item.user_uuid;
 };
 
 /**
@@ -21,11 +20,11 @@ const getPrimaryKey = (item: ItemInterface): string => {
  * @return string | null
  */
 const getSortKey = (item: ItemInterface): string => {
-    if (!item.type || !item.date || !item.category || !item.createdAt) {
-        return;
-    }
+  if (!item.type || !item.date || !item.category || !item.createdAt) {
+    return;
+  }
 
-    return item.type + '#' + item.date + '#' + item.category + '#' + item.createdAt;
+  return item.type + '#' + item.date + '#' + item.category + '#' + item.createdAt;
 }
 
 /**
@@ -33,13 +32,13 @@ const getSortKey = (item: ItemInterface): string => {
  * @return string | null
  */
 const getItemUuid = (item: ItemInterface): string => {
-    const UUID_NAMESPACE = 'daf8a0be-41bb-4a62-b982-615e8412d604';
-    const sortKey = getSortKey(item);
-    if (!sortKey) {
-        return;
-    }
+  const UUID_NAMESPACE = 'daf8a0be-41bb-4a62-b982-615e8412d604';
+  const sortKey = getSortKey(item);
+  if (!sortKey) {
+    return;
+  }
 
-    return uuidv5(sortKey, UUID_NAMESPACE);
+  return uuidv5(sortKey, UUID_NAMESPACE);
 }
 
 /**
@@ -47,15 +46,15 @@ const getItemUuid = (item: ItemInterface): string => {
  * @param item
  */
 const toJson = (item: ItemInterface): object => {
-    return {
-        // generate an item_item_uuid if one doesn't exist yet
-        item_uuid: item.item_uuid ? item.item_uuid : getItemUuid(item),
-        amount: formatNumberToFloat(item.amount),
-        note: item.note || '',
-        date: item.date,
-        category: item.category,
-        type: item.type
-    };
+  return {
+    // generate an item_item_uuid if one doesn't exist yet
+    item_uuid: item.item_uuid ? item.item_uuid : getItemUuid(item),
+    amount: formatNumberToFloat(item.amount),
+    note: item.note || '',
+    date: item.date,
+    category: item.category,
+    type: item.type
+  };
 };
 
 /**
@@ -64,22 +63,27 @@ const toJson = (item: ItemInterface): object => {
  * @param monthNumber 
  */
 const getMonthConfig = (monthNumber: number) => {
-    let date = new Date();
+  let date = new Date();
 
-    // I swear this makese sense.
-    // go one month forward
-    // go to the first day of the month
-    // go back an hour so we're on the LAST day of the month we actually want
-    date.setMonth((monthNumber + 1));
-    date.setDate(0); // going to 1st of the month
-    date.setHours(-1); // going to last hour before this date even started.
+  // I swear this makes sense.
+  // go one month forward
+  // go to the first day of the month
+  // go back an hour so we're on the LAST day of the month we actually want
+  date.setMonth((monthNumber + 1));
+  date.setDate(0); // going to 1st of the month
+  date.setHours(-1); // going to last hour before this date even started.
 
-    return {
-        name: getMonthName(date.getMonth()),
-        yearMonth: date.getFullYear() + '-' + ('0' + (date.getMonth() + 1)).slice(-2),
-    };
+  return {
+    name: getMonthName(date.getMonth()),
+    yearMonth: date.getFullYear() + '-' + ('0' + (date.getMonth() + 1)).slice(-2),
+  };
 };
 
+/**
+ * Get the income and expenses for a given month
+ * @param string yearMonth
+ * @returns array of Item
+ */
 const getMonthlyData = async (yearMonth: string) => {
   try {
     let response = await fetch('/api/item/search?type=expense&date=' + yearMonth, {
@@ -169,24 +173,24 @@ const getSummarizedData = async (numberMonths: number) => {
  * @param items 
  */
 const groupItemsByDay = (items: Array<ItemInterface>) => {
-    let data = {};
-    items.map((item) => {
-        if (!data[item.date.getTime()]) {
-            data[item.date.getTime()] = {
-                'date': item.date,
-                'income': 0,
-                'expenses': 0
-            };
-        }
+  let data = {};
+  items.map((item) => {
+    if (!data[item.date.getTime()]) {
+      data[item.date.getTime()] = {
+        'date': item.date,
+        'income': 0,
+        'expenses': 0
+      };
+    }
 
-        if (item.type == 'income') {
-            data[item.date.getTime()]['income'] += item.amount;
-        } else if (item.type == 'expense') {
-            data[item.date.getTime()]['expenses'] += item.amount;
-        }
-    });
+    if (item.type == 'income') {
+      data[item.date.getTime()]['income'] += item.amount;
+    } else if (item.type == 'expense') {
+      data[item.date.getTime()]['expenses'] += item.amount;
+    }
+  });
 
-    return data;
+  return data;
 };
 
 /**
@@ -199,93 +203,93 @@ const groupItemsByDay = (items: Array<ItemInterface>) => {
  * @param items
  */
 const sumItemsByDay = (items: Array<ItemInterface>) => {
-    let data = groupItemsByDay(items);
+  let data = groupItemsByDay(items);
 
-    // sort the days
-    let dataKeys = [];
-    for (const key in data) {
-        dataKeys.push(key);
+  // sort the days
+  let dataKeys = [];
+  for (const key in data) {
+    dataKeys.push(key);
+  }
+  dataKeys.sort();
+
+
+  let dataArray = [];
+  // we keep track of the last item so we can add to it and create a 
+  // running total vs a daily total
+  let lastItem = null;
+  dataKeys.forEach((key) => {
+    let item = data[key];
+    if (lastItem) {
+      item.income += lastItem.income;
+      item.expenses += lastItem.expenses;
     }
-    dataKeys.sort();
+    dataArray.push(item);
+    lastItem = item;
+  });
 
-
-    let dataArray = [];
-    // we keep track of the last item so we can add to it and create a 
-    // running total vs a daily total
-    let lastItem = null;
-    dataKeys.forEach((key) => {
-        let item = data[key];
-        if (lastItem) {
-            item.income += lastItem.income;
-            item.expenses += lastItem.expenses;
-        }
-        dataArray.push(item);
-        lastItem = item;
-    });
-
-    return dataArray;
+  return dataArray;
 };
 
 const groupItemsByCategory = (items: Array<ItemInterface>) => {
-    let income = {};
-    let expenses = {};
+  let income = {};
+  let expenses = {};
 
-    items.forEach((item) => {
-        if (item.type == 'income') {
-            if (!income[item.category]) {
-                income[item.category] = item.amount;
-            } else {
-                income[item.category] += item.amount;
-            }
-        } else if (item.type == 'expense') {
-            if (!expenses[item.category]) {
-                expenses[item.category] = item.amount;
-            } else {
-                expenses[item.category] += item.amount;
-            }
-        }
-    });
+  items.forEach((item) => {
+    if (item.type == 'income') {
+      if (!income[item.category]) {
+        income[item.category] = item.amount;
+      } else {
+        income[item.category] += item.amount;
+      }
+    } else if (item.type == 'expense') {
+      if (!expenses[item.category]) {
+        expenses[item.category] = item.amount;
+      } else {
+        expenses[item.category] += item.amount;
+      }
+    }
+  });
 
-    return { income, expenses };
+  return { income, expenses };
 };
 
 const EXPENSE_ITEM_CATEGORIES = [
-    'other',
-    'utilities',
-    'transportation',
-    'groceries',
-    'health',
-    'insurance',
-    'restaurants',
-    'entertainment',
-    'travel',
-    'giving',
-    'education',
-    'lawn care',
-    'home improvement'
+  'other',
+  'utilities',
+  'transportation',
+  'groceries',
+  'health',
+  'insurance',
+  'restaurants',
+  'entertainment',
+  'travel',
+  'giving',
+  'education',
+  'lawn care',
+  'home improvement'
 ];
 
 const INCOME_ITEM_CATEGORIES = [
-    'payroll',
-    'freelance',
-    'other'
+  'payroll',
+  'freelance',
+  'other'
 ];
 
 const ITEM_TYPES = [
-    'income',
-    'expense'
+  'income',
+  'expense'
 ];
 
 export {
-    toJson,
-    getMonthlyData,
-    getSummarizedData,
-    sumItemsByDay,
-    groupItemsByCategory,
-    getPrimaryKey,
-    getSortKey,
-    getItemUuid,
-    INCOME_ITEM_CATEGORIES,
-    EXPENSE_ITEM_CATEGORIES,
-    ITEM_TYPES
+  toJson,
+  getMonthlyData,
+  getSummarizedData,
+  sumItemsByDay,
+  groupItemsByCategory,
+  getPrimaryKey,
+  getSortKey,
+  getItemUuid,
+  INCOME_ITEM_CATEGORIES,
+  EXPENSE_ITEM_CATEGORIES,
+  ITEM_TYPES
 };

@@ -6,8 +6,7 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "test": "jest",
-    "migrate": "node migrations/init.js"
+    "test": "jest"
   },
   "dependencies": {
     "@aws-amplify/ui-react": "^1.2.4",
