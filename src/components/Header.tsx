@@ -18,7 +18,7 @@ const Header = ({ user }) => {
         </Link>
       </div>
       <div className="navigation col-sm-7 col-xs-12">
-      {user && (
+      {user.email && (
         <>
           <Link href="/dashboard">Dashboard</Link>
           <Link href="/item/add">+ Add item</Link>
@@ -26,7 +26,7 @@ const Header = ({ user }) => {
       )}
       </div>
       <div className="utility col-sm-4 col-xs-12">
-      {user ? (
+      {user.email ? (
         <>
           <button className={styles.logout} onClick={() => Auth.signOut()}>Log Out ({user.email})</button>
         </>

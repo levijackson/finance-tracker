@@ -35,7 +35,7 @@ interface HomeProps {
 }
 
 export default function Home(props: HomeProps) {
-  if (!props.user) {
+  if (!props.user.email) {
     return (
       <>
         <p>You must log in to use this.</p>
