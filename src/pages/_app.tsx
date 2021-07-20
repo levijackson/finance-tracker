@@ -6,7 +6,32 @@ import awsconfig from 'src/aws-exports';
 import Header from 'src/components/Header';
 import Footer from 'src/components/Footer';
 
-Amplify.configure({ ...awsconfig, ssr: true });
+
+const isLocalhost = Boolean(
+  process.env.IS_DEV
+);
+
+const [
+  localRedirectSignIn,
+  productionRedirectSignIn,
+] = awsconfig.oauth.redirectSignIn.split(",");
+
+const [
+  localRedirectSignOut,
+  productionRedirectSignOut,
+] = awsconfig.oauth.redirectSignOut.split(",");
+
+const updatedAwsConfig = {
+  ...awsconfig,
+  oauth: {
+    ...awsconfig.oauth,
+    redirectSignIn: isLocalhost ? localRedirectSignIn : productionRedirectSignIn,
+    redirectSignOut: isLocalhost ? localRedirectSignOut : productionRedirectSignOut,
+  },
+  ssr: true
+}
+
+Amplify.configure(updatedAwsConfig);
 
 // http://flexboxgrid.com/
 import 'src/styles/flexboxgrid.min.css';
