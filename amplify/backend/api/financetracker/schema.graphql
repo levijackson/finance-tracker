@@ -1,0 +1,22 @@
+enum TYPE {
+  expense
+  income
+}
+
+type Item
+  @model
+  @auth(rules: [{ allow: owner }])
+  @key(fields: ["PK", "SK"])
+  @key(name: "byItemUuid", fields: ["item_uuid"], queryField: "byItemUuid" )
+{
+  PK: String!
+  SK: String!
+  item_uuid: String!
+  user_uuid: String!
+  type: TYPE!
+  category: String!
+  amount: Float!
+  date: AWSDate!
+  note: String
+  createdAt: AWSDateTime
+}
