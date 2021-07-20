@@ -1,7 +1,7 @@
 import { useMemo } from 'react';
 import { useTable, useSortBy } from 'react-table';
 import { Item } from 'src/API';
-import styles from 'styles/itemTable.module.scss';
+import styles from 'src/styles/itemTable.module.scss';
 
 
 interface ItemTableProps {

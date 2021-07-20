@@ -1,4 +1,4 @@
-import { formatNumberToFloat, formatCurrency } from '../../../utils/currency';
+import { formatNumberToFloat, formatCurrency } from 'src/utils/currency';
 
 describe('formatNumberToFloat', () => {
   test('no decimals adds .00', () => {

@@ -2,13 +2,13 @@ import { useState } from 'react';
 import DatePicker from 'react-datepicker';
 import { useRouter } from 'next/router';
 
-import { ItemInterface } from 'components/interfaces/Item';
-import { UserInterface } from 'components/interfaces/User';
-import { formatNumberToFloat } from 'utils/currency';
-import { formatDate } from 'utils/date';
-import { EXPENSE_ITEM_CATEGORIES, INCOME_ITEM_CATEGORIES, ITEM_TYPES } from 'helpers/item';
+import { ItemInterface } from 'src/components/interfaces/Item';
+import { UserInterface } from 'src/components/interfaces/User';
+import { formatNumberToFloat } from 'src/utils/currency';
+import { formatDate } from 'src/utils/date';
+import { EXPENSE_ITEM_CATEGORIES, INCOME_ITEM_CATEGORIES, ITEM_TYPES } from 'src/helpers/item';
 
-import styles from 'styles/financeForm.module.scss';
+import styles from 'src/styles/financeForm.module.scss';
 import 'react-datepicker/dist/react-datepicker.css';
 
 interface FinanceFormProps {
@@ -20,20 +20,11 @@ interface FinanceFormProps {
 const FinanceForm = (props: FinanceFormProps) => {
   let editing = false;
   if (props.hasOwnProperty('item')) {
-    // react-datepicker needs a Date object
-    // It is a string the first time the page loads
-    if (typeof props.item.date === 'string') {
-      // add 12 hours to overcome issue with timezone when loading just yyyy-mm-dd
-      // may not be permanent fix.
-      props.item.date = (props.item.date + 'T12:00:00');
-    }
-
-    props.item.date = new Date(props.item.date);
     editing = true;
   }
 
   const defaultState: ItemInterface = {
-    date: new Date(),
+    date: '',
     amount: 0,
     type: 'expense',
     note: '',
@@ -41,6 +32,7 @@ const FinanceForm = (props: FinanceFormProps) => {
   };
 
   const [ state, setState ] = useState((props.item ? props.item : defaultState));
+  const [ date, setDate ] = useState(props.item?.date ? new Date(props.item?.date) : new Date());
   const [ message, setMessage ] = useState('');
   const router = useRouter();
   
@@ -67,10 +59,7 @@ const FinanceForm = (props: FinanceFormProps) => {
     }
 
     try {
-      const data: object = { ...state, user_uuid: props.user.uuid };
-      data.date.setHours(0,0,0,0);
-      data.date = formatDate(data.date);
-
+      const data: ItemInterface = { ...state, user_uuid: props.user.uuid, date: formatDate(date) };
 
       await fetch(url, {
         method: 'POST',
@@ -153,8 +142,8 @@ const FinanceForm = (props: FinanceFormProps) => {
           When
           <DatePicker 
             dateFormat="yyyy-MM-dd"
-            selected={state.date}
-            onChange={(date: string) => setState({ ...state, date: date })}
+            selected={date}
+            onChange={(date) => setDate(date)}
           />
         </label>
         <label htmlFor="category">

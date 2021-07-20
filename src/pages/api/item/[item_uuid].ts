@@ -1,8 +1,8 @@
 import type { NextApiRequest, NextApiResponse } from 'next';
 import Amplify, { withSSRContext } from 'aws-amplify';
-import awsconfig from 'aws-exports.js';
-import ItemService from 'services/ItemService';
-import { ItemInterface } from 'components/interfaces/Item';
+import awsconfig from 'src/aws-exports.js';
+import ItemService from 'src/services/ItemService';
+import { ItemInterface } from 'src/components/interfaces/Item';
 
 // needs to be enabled in each API route
 Amplify.configure({ ...awsconfig, ssr: true });

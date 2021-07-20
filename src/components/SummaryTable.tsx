@@ -3,7 +3,7 @@ import { useTable, useSortBy } from 'react-table';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faSpinner } from '@fortawesome/free-solid-svg-icons';
 
-import styles from 'styles/summaryTable.module.scss';
+import styles from 'src/styles/summaryTable.module.scss';
 
 
 interface DataItem {

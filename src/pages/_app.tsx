@@ -1,19 +1,19 @@
 import type { AppProps } from 'next/app';
 import React, { useState, useEffect } from 'react';
 import Amplify, { Auth } from 'aws-amplify';
-import awsconfig from 'aws-exports';
+import awsconfig from 'src/aws-exports';
 
-import Header from 'components/Header';
-import Footer from 'components/Footer';
+import Header from 'src/components/Header';
+import Footer from 'src/components/Footer';
 
 Amplify.configure({ ...awsconfig, ssr: true });
 
 // http://flexboxgrid.com/
-import 'styles/flexboxgrid.min.css';
-import 'styles/layout.css';
+import 'src/styles/flexboxgrid.min.css';
+import 'src/styles/layout.css';
 
 function MyApp({ Component, pageProps }: AppProps) {
-  const [ currentUser, setCurrentUser ] = useState();
+  const [ currentUser, setCurrentUser ] = useState({});
 
   useEffect(() => {
       Auth.currentAuthenticatedUser()

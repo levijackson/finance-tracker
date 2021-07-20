@@ -3,17 +3,17 @@ import { useState, useEffect } from 'react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faSpinner } from '@fortawesome/free-solid-svg-icons';
 
-import { sumItemsByDay, groupItemsByCategory, getMonthlyData } from 'helpers/item';
-import { chartColors } from 'helpers/chart';
-import { cloneObject } from 'utils/object';
-import { formatCurrency } from 'utils/currency';
-import { formatDate, getMonthName } from 'utils/date';
-import { UserInterface } from 'components/interfaces/User';
-import ItemTable from 'components/ItemTable';
-import CategoryPieChart from 'components/CategoryPieChart';
-import IncomeExpenseLineChart from 'components/IncomeExpenseLineChart';
+import { sumItemsByDay, groupItemsByCategory, getMonthlyData } from 'src/helpers/item';
+import { chartColors } from 'src/helpers/chart';
+import { cloneObject } from 'src/utils/object';
+import { formatCurrency } from 'src/utils/currency';
+import { formatDate, getMonthName } from 'src/utils/date';
+import { UserInterface } from 'src/components/interfaces/User';
+import ItemTable from 'src/components/ItemTable';
+import CategoryPieChart from 'src/components/CategoryPieChart';
+import IncomeExpenseLineChart from 'src/components/IncomeExpenseLineChart';
 
-import styles from 'styles/dashboard.module.scss';
+import styles from 'src/styles/dashboard.module.scss';
 
 
 interface DashboardProps {

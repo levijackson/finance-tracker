@@ -1,4 +1,4 @@
-import { toJson, getPrimaryKey, getSortKey, getItemUuid, sumItemsByDay } from '../../../helpers/item';
+import { toJson, getPrimaryKey, getSortKey, getItemUuid, sumItemsByDay } from 'src/helpers/item';
 
 describe('toJson tests', () => {
   test('An object can be turned into json without an existing item_uuid', () => {

@@ -1,13 +1,13 @@
 
 import React, { useEffect, useState } from 'react';
 
-import Recent from 'components/Recent';
-import { ItemInterface } from 'components/interfaces/Item';
-import { UserInterface } from 'components/interfaces/User';
-import { getSummarizedData } from 'helpers/item';
-import { cloneObject } from 'utils/object';
-import { formatCurrency } from 'utils/currency';
-import SummaryTable from 'components/SummaryTable';
+import Recent from 'src/components/Recent';
+import { ItemInterface } from 'src/components/interfaces/Item';
+import { UserInterface } from 'src/components/interfaces/User';
+import { getSummarizedData } from 'src/helpers/item';
+import { cloneObject } from 'src/utils/object';
+import { formatCurrency } from 'src/utils/currency';
+import SummaryTable from 'src/components/SummaryTable';
 
 
 interface ChartData {
@@ -44,7 +44,7 @@ export default function Home(props: HomeProps) {
   }
 
   const [chartData, setChartData] = useState([]);
-  const [financeData, setFinanceData] = useState([]);
+  const [financeData, setFinanceData] = useState({});
 
   useEffect(() => {
     getSummarizedData(3).then((response) => {

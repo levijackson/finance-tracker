@@ -1,7 +1,7 @@
 import { Tooltip, PieChart, Pie } from 'recharts';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faSpinner } from '@fortawesome/free-solid-svg-icons';
-import { formatNumberToFloat } from 'utils/currency';
+import { formatNumberToFloat } from 'src/utils/currency';
 
 
 interface DataItem {

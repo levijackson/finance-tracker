@@ -1,8 +1,8 @@
-import { ItemInterface } from 'components/interfaces/Item';
-import { createItem, updateItem, deleteItem } from 'graphql/mutations';
-import { byItemUuid, listItems } from 'graphql/queries';
-import { CreateItemInput, UpdateItemInput, DeleteItemInput, Item } from 'API';
-import { getPrimaryKey, getSortKey, getItemUuid } from 'helpers/item';
+import { ItemInterface } from 'src/components/interfaces/Item';
+import { createItem, updateItem, deleteItem } from 'src/graphql/mutations';
+import { byItemUuid, listItems } from 'src/graphql/queries';
+import { CreateItemInput, UpdateItemInput, DeleteItemInput, Item, TYPE } from 'src/API';
+import { getPrimaryKey, getSortKey, getItemUuid } from 'src/helpers/item';
 
 
 
@@ -38,14 +38,14 @@ export default class ItemService {
    * 
    * @return string  item_uuid for the item
    */
-  async updateItem(API: any, currentItem: Item, itemChanges: Item) {
+  async updateItem(API: any, currentItem: Item, itemChanges: ItemInterface) {
     try {
       let dynamoItem: UpdateItemInput = {
         PK: currentItem.PK,
         SK: currentItem.SK,
         user_uuid: currentItem.user_uuid,
         item_uuid: currentItem.item_uuid,
-        type: itemChanges.type,
+        type: TYPE[itemChanges.type],
         category: itemChanges.category,
         amount: itemChanges.amount,
         date: itemChanges.date,
@@ -94,7 +94,8 @@ export default class ItemService {
    */
   async addItem(API: any, item: ItemInterface) {
     try {
-      const dynamoItem: CreateItemInput = {
+      // CreateItemInput
+      const dynamoItem = {
         ...item,
         PK: getPrimaryKey(item),
         SK: getSortKey(item),

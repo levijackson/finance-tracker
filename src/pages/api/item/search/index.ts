@@ -1,7 +1,7 @@
 import type { NextApiRequest, NextApiResponse } from 'next';
 import Amplify, { withSSRContext } from 'aws-amplify';
-import awsconfig from 'aws-exports.js';
-import ItemService from 'services/ItemService';
+import awsconfig from 'src/aws-exports.js';
+import ItemService from 'src/services/ItemService';
 
 // needs to be enabled in each API route
 Amplify.configure({ ...awsconfig, ssr: true });
@@ -16,7 +16,7 @@ export default async (req: NextApiRequest, res: NextApiResponse) => {
   const service = new ItemService();
 
   try {
-    const items = await service.getItemsByMonth(API, user.attributes.sub, req.query.type, req.query.date)
+    const items = await service.getItemsByMonth(API, user.attributes.sub, String(req.query.type), String(req.query.date))
     res.status(201).json({ success: true, items: items });
   } catch (error) {
     console.log(error);

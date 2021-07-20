@@ -2,8 +2,8 @@ import Link from 'next/link';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faSpinner } from '@fortawesome/free-solid-svg-icons';
 
-import { ItemInterface } from 'components/interfaces/Item';
-import { formatDate } from 'utils/date';
+import { ItemInterface } from 'src/components/interfaces/Item';
+import { formatDate } from 'src/utils/date';
 
 
 interface RecentProps {

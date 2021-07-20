@@ -1,10 +1,11 @@
 import Link from 'next/link';
 import { Auth } from 'aws-amplify';
+import { CognitoHostedUIIdentityProvider } from '@aws-amplify/auth/lib/types';
 
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faDollarSign } from '@fortawesome/free-solid-svg-icons'
 
-import styles from 'styles/header.module.scss';
+import styles from 'src/styles/header.module.scss';
 
 const Header = ({ user }) => {
   return (
@@ -30,8 +31,7 @@ const Header = ({ user }) => {
           <button className={styles.logout} onClick={() => Auth.signOut()}>Log Out ({user.email})</button>
         </>
       ) :
-      // <button onClick={() => Auth.federatedSignIn()}>Sign In</button>
-      <button className={styles.login} onClick={() => Auth.federatedSignIn({provider: 'Google'})}>Sign In</button>
+      <button className={styles.login} onClick={() => Auth.federatedSignIn({ provider: CognitoHostedUIIdentityProvider.Google })}>Sign In</button>
       }
       </div>
     </header>

@@ -1,6 +1,6 @@
-import { formatNumberToFloat } from 'utils/currency';
-import { ItemInterface } from 'components/interfaces/Item';
-import { getMonthName } from 'utils/date';
+import { formatNumberToFloat } from 'src/utils/currency';
+import { ItemInterface } from 'src/components/interfaces/Item';
+import { getMonthName } from 'src/utils/date';
 import { v5 as uuidv5 } from 'uuid';
 
 /**
@@ -175,8 +175,9 @@ const getSummarizedData = async (numberMonths: number) => {
 const groupItemsByDay = (items: Array<ItemInterface>) => {
   let data = {};
   items.map((item) => {
-    if (!data[item.date.getTime()]) {
-      data[item.date.getTime()] = {
+    const itemTime = new Date(item.date);
+    if (!data[itemTime.getTime()]) {
+      data[itemTime.getTime()] = {
         'date': item.date,
         'income': 0,
         'expenses': 0
@@ -184,9 +185,9 @@ const groupItemsByDay = (items: Array<ItemInterface>) => {
     }
 
     if (item.type == 'income') {
-      data[item.date.getTime()]['income'] += item.amount;
+      data[itemTime.getTime()]['income'] += item.amount;
     } else if (item.type == 'expense') {
-      data[item.date.getTime()]['expenses'] += item.amount;
+      data[itemTime.getTime()]['expenses'] += item.amount;
     }
   });
 

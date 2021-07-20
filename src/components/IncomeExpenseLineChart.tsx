@@ -1,8 +1,8 @@
 import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, Legend } from 'recharts';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faSpinner } from '@fortawesome/free-solid-svg-icons';
-import { formatNumberToFloat } from 'utils/currency';
-import { chartColors } from 'helpers/chart';
+import { formatNumberToFloat } from 'src/utils/currency';
+import { chartColors } from 'src/helpers/chart';
 
 
 interface DataItem {

@@ -1,4 +1,4 @@
-import { cloneObject } from '../../../utils/object';
+import { cloneObject } from 'src/utils/object';
 
 test('cloning an object works', () => {
   const originalObject = {
