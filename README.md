@@ -1,7 +1,8 @@
 # Finance Tracker
 A private way to track your expenses and income month over month. It uses AWS Amplify to build the resources. 
 
-# Local Setup
+
+## Local Setup
 1) `npm install`
 
 2) `cp .env.example .env.local`
@@ -24,10 +25,15 @@ npm run dev
 7) Load it in the browser [http://localhost:3000](http://localhost:3000) and you'll be able to create an account on the site.
 
 
-# Production
+## Production
 1) Publish it
 ```
 amplify publish
 ```
 
 2) Log into [Google Console](https://console.developers.google.com/) and add the cognito authorization URL.
+
+## Configuring Google OAuth
+1) You'll want to [follow the guide](https://docs.amplify.aws/lib/auth/social/q/platform/js) to get started.
+
+2) You'll configure the redirect URLs with `localhost` for development. Once you deploy the code though you'll want to make sure that the production domain is in the redirect URLs as well.

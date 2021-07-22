@@ -3,17 +3,28 @@ $dark-green: #00272B;
 $red: #FF6663;
 $lime: #E0FF4F;
 $violet: #413C58;
+$dark-violet: #25074D;
+$light-violet: #8B5CF6;
 */
 
 body {
     padding:0;
     margin:0;
+    background:#25074D;
 }
 
 h1, h2 {
     font-weight:normal;
-    color:#413C58;
+    color:#25074D;
     text-shadow:1px 1px 2px #ccc;
+}
+
+a {
+    color:#333;
+    text-decoration:none;
+}
+a:hover {
+    text-decoration:underline;
 }
 
 .wrapper {
@@ -28,14 +39,19 @@ h1, h2 {
 }
 
 header {
-    background:#413C58;
+    background:#25074D;
     width:100%;
     padding:1em;
     flex: 1 0 auto;
 }
 
-.content {
+.main {
     flex: 1 0 auto;
+}
+
+.content {
+    background:#eee;
+    border-top-left-radius: 1.5rem;
 }
 
 .navigation a,
@@ -67,7 +83,7 @@ header {
 }
 
 footer {
-    background:#413C58;
+    background:#25074D;
     padding:1em;
     color:#eee;
     font-size:0.8em;
@@ -76,4 +92,15 @@ footer {
 
 body .react-datepicker-wrapper {
     display:block;
+}
+
+.widget-wrapper {
+    padding:1em;
+    margin-top:2em;
+    border:1px solid #d8d8d8;
+    border-radius:15px;
+    box-shadow:1px 1px 6px #d8d8d8;
+}
+.widget-wrapper h2 {
+    margin-top:0;
 }

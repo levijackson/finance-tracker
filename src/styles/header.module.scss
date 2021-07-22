@@ -5,6 +5,7 @@
     padding:5px 15px;
     color:#413C58;
     text-decoration:none;
+    margin-left:-15px;
 
     &:hover {
         color:#FF6663;
@@ -18,7 +19,7 @@
     cursor:pointer;
 
     &:hover {
-        background:#E0FF4F;
+        background:#fff;
     }
 }
 .login {
@@ -29,6 +30,10 @@
     cursor:pointer;
 
     &:hover {
-        background:#E0FF4F;
+        background:#fff;
     }
+}
+.siteName {
+    color:#eee;
+    margin-left:1em;
 }

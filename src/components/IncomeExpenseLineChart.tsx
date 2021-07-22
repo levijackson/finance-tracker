@@ -1,4 +1,4 @@
-import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, Legend } from 'recharts';
+import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer } from 'recharts';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faSpinner } from '@fortawesome/free-solid-svg-icons';
 import { formatNumberToFloat } from 'src/utils/currency';
@@ -25,10 +25,8 @@ const IncomeExpenseLineChart = (props: IncomeExpenseLineChartProps) => {
   }
 
   return (
-    <>
+    <ResponsiveContainer width="95%" height={300}>
       <LineChart
-        width={500}
-        height={300}
         data={props.data}
       >
         <CartesianGrid strokeDasharray="3 3" />
@@ -41,7 +39,7 @@ const IncomeExpenseLineChart = (props: IncomeExpenseLineChartProps) => {
         <Line type="monotone" dataKey="income" stroke={chartColors[0]} />
         <Line type="monotone" dataKey="expenses" stroke={chartColors[1]} />
       </LineChart>
-    </>
+    </ResponsiveContainer>
   );
 
 };

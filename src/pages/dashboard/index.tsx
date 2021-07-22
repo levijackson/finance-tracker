@@ -12,6 +12,7 @@ import { UserInterface } from 'src/components/interfaces/User';
 import ItemTable from 'src/components/ItemTable';
 import CategoryPieChart from 'src/components/CategoryPieChart';
 import IncomeExpenseLineChart from 'src/components/IncomeExpenseLineChart';
+import WidgetWrapper from 'src/components/WidgetWrapper';
 
 import styles from 'src/styles/dashboard.module.scss';
 
@@ -91,7 +92,7 @@ const DashboardIndex = (props: DashboardProps) => {
   };
 
   return (
-    <>
+    <div class="row">
       <div className="col-xs-12">
           <h1 className={styles.heading}>Analyze</h1>
           {
@@ -106,42 +107,50 @@ const DashboardIndex = (props: DashboardProps) => {
           </label>
       </div>
 
-      <div className="col-xs-12 col-sm-6">
-        <h3>Itemized</h3>
-        { loading ? <FontAwesomeIcon icon={faSpinner} className="fa-spin" /> : '' }
-        { (date && data.length > 0) ? 
-          <ItemTable data={tableData} />
-          : 'No data' 
-        }
+      <div className="col-xs-12 col-md-6">
+        <WidgetWrapper>
+          <h3>Itemized</h3>
+          { loading ? <FontAwesomeIcon icon={faSpinner} className="fa-spin" /> : '' }
+          { (date && data.length > 0) ? 
+            <ItemTable data={tableData} />
+            : 'No data' 
+          }
+        </WidgetWrapper>
       </div> 
   
-      <div className="col-xs-12 col-sm-6">
-        <h3>Trend</h3>
-        { loading ? <FontAwesomeIcon icon={faSpinner} className="fa-spin" /> : '' }
-        { chartData.length > 0 ?
-          <IncomeExpenseLineChart data={chartData} />
-          : 'No data'
-        }
+      <div className="col-xs-12 col-md-6">
+        <WidgetWrapper>
+          <h3>Trend</h3>
+          { loading ? <FontAwesomeIcon icon={faSpinner} className="fa-spin" /> : '' }
+          { chartData.length > 0 ?
+            <IncomeExpenseLineChart data={chartData} />
+            : 'No data'
+          }
+        </WidgetWrapper>
       </div>
 
-      <div className="col-xs-12 col-sm-6">
-        <h3>Income Breakdown</h3>
-        { loading ? <FontAwesomeIcon icon={faSpinner} className="fa-spin" /> : '' }
-        { incomePieChartData.length > 0 ?
-          <CategoryPieChart data={incomePieChartData} />
-          : 'No data'
-        }
+      <div className="col-xs-12 col-md-6">
+        <WidgetWrapper>
+          <h3>Income Breakdown</h3>
+          { loading ? <FontAwesomeIcon icon={faSpinner} className="fa-spin" /> : '' }
+          { incomePieChartData.length > 0 ?
+            <CategoryPieChart data={incomePieChartData} />
+            : 'No data'
+          }
+        </WidgetWrapper>
       </div>
 
-      <div className="col-xs-12 col-sm-6">
-        <h3>Expense Breakdown</h3>
-        { loading ? <FontAwesomeIcon icon={faSpinner} className="fa-spin" /> : '' }
-        { expensePieChartData.length > 0 ?
-          <CategoryPieChart data={expensePieChartData} />
-          : 'No data'
-        }
+      <div className="col-xs-12 col-md-6">
+        <WidgetWrapper>
+          <h3>Expense Breakdown</h3>
+          { loading ? <FontAwesomeIcon icon={faSpinner} className="fa-spin" /> : '' }
+          { expensePieChartData.length > 0 ?
+            <CategoryPieChart data={expensePieChartData} />
+            : 'No data'
+          }
+        </WidgetWrapper>
       </div>
-    </>
+    </div>
   );
 }
 

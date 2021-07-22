@@ -2,6 +2,7 @@ import { useMemo } from 'react';
 import { useTable, useSortBy } from 'react-table';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faSpinner } from '@fortawesome/free-solid-svg-icons';
+import WidgetWrapper from 'src/components/WidgetWrapper';
 
 import styles from 'src/styles/summaryTable.module.scss';
 
@@ -112,10 +113,10 @@ const SummaryTable = (props: SummaryTableProps) => {
   }
 
   return (
-    <>
+    <WidgetWrapper>
       <h2>Summary</h2>
       <Table columns={columns} data={props.data} />
-    </>
+    </WidgetWrapper>
   );
 
 };

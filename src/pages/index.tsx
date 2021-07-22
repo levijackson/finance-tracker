@@ -82,12 +82,14 @@ export default function Home(props: HomeProps) {
 
   return (
     <>
+    <div className="row">
       <div className="col-xs-12 col-sm-6">
         <SummaryTable data={tableData} />
       </div>
 
       <div className="col-xs-12 col-sm-6">
         <Recent data={recentData} />
+      </div>
       </div>
     </>
   )

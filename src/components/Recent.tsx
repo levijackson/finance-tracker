@@ -4,6 +4,7 @@ import { faSpinner } from '@fortawesome/free-solid-svg-icons';
 
 import { ItemInterface } from 'src/components/interfaces/Item';
 import { formatDate } from 'src/utils/date';
+import WidgetWrapper from 'src/components/WidgetWrapper';
 
 
 interface RecentProps {
@@ -61,10 +62,10 @@ const Recent = (props: RecentProps) => {
   
   
   return (
-    <>
-    <h2>Recent Transactions</h2>
-    { markup }
-    </>
+    <WidgetWrapper>
+      <h2>Recent Transactions</h2>
+      { markup }
+    </WidgetWrapper>
   );
 };
 

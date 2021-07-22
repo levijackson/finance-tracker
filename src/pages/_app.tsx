@@ -5,6 +5,7 @@ import awsconfig from 'src/aws-exports';
 
 import Header from 'src/components/Header';
 import Footer from 'src/components/Footer';
+import Nav from 'src/components/Nav';
 
 
 const isLocalhost = Boolean(
@@ -59,8 +60,11 @@ function MyApp({ Component, pageProps }: AppProps) {
     <div className="wrapper">
       <Header user={currentUser} />
       
-      <div className="content row">
-        <Component {...pageProps} user={currentUser} />
+      <div className="main row">
+        <Nav user={currentUser} />
+        <div className="content col-sm-10 col-xs-12">
+          <Component {...pageProps} user={currentUser} />
+        </div>
       </div>
 
       <Footer />
