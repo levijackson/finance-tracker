@@ -139,40 +139,41 @@ const FinanceForm = (props: FinanceFormProps) => {
     <div className={styles.financeForm}>
       { message ? <p className={styles.message}>{message}</p> : '' }
       <form onSubmit={handleSubmit}>
-        { editing ? <a className={styles.delete} onClick={handleDelete}>DELETE</a> : '' }
         <label htmlFor="type">
           Type
-          <select name="type" value={state.type} onChange={handleInputChange}>
-            { ITEM_TYPES.map((item, index) => {
-                return <option value={item} key={index}>{item}</option>
-            })}
-          </select>
         </label>
+        <select name="type" value={state.type} onChange={handleInputChange}>
+          { ITEM_TYPES.map((item, index) => {
+              return <option value={item} key={index}>{item}</option>
+          })}
+        </select>
         <label htmlFor="date">
           When
-          <DatePicker 
-            dateFormat="yyyy-MM-dd"
-            selected={date}
-            onChange={(date) => setDate(date)}
-          />
         </label>
+        <DatePicker 
+          dateFormat="yyyy-MM-dd"
+          selected={date}
+          onChange={(date) => setDate(date)}
+        />
         <label htmlFor="category">
           Category
-          <select name="category" value={state.category} onChange={handleInputChange}>
-            { itemCategories.map((item, index) => {
-              return <option value={item} key={index}>{item}</option>
-            })}
-          </select>
         </label>
+        <select name="category" value={state.category} onChange={handleInputChange}>
+          { itemCategories.map((item, index) => {
+            return <option value={item} key={index}>{item}</option>
+          })}
+        </select>
         <label htmlFor="amount">
           Amount
-          <input type="text" name="amount" value={state.amount} onChange={handleInputChange} />
         </label>
+        <input type="text" name="amount" value={state.amount} onChange={handleInputChange} />
         <label htmlFor="note">
           Note
-          <textarea name="note" value={state.note} onChange={handleInputChange} />
         </label>
+        <textarea name="note" value={state.note} onChange={handleInputChange} />
         <input type="submit" name="submit" value="Save" />
+
+        { editing ? <a className={styles.delete} onClick={handleDelete}>Delete</a> : '' }
       </form>
     </div>
   );

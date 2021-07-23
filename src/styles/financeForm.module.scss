@@ -1,28 +1,33 @@
 .financeForm {
-    padding:2em;
+    padding:0 1em;
 
     label {
         display: block;
-        margin-bottom:2em;
+        margin-top:2em;
     }
     input,
     textarea,
     select {
-        width:100%;
+        width:50%;
         border:1px solid #ccc;
         padding:0.5em;
         border-radius:0.5em;
+    }
+    select {
+        width:52%;
     }
     textarea {
         height:5em;
     }
     input[type="submit"] {
+        width:52%;
         background:#413C58;
         border:0;
         padding:0.5em;
         color:#eee;
         font-size:1em;
         cursor:pointer;
+        margin-top:2em;
 
         &:hover {
             background:#00272B;
@@ -30,14 +35,20 @@
     }
 
     .delete {
+        margin-top:4em;
         display:block;
-        float:right;
+        width:50%;
         padding:10px;
         background:#FF6663;
         border:1px solid #FF6663;
-        border-radius:4px;
+        border-radius:8px;
+        text-align:center;
         cursor:pointer;
         margin-bottom:10px;
+    }
+    .delete:hover {
+        text-decoration:none;
+        background:#fff;
     }
 
     .message {
@@ -47,5 +58,24 @@
         color:#333;
         font-size:0.9em;
         margin-bottom:3em;
+    }
+}
+
+@media screen and (max-width: 48em){
+    .financeForm {        
+        input,
+        textarea,
+        select {
+            width:100%;
+        }
+
+        select,
+        input[type="submit"] {
+            width:104%;
+        }
+
+        .delete {
+            width:98%;
+        }
     }
 }

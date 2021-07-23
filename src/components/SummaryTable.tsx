@@ -21,8 +21,10 @@ const SummaryTable = (props: SummaryTableProps) => {
   if (props.data.length === 0)  {
     return (
       <>
-        <h2>Summary</h2>
-        <FontAwesomeIcon icon={faSpinner} className="fa-spin" />
+        <WidgetWrapper>
+          <h2>Summary</h2>
+          <FontAwesomeIcon icon={faSpinner} className="fa-spin" />
+        </WidgetWrapper>
       </>
     );
   }
