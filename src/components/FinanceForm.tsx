@@ -69,12 +69,22 @@ const FinanceForm = (props: FinanceFormProps) => {
       },
         body: JSON.stringify(data),
       }).then(() => {
+        window.scrollTo({
+          top: 0,
+          left: 0,
+          behavior: 'smooth'
+        });
+
         if (editing) {
             setMessage('Updated!');
         } else {
             setState(defaultState);
             setMessage('Added!');
         }
+
+        setTimeout(() => {
+          setMessage('');
+        }, 3000);
       });
     } catch (error) {
       setMessage('Failed to add ' + props.type);
@@ -127,7 +137,7 @@ const FinanceForm = (props: FinanceFormProps) => {
 
   return (
     <div className={styles.financeForm}>
-      { message ? <p>{message}</p> : '' }
+      { message ? <p className={styles.message}>{message}</p> : '' }
       <form onSubmit={handleSubmit}>
         { editing ? <a className={styles.delete} onClick={handleDelete}>DELETE</a> : '' }
         <label htmlFor="type">

@@ -92,7 +92,7 @@ const DashboardIndex = (props: DashboardProps) => {
   };
 
   return (
-    <div class="row">
+    <div className="row">
       <div className="col-xs-12">
           <h1 className={styles.heading}>Analyze</h1>
           {

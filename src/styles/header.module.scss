@@ -37,3 +37,14 @@
     color:#eee;
     margin-left:1em;
 }
+.utility a {
+    color:#eee;
+    text-decoration:none;
+    margin-right:1.5em;
+    cursor:pointer;
+    line-height:2em;
+    text-shadow:-1px -1px 3px #222;
+}
+.utility a:hover {
+    color:#FF6663;
+}

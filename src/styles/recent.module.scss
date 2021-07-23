@@ -1,0 +1,19 @@
+.heading {
+    margin:0;
+}
+
+.transactions {
+    list-style:none;
+    padding-left:0;
+    margin:0 0 2em 0;
+
+    li {
+        line-height:2em;
+    }
+
+    a {
+        svg {
+            margin-right:8px;
+        }
+    }
+}

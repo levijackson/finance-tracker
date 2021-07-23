@@ -1,10 +1,12 @@
 import Link from 'next/link';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faSpinner } from '@fortawesome/free-solid-svg-icons';
+import { faSpinner, faEdit } from '@fortawesome/free-solid-svg-icons';
 
 import { ItemInterface } from 'src/components/interfaces/Item';
 import { formatDate } from 'src/utils/date';
 import WidgetWrapper from 'src/components/WidgetWrapper';
+
+import styles from 'src/styles/recent.module.scss';
 
 
 interface RecentProps {
@@ -33,28 +35,38 @@ const Recent = (props: RecentProps) => {
       let itemMarkup = [];
 
       if (props.data[i].income.items.length > 0) {
-        markup.push(<h4 key={'income-header'+ i}>{ props.data[i].month } - Income</h4>);
+        markup.push(<h4 className={styles.heading} key={'income-header'+ i}>Income - { props.data[i].month }</h4>);
         props.data[i].income.items.map((item: ItemInterface, itemIndex: number) => {
           itemMarkup.push(
             <li key={item.item_uuid}>
-              <Link href={"/item/edit/" + item.item_uuid}><a>${item.amount} ({formatDate(new Date(item.date))})</a></Link>
+              <Link href={"/item/edit/" + item.item_uuid}>
+                <a>
+                  <FontAwesomeIcon icon={faEdit} />
+                  ${item.amount} ({formatDate(new Date(item.date))})
+                </a>
+              </Link>
             </li>
           );
         });
-        markup.push(<ul key={'income'+ i}>{ itemMarkup }</ul>);
+        markup.push(<ul className={styles.transactions} key={'income'+ i}>{ itemMarkup }</ul>);
       }
 
       if (props.data[i].expense.items.length > 0) {
-        markup.push(<h4 key={'expense-header'+ i}>{ props.data[i].month } - Expense</h4>);
+        markup.push(<h4 className={styles.heading} key={'expense-header'+ i}>Expenses - { props.data[i].month }</h4>);
         itemMarkup = [];
         props.data[i].expense.items.map((item: ItemInterface, itemIndex: number) => {
           itemMarkup.push(
             <li key={item.item_uuid}>
-              <Link href={"/item/edit/" + item.item_uuid}><a>${item.amount} ({formatDate(new Date(item.date))})</a></Link>
+              <Link href={"/item/edit/" + item.item_uuid}>
+                <a>
+                  <FontAwesomeIcon icon={faEdit} />
+                  ${item.amount} ({formatDate(new Date(item.date))})
+                </a>
+              </Link>
             </li>
           );
         });
-        markup.push(<ul key={'expense' + i}>{ itemMarkup }</ul>);
+        markup.push(<ul className={styles.transactions} key={'expense' + i}>{ itemMarkup }</ul>);
       }
     }
   }
