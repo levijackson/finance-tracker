@@ -1,12 +1,12 @@
 import type { NextApiRequest, NextApiResponse } from 'next';
 import Amplify, { withSSRContext } from 'aws-amplify';
-import awsconfig from 'src/aws-exports.js';
+import { amplifyConfiguration } from 'src/helpers/aws';
 import { ItemInterface } from 'src/components/interfaces/Item.js';
 import ItemService from 'src/services/ItemService';
 
 
 // needs to be enabled in each API route
-Amplify.configure({ ...awsconfig, ssr: true });
+Amplify.configure(amplifyConfiguration());
 
 export default async (req: NextApiRequest, res: NextApiResponse) => {
   if (req.method !== 'POST') {

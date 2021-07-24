@@ -52,13 +52,15 @@ export default function Home(props: HomeProps) {
 
       let formattedChartData = [];
       for (let i in response.data) {
-        formattedChartData.push(
-          {
-              'month': response.data[i].month,
-              'income': response.data[i].income.sum,
-              'expense': response.data[i].expense.sum
-          }
-        );
+        if (response.data[i].income.sum > 0 && response.data[i].expense.sum > 0) {
+          formattedChartData.push(
+            {
+                'month': response.data[i].month,
+                'income': response.data[i].income.sum,
+                'expense': response.data[i].expense.sum
+            }
+          );
+        }
       }
 
       setChartData(formattedChartData);

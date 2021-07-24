@@ -7,7 +7,7 @@ import { sumItemsByDay, groupItemsByCategory, getMonthlyData } from 'src/helpers
 import { chartColors } from 'src/helpers/chart';
 import { cloneObject } from 'src/utils/object';
 import { formatCurrency } from 'src/utils/currency';
-import { formatDate, getMonthName } from 'src/utils/date';
+import { formatDate, getMonthName, getYearMonth } from 'src/utils/date';
 import { UserInterface } from 'src/components/interfaces/User';
 import ItemTable from 'src/components/ItemTable';
 import CategoryPieChart from 'src/components/CategoryPieChart';
@@ -22,14 +22,15 @@ interface DashboardProps {
 }
 
 const DashboardIndex = (props: DashboardProps) => {
-  const [ date, setDate ] = useState('');
+  
+  const [ date, setDate ] = useState(getYearMonth());
   const [ loading, setLoading ] = useState(false);
   const [ data, setData ] = useState([]);
   const [ message, setMessage ] = useState(null);
   
 
-  useEffect(() => {
-    setData([]);  
+  const loadData = () => {
+    setData([]);
     if (!date) {
       return;
     }
@@ -41,8 +42,16 @@ const DashboardIndex = (props: DashboardProps) => {
         setLoading(false);
       });
     } catch (error) {
-
+      setMessage(error);
     }
+  };
+
+  useEffect(() => {
+    loadData();
+  }, []);
+
+  useEffect(() => {
+    loadData();
   }, [date]);
 
 
@@ -99,12 +108,11 @@ const DashboardIndex = (props: DashboardProps) => {
             message ? <p className="msg">{message}</p> : ''
           }
           <label htmlFor="type" className={styles.dateSelector}>
-              Month
-              <select name="date" value={date} onChange={e => setDate(e.target.value)}>
-                <option value="">Select Month</option>
-                {getMonthOptions()}
-              </select>
+            Select Month
           </label>
+          <select name="date" value={date} onChange={e => setDate(e.target.value)}>
+            {getMonthOptions()}
+          </select>
       </div>
 
       <div className="col-xs-12 col-md-6">

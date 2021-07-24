@@ -153,12 +153,12 @@ const getSummarizedData = async (numberMonths: number) => {
     data[i]['income'] = {
       'items': incomeItems,
       'sum': incomeSum
-    };  
+    };
 
     data[i]['expense'] = {
       'items': expenseItems,
       'sum': expenseSum
-    };  
+    };
 
     currentMonth = currentMonth - 1;
   }

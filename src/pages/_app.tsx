@@ -1,42 +1,31 @@
 import type { AppProps } from 'next/app';
+import Router from 'next/router';
 import React, { useState, useEffect } from 'react';
 import Amplify, { Auth } from 'aws-amplify';
-import awsconfig from 'src/aws-exports';
+import { amplifyConfiguration } from 'src/helpers/aws';
 
 import Header from 'src/components/Header';
 import Footer from 'src/components/Footer';
 import Nav from 'src/components/Nav';
+import NProgress from 'nprogress';
 
-
-const isLocalhost = Boolean(
-  process.env.IS_DEV
-);
-
-const [
-  localRedirectSignIn,
-  productionRedirectSignIn,
-] = awsconfig.oauth.redirectSignIn.split(",");
-
-const [
-  localRedirectSignOut,
-  productionRedirectSignOut,
-] = awsconfig.oauth.redirectSignOut.split(",");
-
-const updatedAwsConfig = {
-  ...awsconfig,
-  oauth: {
-    ...awsconfig.oauth,
-    redirectSignIn: isLocalhost ? localRedirectSignIn : productionRedirectSignIn,
-    redirectSignOut: isLocalhost ? localRedirectSignOut : productionRedirectSignOut,
-  },
-  ssr: true
-}
-
-Amplify.configure(updatedAwsConfig);
-
+import 'src/styles/nprogress.css';
 // http://flexboxgrid.com/
 import 'src/styles/flexboxgrid.min.css';
 import 'src/styles/layout.css';
+
+Amplify.configure(amplifyConfiguration());
+
+Router.events.on('routeChangeStart', () => {
+  NProgress.start()
+});
+Router.events.on('routeChangeComplete', () => {
+  NProgress.done()
+});
+Router.events.on('routeChangeError', () => {
+  NProgress.done()
+});
+
 
 function MyApp({ Component, pageProps }: AppProps) {
   const [ currentUser, setCurrentUser ] = useState({});

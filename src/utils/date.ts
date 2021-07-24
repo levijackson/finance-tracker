@@ -26,7 +26,17 @@ const getMonthName = (monthNumber: number): string => {
   return monthNames[monthNumber];
 };
 
+/**
+ * Get the yyyy-mm for today
+ * @returns string
+ */
+const getYearMonth = () => {
+  const currentDate = new Date();
+  return currentDate.getFullYear() + '-' + ('0' + (currentDate.getMonth() + 1)).slice(-2)
+};
+
 export {
   formatDate,
-  getMonthName
+  getMonthName,
+  getYearMonth
 };
